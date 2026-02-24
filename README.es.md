@@ -84,6 +84,7 @@ flowchart LR
 
 - Estado en vivo de servicios y agentes lógicos
 - Control de agentes (start/stop/restart + ping dispatch)
+- Agent Node Studio: grafo interactivo para mapear agentes y vincular skills/tools visualmente
 - Chat del gateway con:
   - mensajes al hilo,
   - envío directo al agente,

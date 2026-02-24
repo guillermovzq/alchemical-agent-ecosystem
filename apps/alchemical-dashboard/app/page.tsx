@@ -10,6 +10,7 @@ import type { DashboardConfig } from "../lib/config";
 
 const CreateAgentWizard = dynamic(() => import("../components/CreateAgentWizard").then((m) => m.CreateAgentWizard), { ssr: false });
 const ChatWorkbench = dynamic(() => import("../components/ChatWorkbench").then((m) => m.ChatWorkbench), { ssr: false });
+const AgentNodeStudio = dynamic(() => import("../components/AgentNodeStudio").then((m) => m.AgentNodeStudio), { ssr: false });
 const CanvasLab = dynamic(() => import("../components/CanvasLab").then((m) => m.CanvasLab), { ssr: false });
 const JobsEventsPanel = dynamic(() => import("../components/JobsEventsPanel").then((m) => m.JobsEventsPanel), { ssr: false });
 const AdminOpsPanel = dynamic(() => import("../components/AdminOpsPanel").then((m) => m.AdminOpsPanel), { ssr: false });
@@ -107,6 +108,7 @@ export default function Page() {
 
           {tab === "chat" && (
             <>
+              <section id="section-node-studio"><AgentNodeStudio /></section>
               <section id="section-chat"><ChatWorkbench /></section>
               <section id="section-crear-agente" className="glass-card" style={{ padding: 12 }}>
                 <Accordion title="Crear agente" open={open.wizard} onToggle={() => setOpen((s) => ({ ...s, wizard: !s.wizard }))} />

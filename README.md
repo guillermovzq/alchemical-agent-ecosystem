@@ -84,6 +84,7 @@ flowchart LR
 
 - Live status for services and logical agents
 - Agent controls (start/stop/restart + ping dispatch)
+- Agent Node Studio: interactive node graph to map agents and bind skills/tools visually
 - Gateway chat workbench with:
   - thread messages,
   - direct ask to selected agent,
