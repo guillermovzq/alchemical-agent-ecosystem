@@ -9,6 +9,7 @@ import { LogsMonitor } from "../components/LogsMonitor";
 import { SettingsPanel } from "../components/SettingsPanel";
 import { ChatWorkbench } from "../components/ChatWorkbench";
 import { CanvasLab } from "../components/CanvasLab";
+import { JobsEventsPanel } from "../components/JobsEventsPanel";
 import type { DashboardPayload } from "../lib/types";
 import type { DashboardConfig } from "../lib/config";
 
@@ -53,6 +54,7 @@ export default function Page() {
           <CreateAgentWizard />
           <ChatWorkbench />
           <CanvasLab />
+          <JobsEventsPanel />
           <SettingsPanel onChange={onCfg} />
           <LogsMonitor defaultService={cfg.defaultLogService} linesCount={cfg.logsLines} />
         </div>
