@@ -1,410 +1,166 @@
 <h1 align="center">⚗️ Alchemical Agent Ecosystem</h1>
 
 <p align="center">
-  <img src="./assets/branding/variants/logo-horizontal.svg" alt="Logo de Alchemical Agent Ecosystem" width="760" />
+  <img src="./assets/branding/variants/logo-horizontal.svg" alt="Alchemical Agent Ecosystem" width="760" />
 </p>
 
-<p align="center"><em>Plataforma multiagente local-first · auto-hospedada · modular · orientada a operación real</em></p>
+<p align="center"><em>Control plane multiagente local-first · orquestación runtime real · operación orientada a producción</em></p>
 
 <p align="center">
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/smouj/alchemical-agent-ecosystem" alt="Licencia" /></a>
-  <a href="https://github.com/smouj/alchemical-agent-ecosystem/commits/main"><img src="https://img.shields.io/github/last-commit/smouj/alchemical-agent-ecosystem" alt="Último commit" /></a>
-  <img src="https://img.shields.io/badge/runtime-Docker%20Compose-2496ED" alt="Docker Compose" />
-  <img src="https://img.shields.io/badge/realtime-SSE-06b6d4" alt="SSE" />
-  <img src="https://img.shields.io/badge/perfiles-2G%2F4G%2F8G%2F16G%2F32G-7c3aed" alt="Perfiles RAM" />
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/smouj/alchemical-agent-ecosystem" alt="Licencia"></a>
+  <a href="https://github.com/smouj/alchemical-agent-ecosystem/commits/main"><img src="https://img.shields.io/github/last-commit/smouj/alchemical-agent-ecosystem" alt="Último commit"></a>
+  <a href="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/ci.yml"><img src="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/release.yml"><img src="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/release.yml/badge.svg" alt="Release"></a>
+  <a href="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/sync-project-status.yml"><img src="https://github.com/smouj/alchemical-agent-ecosystem/actions/workflows/sync-project-status.yml/badge.svg" alt="Sync project"></a>
+  <img src="https://img.shields.io/badge/runtime-Docker%20Compose-2496ED" alt="Docker Compose">
+  <img src="https://img.shields.io/badge/gateway-FastAPI-009688" alt="FastAPI">
+  <img src="https://img.shields.io/badge/dashboard-Next.js%2015-black" alt="Next.js 15">
+  <img src="https://img.shields.io/badge/realtime-SSE-06b6d4" alt="SSE">
+  <img src="https://img.shields.io/github/issues/smouj/alchemical-agent-ecosystem" alt="Issues abiertas">
 </p>
 
 <p align="center">
-  <a href="./README.md"><img src="https://img.shields.io/badge/README-English-1f6feb?style=for-the-badge" alt="English" /></a>
-  <a href="./README.es.md"><img src="https://img.shields.io/badge/README-Espa%C3%B1ol-c92a2a?style=for-the-badge" alt="Español" /></a>
+  <a href="./README.md"><img src="https://img.shields.io/badge/README-English-1f6feb?style=for-the-badge" alt="English"></a>
+  <a href="./README.es.md"><img src="https://img.shields.io/badge/README-Español-c92a2a?style=for-the-badge" alt="Español"></a>
 </p>
 
 ---
 
-## ✨ Resumen
+## Resumen
 
-**Alchemical Agent Ecosystem** es un sistema de orquestación local-first para agentes IA.
-Combina:
+Alchemical Agent Ecosystem es una plataforma local-first donde:
+- el Dashboard es el cockpit del operador,
+- el Gateway es el límite de política/routing/runtime,
+- los servicios de ejecución realizan acciones reales,
+- eventos/jobs/chat/usage quedan persistidos y observables.
 
-- 🧠 **Agentes lógicos** (dinámicos y definidos por el usuario)
-- ⚙️ **Backends de ejecución** (servicios FastAPI)
-- 🌐 **Gateway** (orquestación, registros, cola y eventos)
-- 🖥️ **Dashboard** (control plane + streams SSE)
-- 🧱 **Stack de infraestructura** (Caddy, Redis, ChromaDB, Ollama)
-
----
-
-## 🧭 Índice
-
-- [✨ Resumen](#-resumen)
-- [🏗️ Arquitectura](#️-arquitectura)
-- [🧪 Agentes lógicos (seed por defecto)](#-agentes-lógicos-seed-por-defecto)
-- [🗺️ Mapa de servicios runtime](#️-mapa-de-servicios-runtime)
-- [🖥️ Capacidades del dashboard](#️-capacidades-del-dashboard)
-- [🔌 Superficie API](#-superficie-api)
-- [🚀 Instalación](#-instalación)
-- [📦 Perfiles RAM](#-perfiles-ram)
-- [🔒 Modelo de seguridad](#-modelo-de-seguridad)
-- [📚 Mapa de documentación](#-mapa-de-documentación)
-- [📁 Estructura del proyecto](#-estructura-del-proyecto)
-- [📌 Limitaciones actuales](#-limitaciones-actuales)
-- [📜 Licencia](#-licencia)
+No se usan mocks para los flujos core.
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura (realidad actual)
 
-<p align="center"><strong>Arquitectura runtime real (estado actual del proyecto)</strong></p>
+<p align="center"><strong>Arquitectura runtime</strong></p>
 
 <div align="center">
 
 ```mermaid
 flowchart TB
-  U[Operador] --> D[Dashboard
-Next.js]
-  D -->|SSE + proxy gateway| G[Gateway
-FastAPI]
+  U[Operador] --> D[Dashboard\nNext.js]
+  D -->|/api/gateway/* + SSE| G[Gateway\nFastAPI]
 
-  G -->|dispatch agente/acción| S1[Servicios de ejecución
-7401..7410]
-  G --> DB[(SQLite estado runtime)]
+  G -->|dispatch| S[Servicios de ejecución\n7401..7410]
+  G --> DB[(SQLite runtime)]
   G --> R[(Redis)]
   G --> C[(ChromaDB)]
-  S1 --> O[(Ollama)]
+  S --> O[(Ollama)]
 
-  CADDY[Caddy edge
-:80/:443] --> D
-  CADDY --> G
+  EDGE[Caddy :80/:443] --> D
+  EDGE --> G
 ```
 
 </div>
 
-<p align="center"><strong>Modelo lógico de agentes (comportamiento real)</strong></p>
+<p align="center"><strong>Modelo lógico de agentes</strong></p>
 
 <div align="center">
 
 ```mermaid
 flowchart LR
-  OP[Petición del operador] --> GW[Gateway]
+  IN[Mensaje operador] --> GW[Gateway]
   GW --> REG[Registry de agentes]
   REG --> MAP[Mapping target_service]
-  MAP --> EXEC[Servicio de ejecución]
-  EXEC --> RES[Resultado + uso]
-  RES --> EVT[Eventos / chat / jobs persistidos]
-  EVT --> UI[Dashboard en tiempo real]
+  MAP --> EXEC[Acción del servicio]
+  EXEC --> OUT[Resultado/uso]
+  OUT --> STORE[Eventos + chat + jobs]
+  STORE --> UI[Dashboard realtime]
 ```
 
 </div>
 
-<div align="center">
-<table>
-  <thead><tr><th>Capa</th><th>Responsabilidad real</th></tr></thead>
-  <tbody>
-    <tr><td>Dashboard</td><td>UI de control, streams realtime, proxies al gateway</td></tr>
-    <tr><td>Gateway</td><td>Auth/RBAC, routing, cola/jobs, conectores, persistencia</td></tr>
-    <tr><td>Agentes lógicos</td><td>Identidades estables mapeadas a <code>target_service</code></td></tr>
-    <tr><td>Servicios de ejecución</td><td>Endpoints reales de ejecución</td></tr>
-    <tr><td>Capa datos/modelos</td><td>SQLite + Redis + ChromaDB + Ollama</td></tr>
-  </tbody>
-</table>
-</div>
+---
 
-### Por qué esta arquitectura es correcta
+## Capacidades del dashboard (implementadas)
 
-1. **Límite claro**: el dashboard no bypass del gateway en operaciones protegidas.
-2. **Lógica estable**: identidad de agente desacoplada del número de contenedores.
-3. **Fiabilidad operativa**: jobs/eventos/usage persistidos y streameables.
-4. **Security-first**: token auth + RBAC + higiene de secretos en conectores.
-
-## 🧪 Agentes lógicos (seed por defecto)
-
-El gateway inicializa 5 agentes lógicos editables:
-
-| Agente | Misión |
-|---|---|
-| 👑 Alquimista Mayor | Orquestación global, routing y quality gate |
-| 🔎 Investigador/Analista | Research, verificación y comparación de fuentes |
-| 🔥 Ingeniero/Constructor | Código, integración, debugging y entrega |
-| 🎨 Creador Visual | UI/UX, branding y outputs visuales |
-| ✍️ Redactor/Narrador | Copywriting, storytelling y contenido SEO |
-
-> Skills/tools son capacidades adjuntas a agentes (no identidades fijas).
-
-### Mapa agente → servicio objetivo (por defecto)
-
-| Agente lógico | Servicio objetivo |
-|---|---|
-| Alquimista Mayor | `velktharion` |
-| Investigador/Analista | `synapsara` |
-| Ingeniero/Constructor | `ignivox` |
-| Creador Visual | `auralith` |
-| Redactor/Narrador | `resonvyr` |
+- Estado en vivo de servicios y agentes lógicos
+- Control de agentes (start/stop/restart + ping dispatch)
+- Chat del gateway con:
+  - mensajes al hilo,
+  - envío directo al agente,
+  - roundtable multi-agente,
+  - metadatos repo/thinking/auto-edit,
+  - adjuntos en modo metadata
+- Paneles realtime de jobs y eventos
+- Panel realtime de uso/coste
+- Admin/API keys + operaciones de conectores
+- Navegación funcional por secciones en sidebar
+- Tema visual carbono/ceniza con acentos turquesa/púrpura/celeste/verde
 
 ---
 
-## 🗺️ Mapa de servicios runtime
-
-### Backends de agentes
-
-| Servicio | Puerto | Endpoint |
-|---|---:|---|
-| velktharion | 7401 | `/navigate` |
-| synapsara | 7402 | `/query` |
-| kryonexus | 7403 | `/search` |
-| noctumbra-mail | 7404 | `/send` |
-| temporaeth | 7405 | `/plan` |
-| vaeloryn-conclave | 7406 | `/deliberate` |
-| ignivox | 7407 | `/transform` |
-| auralith | 7408 | `/live` |
-| resonvyr | 7409 | `/voice` |
-| fluxenrath | 7410 | `/` |
-
-### Infraestructura core
-
-| Componente | Propósito |
-|---|---|
-| [Caddy](https://caddyserver.com/) | Reverse proxy + ingress |
-| `alchemical-gateway` | API de orquestación y control |
-| [Redis](https://redis.io/) | Capa runtime key-value |
-| [ChromaDB](https://www.trychroma.com/) | Capa de almacenamiento vectorial |
-| [Ollama](https://ollama.com/) | Serving de modelos locales |
-
----
-
-## 🖥️ Capacidades del dashboard
-
-<p align="center"><strong>Alcance actual del dashboard (real, implementado)</strong></p>
-
-<div align="center">
-<table>
-  <thead><tr><th>Área</th><th>Qué puedes hacer ahora</th><th>Realtime</th></tr></thead>
-  <tbody>
-    <tr><td>Vista sistema</td><td>Ver estado runtime, salud core y métricas de alto nivel</td><td>✅</td></tr>
-    <tr><td>Agentes</td><td>Inspeccionar agentes, start/stop/restart y ping de dispatch</td><td>✅</td></tr>
-    <tr><td>Chat Gateway</td><td>Escribir al hilo o enviar directo al agente seleccionado (<code>chat/ask</code>)</td><td>✅</td></tr>
-    <tr><td>Jobs & Events</td><td>Seguir cola de jobs, reintentos y eventos operativos</td><td>✅</td></tr>
-    <tr><td>Uso & Coste</td><td>Monitorizar muestras de tokens/coste y distribución de uso</td><td>✅</td></tr>
-    <tr><td>Conectores</td><td>Configurar conectores y encolar mensajes salientes</td><td>✅</td></tr>
-    <tr><td>Admin Ops</td><td>Crear/desactivar API keys y controles operativos</td><td>✅</td></tr>
-    <tr><td>Logs Monitor</td><td>Observar logs de servicios en modo stream</td><td>✅</td></tr>
-  </tbody>
-</table>
-</div>
-
-### Mejoras UX ya integradas
-
-- Botones del sidebar izquierdo navegan a secciones reales (anclas con scroll suave).
-- El chat soporta dos modos: **solo hilo** y **envío directo a agente**.
-- Los streams SSE están reforzados para evitar errores por controller cerrado.
-- Cadencia de polling ajustada para reducir carga sin perder respuesta en tiempo real.
-
-### Modos de ejecución local (importante)
-
-- **Runtime completo vía Docker/Caddy**: `http://localhost`
-- **Dashboard en modo dev (Next.js)**: `http://localhost:3000`
-
-> Si quieres validar cambios de UI al instante, usa modo dev desde `apps/alchemical-dashboard`.
-
----
-
-## 🔌 Superficie API
-## 🔌 Superficie API
-
-### Gateway core
-
-| Endpoint | Método | Propósito |
-|---|---|---|
-| `/gateway/health` | GET | Liveness |
-| `/gateway/ready` | GET | Readiness + contadores |
-| `/gateway/stats` | GET | Estadísticas runtime |
-| `/gateway/events` | GET | Feed de eventos |
-| `/gateway/events/stream` | GET (SSE) | Stream realtime de eventos |
-| `/gateway/capabilities` | GET | Catálogo de skills/tools/conectores |
-| `/gateway/agents` | GET/POST | Listado/upsert de agentes lógicos |
-| `/gateway/agents/{name}` | GET | Detalle de agente |
-| `/gateway/connectors` | GET/POST | Listado/upsert de conectores |
-| `/gateway/connectors/send` | POST | Encolar mensaje saliente de conector |
-| `/gateway/connectors/webhook/{channel}` | POST | Ingesta webhook entrante (Telegram/Discord normalizado + validación opcional de secreto) |
-| `/gateway/auth/keys` | GET/POST | Listar/crear API keys (admin) |
-| `/gateway/auth/keys/{id}/disable` | POST | Desactivar API key (admin) |
-| `/gateway/jobs` | GET | Estado de cola/jobs |
-| `/gateway/usage/summary` | GET | Resumen de uso/coste + muestras |
-| `/gateway/usage/stream` | GET (SSE) | Stream en tiempo real de uso/coste |
-| `/gateway/chat/thread` | GET/POST | Hilo compartido |
-| `/gateway/chat/stream` | GET (SSE) | Stream realtime de hilo |
-| `/gateway/chat/actions/plan` | POST | Planificación de objetivo |
-| `/gateway/dispatch/{agent}/{action}` | POST | Dispatch a servicio objetivo |
-
-### Rutas API del dashboard
-
-| Endpoint | Método | Propósito |
-|---|---|---|
-| `/api/agents` | GET | Inventario + estado de agentes |
-| `/api/system` | GET | Salud core |
-| `/api/control` | POST | Acciones de servicios |
-| `/api/logs` | GET | Snapshot de logs |
-| `/api/logs/stream` | GET (SSE) | Logs realtime |
-| `/api/metrics` | GET | Métricas CPU/RAM |
-| `/api/config` | GET/PUT | Config del dashboard |
-| `/api/gateway/*` | GET/POST | Proxies a endpoints del gateway |
-
----
-
-## 🚀 Instalación
-
-### Bootstrap remoto (un comando)
-
-```bash
-bash scripts/install-remote.sh
-```
-
-### Instalador one-command (recomendado)
-
-```bash
-cd /mnt/d/alchemical-agent-ecosystem
-./install.sh --wizard
-```
-
-### Instalación no interactiva
-
-```bash
-./install.sh --domain localhost --profile 4g --model phi3:mini
-```
-
-### Modo de instalación rápida (optimizado)
-
-```bash
-# omite build local y pull de modelo por defecto
-./install.sh --fast --profile 2g
-
-# vía CLI rápida
-./scripts/alchemical install-fast --profile 2g
-./scripts/alchemical up-fast
-```
-
----
-
-## ⚡ Comandos esenciales (mínimo)
+## Comandos esenciales
 
 ```bash
 # 1) instalar
 ./install.sh --wizard
 
-# 2) iniciar (ruta rápida)
+# 2) iniciar runtime
 ./scripts/alchemical up-fast
 
-# 3) abrir dashboard
-./scripts/alchemical dashboard
-
-# 4) health check rápido
+# 3) health check
 curl -fsS http://localhost/gateway/health
+
+# 4) dashboard en modo dev
+cd apps/alchemical-dashboard && npm run dev
 ```
 
-Para catálogo completo de comandos, rituales de mantenimiento y automatización del project:
-- `docs/CLI_REFERENCE.md`
-- `docs/OPERATIONS_RUNBOOK.md`
+Modos de ejecución:
+- Runtime vía Caddy: `http://localhost`
+- Dashboard dev: `http://localhost:3000`
 
 ---
 
-## 📦 Perfiles RAM
-## 📦 Perfiles RAM
+## API destacada
 
-El wizard detecta RAM del host y sugiere perfil.
+Gateway:
+- `POST /gateway/chat/ask`
+- `POST /gateway/chat/roundtable`
+- `GET /gateway/chat/stream`
+- `GET /gateway/jobs`
+- `GET /gateway/usage/summary`
+- `POST /gateway/connectors/webhook/{channel}`
 
-| Perfil | RAM host | Huella |
-|---|---:|---|
-| `2g` | ~2 GB | Core + gateway + servicios mínimos |
-| `4g` | ~4 GB | Setup balanceado |
-| `8g` | ~8 GB | Runtime extendido |
-| `16g` | ~16 GB | Stack completo |
-| `32g` | ~32 GB | Stack completo + más margen para modelos |
+Proxy dashboard:
+- `POST /api/gateway/chat-ask`
+- `POST /api/gateway/chat-roundtable`
+- `GET /api/gateway/chat-stream`
 
----
-
-## 🔒 Modelo de seguridad
-
-| Control | Implementación |
-|---|---|
-| 🔐 Auth por token | Header `x-alchemy-token` + `ALCHEMICAL_GATEWAY_TOKEN` |
-| 👤 Roles de acceso | Checks `viewer` / `operator` / `admin` |
-| 🔑 API keys | Gestión vía endpoints `/gateway/auth/keys` |
-| 🧹 Escaneo de secretos | `./scripts/alchemical scan-secrets` |
-| 🪝 Guard pre-commit | `./scripts/alchemical setup-hooks` |
-| 🧾 Política de secretos en conectores | Solo `token_ref` (sin token raw) |
+API completa: [`docs/API_REFERENCE.md`](./docs/API_REFERENCE.md)
 
 ---
 
-## 📚 Mapa de documentación
+## Mapa de documentación
 
-- [`docs/README.md`](./docs/README.md) — índice y política de documentación
-- [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — arquitectura técnica
-- [`docs/API_REFERENCE.md`](./docs/API_REFERENCE.md) — APIs de gateway + dashboard
-- [`docs/INSTALLATION.md`](./docs/INSTALLATION.md) — instalación/arranque por perfiles y bootstrap orientado a rendimiento
-- [`docs/CLI_REFERENCE.md`](./docs/CLI_REFERENCE.md) — catálogo completo de comandos (movido fuera del README)
-- [`docs/OPERATIONS_RUNBOOK.md`](./docs/OPERATIONS_RUNBOOK.md) — runbook operativo (update/rollback)
-- [`docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md`](./docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md) — roadmap
-- [`docs/INTEGRATION_WORKPLAN.md`](./docs/INTEGRATION_WORKPLAN.md) — plan de integración
-- [`docs/RELEASE_PLAN.md`](./docs/RELEASE_PLAN.md) — estrategia de releases y versionado
-- [`docs/BRANDING.md`](./docs/BRANDING.md) — guía de uso/exportación del logo
-- [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md) — snapshot autogenerado del estado del repositorio
-- [`docs/GO_BETA_CHECKLIST.md`](./docs/GO_BETA_CHECKLIST.md) — checklist final antes de declarar beta pública
+- [`docs/README.md`](./docs/README.md) — índice de documentación
+- [`docs/INSTALLATION.md`](./docs/INSTALLATION.md) — instalación/arranque/bootstrap de rendimiento
+- [`docs/CLI_REFERENCE.md`](./docs/CLI_REFERENCE.md) — catálogo completo de comandos
+- [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — arquitectura e invariantes
+- [`docs/API_REFERENCE.md`](./docs/API_REFERENCE.md) — referencia de endpoints
+- [`docs/OPERATIONS_RUNBOOK.md`](./docs/OPERATIONS_RUNBOOK.md) — operación y mantenimiento
+- [`docs/PROJECT_STATUS.md`](./docs/PROJECT_STATUS.md) — snapshot autosincronizado del proyecto
 
 ---
 
-## 🔄 Update y rollback
-
-Usa el runbook operativo como fuente única:
-- `docs/OPERATIONS_RUNBOOK.md`
-
-Ruta más común y segura:
-
-```bash
-./scripts/alchemical update-safe
-./scripts/alchemical rollback   # solo si hace falta
-```
-
-Para el ritual de higiene de project/repo:
+## Ritual operativo (higiene project/repo)
 
 ```bash
 bash ops/ritual-sync.sh
 ```
 
----
-
-## 📁 Estructura del proyecto
-## 📁 Estructura del proyecto
-
-| Ruta | Propósito |
-|---|---|
-| `.github/` | Workflows y templates de GitHub |
-| `apps/alchemical-dashboard/` | Control plane en Next.js |
-| `assets/` | Branding y recursos visuales |
-| `docs/` | Documentación técnica y operativa |
-| `gateway/` | Gateway de orquestación (FastAPI + SQLite queue) |
-| `infra/caddy/` | Configuración de reverse proxy |
-| `infra/scripts/` | Scripts de instalación/bootstrap |
-| `ops/` | Scripts de update-safe y rollback |
-| `scripts/` | CLI y utilidades de automatización |
-| `services/` | Backends de ejecución (FastAPI) |
-| `shared/` | Contratos/schemas compartidos |
-| `workspace/skills/` | Repositorio de skills del ecosistema |
+Este flujo ejecuta tidy de project, sync de estado, secret scan, rebase/push y chequeos finales.
 
 ---
 
-## 📌 Limitaciones actuales
+## Licencia
 
-- Métrica GPU básica salvo integración dedicada de runtime GPU.
-- Transporte de conectores está preparado con cola/retry; algunos adapters específicos requieren más hardening.
-- Para escala multi-nodo de alto volumen, conviene migrar SQLite runtime a DB/event bus dedicados.
-
----
-
-## 📜 Licencia
-
-📄 License MIT
-
----
-
-<p align="center"><strong>Hecho con ❤️ por smouj — modelos locales, flujos abiertos y automatización real.</strong></p>
-
----
+MIT
