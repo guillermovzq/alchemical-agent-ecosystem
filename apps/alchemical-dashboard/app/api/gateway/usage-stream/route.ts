@@ -12,15 +12,29 @@ export async function GET() {
   const stream = new ReadableStream({
     async start(controller) {
       let last = "";
-      const send = (txt: string) => controller.enqueue(encoder.encode(txt));
+      let closed = false;
+      const send = (txt: string) => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(txt));
+        } catch {
+          closed = true;
+        }
+      };
+      const empty = { summary: { tokens_in: 0, tokens_out: 0, total_tokens: 0, cost_usd: 0 }, items: [] };
       const loop = async () => {
+        if (closed) return;
         try {
           const r = await fetch("http://localhost/gateway/usage/summary?limit=80", {
             cache: "no-store",
             headers: gatewayHeaders(),
           });
           const j = await r.json();
-          const payload = JSON.stringify(j);
+          const safe =
+            r.ok && j && typeof j === "object" && j.summary && Array.isArray(j.items)
+              ? j
+              : empty;
+          const payload = JSON.stringify(safe);
           if (payload !== last) {
             send(`data: ${payload}\n\n`);
             last = payload;
@@ -28,17 +42,24 @@ export async function GET() {
             send(`: keepalive\n\n`);
           }
         } catch {
-          send(`data: ${JSON.stringify({ summary: { tokens_in: 0, tokens_out: 0, total_tokens: 0, cost_usd: 0 }, items: [] })}\n\n`);
+          send(`data: ${JSON.stringify(empty)}\n\n`);
         }
       };
       await loop();
       const id = setInterval(loop, 1000);
       // @ts-ignore
       this._id = id;
+      // @ts-ignore
+      this._closed = () => {
+        closed = true;
+        clearInterval(id);
+      };
     },
     cancel() {
       // @ts-ignore
-      if (this._id) clearInterval(this._id);
+      if (this._closed) this._closed();
+      // @ts-ignore
+      else if (this._id) clearInterval(this._id);
     },
   });
 

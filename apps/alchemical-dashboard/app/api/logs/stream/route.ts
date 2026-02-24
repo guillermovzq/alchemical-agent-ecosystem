@@ -24,8 +24,17 @@ export async function GET(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       let last = "";
-      const send = (txt: string) => controller.enqueue(encoder.encode(txt));
+      let closed = false;
+      const send = (txt: string) => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(txt));
+        } catch {
+          closed = true;
+        }
+      };
       const loop = async () => {
+        if (closed) return;
         const logs = await tailLogs(service, lines);
         const payload = JSON.stringify({ service, logs });
         if (payload !== last) {
@@ -39,10 +48,17 @@ export async function GET(req: NextRequest) {
       const id = setInterval(loop, 1500);
       // @ts-ignore
       this._id = id;
+      // @ts-ignore
+      this._closed = () => {
+        closed = true;
+        clearInterval(id);
+      };
     },
     cancel() {
       // @ts-ignore
-      if (this._id) clearInterval(this._id);
+      if (this._closed) this._closed();
+      // @ts-ignore
+      else if (this._id) clearInterval(this._id);
     },
   });
 
