@@ -14,7 +14,7 @@
   <a href="https://github.com/smouj/alchemical-agent-ecosystem/commits/main"><img src="https://img.shields.io/github/last-commit/smouj/alchemical-agent-ecosystem" alt="Last Commit"></a>
   <img src="https://img.shields.io/badge/runtime-Docker%20Compose-2496ED" alt="Docker Compose">
   <img src="https://img.shields.io/badge/AI-Local%20Only-success" alt="Local AI">
-  <img src="https://img.shields.io/badge/profile-2GB%20RAM%20ready-blueviolet" alt="2GB profile">
+  <img src="https://img.shields.io/badge/profiles-2G%2F4G%2F8G%2F16G%2F32G-blueviolet" alt="RAM profiles">
 </p>
 
 <p align="center">
@@ -31,7 +31,7 @@
 - [Services Map](#services-map)
 - [Dashboard (Alchemical Control Panel)](#dashboard-alchemical-control-panel)
 - [Installation & Operations](#installation--operations)
-- [2GB RAM Profile](#2gb-ram-profile)
+- [RAM Profiles (2G / 4G / 8G / 16G / 32G)](#ram-profiles-2g--4g--8g--16g--32g)
 - [Security Guardrails](#security-guardrails)
 - [Project Structure](#project-structure)
 - [Operational Notes](#operational-notes)
@@ -61,7 +61,7 @@ It is designed for:
 | One-command ops | `./scripts/alchemical` CLI for install, run, logs, doctor |
 | Premium dashboard | Real-time control panel with health, logs, actions and config |
 | Security baseline | Secret scanning + pre-commit hook guardrails |
-| Low-RAM mode | Dedicated 2GB profile for constrained machines |
+| RAM profiles | Tuned runtime profiles for 2G, 4G, 8G, 16G and 32G hosts |
 
 ---
 
@@ -166,8 +166,11 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical doctor
 ./scripts/alchemical setup-hooks
 ./scripts/alchemical scan-secrets
-./scripts/alchemical install --domain localhost --profile standard --model phi3:mini
+./scripts/alchemical install --domain localhost --profile 4g --model phi3:mini
 ./scripts/alchemical up
+./scripts/alchemical up-2g
+./scripts/alchemical up-4g
+./scripts/alchemical up-8g
 ./scripts/alchemical status
 ./scripts/alchemical logs velktharion
 ./scripts/alchemical dashboard
@@ -175,26 +178,39 @@ cd /mnt/d/alchemical-agent-ecosystem
 
 ---
 
-## 2GB RAM Profile
+## RAM Profiles (2G / 4G / 8G / 16G / 32G)
 
-For constrained hosts (target: **~2GB RAM**):
+Choose runtime footprint by host memory:
+
+| Profile | Recommended RAM | Services |
+|---|---:|---|
+| `2g` | 2 GB | core + gateway + `velktharion`, `synapsara` |
+| `4g` | 4 GB | `2g` + `kryonexus`, `ignivox` |
+| `8g` | 8 GB | `4g` + `auralith`, `resonvyr` |
+| `16g` | 16 GB | full stack |
+| `32g` | 32 GB | full stack (headroom for bigger local models) |
 
 ```bash
-./scripts/alchemical install --profile min --domain localhost
-# or fast minimal boot:
-./scripts/alchemical up-min
+./scripts/alchemical install --profile 2g --domain localhost
+./scripts/alchemical install --profile 4g --domain localhost
+./scripts/alchemical install --profile 8g --domain localhost
+./scripts/alchemical install --profile 16g --domain localhost
+./scripts/alchemical install --profile 32g --domain localhost
 ```
 
-### What `min` profile starts
-- `caddy`
-- `redis`
-- `chromadb`
-- `ollama`
-- `alchemical-gateway`
-- `velktharion`
-- `synapsara`
+Fast boot shortcuts:
 
-Default lightweight model in wizard for min profile: `tinyllama:1.1b`.
+```bash
+./scripts/alchemical up-2g
+./scripts/alchemical up-4g
+./scripts/alchemical up-8g
+```
+
+Default model suggestion by profile:
+- `2g` → `tinyllama:1.1b`
+- `4g` → `phi3:mini`
+- `8g` → `qwen2.5:3b`
+- `16g`/`32g` → `phi3:mini` (you can override with `--model`)
 
 ---
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOMAIN="localhost"
-PROFILE="standard"
+PROFILE="4g"
 OLLAMA_MODEL="phi3:mini"
 NO_PULL=0
 WIZARD=0
@@ -11,12 +11,40 @@ log(){ printf "\033[1;36m[alchemical]\033[0m %s\n" "$*"; }
 warn(){ printf "\033[1;33m[warn]\033[0m %s\n" "$*"; }
 err(){ printf "\033[1;31m[error]\033[0m %s\n" "$*"; }
 
+profile_services() {
+  case "$1" in
+    2g)  echo "caddy redis chromadb ollama alchemical-gateway velktharion synapsara" ;;
+    4g)  echo "caddy redis chromadb ollama alchemical-gateway velktharion synapsara kryonexus ignivox" ;;
+    8g)  echo "caddy redis chromadb ollama alchemical-gateway velktharion synapsara kryonexus ignivox auralith resonvyr" ;;
+    16g|32g) echo "all" ;;
+    *) return 1 ;;
+  esac
+}
+
+default_model_for_profile() {
+  case "$1" in
+    2g) echo "tinyllama:1.1b" ;;
+    4g) echo "phi3:mini" ;;
+    8g) echo "qwen2.5:3b" ;;
+    16g|32g) echo "phi3:mini" ;;
+    *) echo "phi3:mini" ;;
+  esac
+}
+
+validate_profile() {
+  case "$1" in
+    2g|4g|8g|16g|32g) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 usage(){
   cat <<USAGE
 Usage: bash infra/scripts/install.sh [options]
   --domain <domain>          Domain for reverse proxy (default: localhost)
-  --profile <standard|min>   Compose profile hint (default: standard)
-  --model <ollama-model>     Ollama model to pull (default: phi3:mini)
+  --profile <2g|4g|8g|16g|32g>
+                             RAM profile (default: 4g)
+  --model <ollama-model>     Ollama model to pull (default: profile-based)
   --no-pull                  Skip Ollama model pull
   --wizard                   Interactive wizard mode
   -h, --help                 Show this help
@@ -26,8 +54,8 @@ USAGE
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --domain) DOMAIN="${2:-}"; shift 2 ;;
-    --profile) PROFILE="${2:-standard}"; shift 2 ;;
-    --model) OLLAMA_MODEL="${2:-phi3:mini}"; shift 2 ;;
+    --profile) PROFILE="${2:-4g}"; shift 2 ;;
+    --model) OLLAMA_MODEL="${2:-}"; shift 2 ;;
     --no-pull) NO_PULL=1; shift ;;
     --wizard) WIZARD=1; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -35,17 +63,31 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if ! validate_profile "$PROFILE"; then
+  err "Invalid profile: $PROFILE (valid: 2g, 4g, 8g, 16g, 32g)"
+  exit 1
+fi
+
+if [[ -z "$OLLAMA_MODEL" ]]; then
+  OLLAMA_MODEL="$(default_model_for_profile "$PROFILE")"
+fi
+
 if [[ $WIZARD -eq 1 ]]; then
   echo
   echo "🜁 Alchemical Install Wizard"
   echo "----------------------------"
   read -r -p "Dominio [localhost]: " input_domain || true
   DOMAIN="${input_domain:-$DOMAIN}"
-  read -r -p "Perfil (standard|min) [${PROFILE}]: " input_profile || true
+  read -r -p "Perfil RAM (2g|4g|8g|16g|32g) [${PROFILE}]: " input_profile || true
   PROFILE="${input_profile:-$PROFILE}"
 
-  if [[ "$PROFILE" == "min" && "$OLLAMA_MODEL" == "phi3:mini" ]]; then
-    OLLAMA_MODEL="tinyllama:1.1b"
+  if ! validate_profile "$PROFILE"; then
+    warn "Perfil inválido, se mantiene: $PROFILE"
+    PROFILE="4g"
+  fi
+
+  if [[ "$OLLAMA_MODEL" == "phi3:mini" || -z "$OLLAMA_MODEL" ]]; then
+    OLLAMA_MODEL="$(default_model_for_profile "$PROFILE")"
   fi
 
   read -r -p "Modelo Ollama [${OLLAMA_MODEL}]: " input_model || true
@@ -73,11 +115,13 @@ ALCHEMICAL_MODEL=${OLLAMA_MODEL}
 ENV
 
 log "[4/6] Building and starting platform"
-if [[ "$PROFILE" == "min" ]]; then
-  log "Low-RAM profile activo (2GB target): core + gateway + 2 agentes"
-  docker compose up -d --build caddy redis chromadb ollama alchemical-gateway velktharion synapsara
-else
+SERVICES="$(profile_services "$PROFILE")"
+if [[ "$SERVICES" == "all" ]]; then
+  log "Profile ${PROFILE}: full stack"
   docker compose up -d --build
+else
+  log "Profile ${PROFILE}: ${SERVICES}"
+  docker compose up -d --build ${SERVICES}
 fi
 
 log "[5/6] Health check"
