@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 17:11:41 UTC**
+- Generated: **2026-02-24 17:45:16 UTC**
 - Branch: **main**
-- HEAD: **c6a47bc**
-- Last commit: **c6a47bc ops(project): prevent issue-seed loops by default and add robust tidy workflow (2026-02-24)**
+- HEAD: **6f383f3**
+- Last commit: **6f383f3 docs(ops): clarify safe project sync workflow and webhook security notes (2026-02-24)**
 
 ## Repository Metrics
 
