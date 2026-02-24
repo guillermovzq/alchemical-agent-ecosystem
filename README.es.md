@@ -244,6 +244,17 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./install.sh --domain localhost --profile 4g --model phi3:mini
 ```
 
+### Modo de instalación rápida (optimizado)
+
+```bash
+# omite build local y pull de modelo por defecto
+./install.sh --fast --profile 2g
+
+# vía CLI rápida
+./scripts/alchemical install-fast --profile 2g
+./scripts/alchemical up-fast
+```
+
 ---
 
 ## 🛠️ Comandos CLI

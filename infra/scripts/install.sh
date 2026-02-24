@@ -6,6 +6,9 @@ PROFILE="4g"
 OLLAMA_MODEL="phi3:mini"
 NO_PULL=0
 WIZARD=0
+FAST=0
+SKIP_BUILD=0
+PULL_FIRST=1
 
 log(){ printf "\033[1;36m[alchemical]\033[0m %s\n" "$*"; }
 warn(){ printf "\033[1;33m[warn]\033[0m %s\n" "$*"; }
@@ -91,6 +94,9 @@ Usage: bash infra/scripts/install.sh [options]
                              RAM profile (default: 4g)
   --model <ollama-model>     Ollama model to pull (default: profile-based)
   --no-pull                  Skip Ollama model pull
+  --fast                     Fast install mode (skip local build + skip model pull by default)
+  --skip-build               Start without --build (faster if images already available)
+  --no-image-pull            Skip docker compose pull prefetch
   --wizard                   Interactive wizard mode
   -h, --help                 Show this help
 USAGE
@@ -102,6 +108,9 @@ while [[ $# -gt 0 ]]; do
     --profile) PROFILE="${2:-4g}"; shift 2 ;;
     --model) OLLAMA_MODEL="${2:-}"; shift 2 ;;
     --no-pull) NO_PULL=1; shift ;;
+    --fast) FAST=1; SKIP_BUILD=1; NO_PULL=1; shift ;;
+    --skip-build) SKIP_BUILD=1; shift ;;
+    --no-image-pull) PULL_FIRST=0; shift ;;
     --wizard) WIZARD=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) err "Unknown arg: $1"; usage; exit 1 ;;
@@ -142,6 +151,10 @@ if [[ $WIZARD -eq 1 ]]; then
 
   read -r -p "Modelo Ollama [${OLLAMA_MODEL}]: " input_model || true
   OLLAMA_MODEL="${input_model:-$OLLAMA_MODEL}"
+  read -r -p "¿Modo rápido (sin build local y sin pull de modelo)? (y/N): " input_fast || true
+  if [[ "${input_fast:-N}" =~ ^[Yy]$ ]]; then FAST=1; SKIP_BUILD=1; NO_PULL=1; fi
+  read -r -p "¿Prefetch de imágenes docker antes de arrancar? (Y/n): " input_prefetch || true
+  if [[ "${input_prefetch:-Y}" =~ ^[Nn]$ ]]; then PULL_FIRST=0; fi
   read -r -p "¿Pull del modelo ahora? (Y/n): " input_pull || true
   if [[ "${input_pull:-Y}" =~ ^[Nn]$ ]]; then NO_PULL=1; fi
   echo
@@ -168,12 +181,29 @@ ENV
 
 log "[4/6] Building and starting platform"
 SERVICES="$(profile_services "$PROFILE")"
+
+if [[ $PULL_FIRST -eq 1 ]]; then
+  log "Prefetching docker images (faster startup after pull)"
+  if [[ "$SERVICES" == "all" ]]; then
+    docker compose pull --include-deps || warn "Prefetch pull had warnings"
+  else
+    docker compose pull --include-deps ${SERVICES} || warn "Prefetch pull had warnings"
+  fi
+fi
+
+UP_FLAGS="-d"
+if [[ $SKIP_BUILD -eq 0 ]]; then
+  UP_FLAGS="-d --build"
+fi
+
 if [[ "$SERVICES" == "all" ]]; then
   log "Profile ${PROFILE}: full stack"
-  docker compose up -d --build
+  # shellcheck disable=SC2086
+  docker compose up ${UP_FLAGS}
 else
   log "Profile ${PROFILE}: ${SERVICES}"
-  docker compose up -d --build ${SERVICES}
+  # shellcheck disable=SC2086
+  docker compose up ${UP_FLAGS} ${SERVICES}
 fi
 
 log "[5/6] Health check"
@@ -196,6 +226,8 @@ echo "Domain: ${DOMAIN}"
 echo "Profile: ${PROFILE}"
 echo "Model: ${OLLAMA_MODEL}"
 echo "Gateway token: configured (hidden)"
+echo "Fast mode: ${FAST}"
+echo "Skip build: ${SKIP_BUILD}"
 echo "Health checks:"
 echo "  curl http://localhost/velktharion/health"
 echo "  curl http://localhost/synapsara/health"
