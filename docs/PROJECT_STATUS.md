@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 16:44:21 UTC**
+- Generated: **2026-02-24 17:11:41 UTC**
 - Branch: **main**
-- HEAD: **b5c9ebe**
-- Last commit: **b5c9ebe ops(project): add comprehensive project hardening script for roadmap and delivery board (2026-02-24)**
+- HEAD: **c6a47bc**
+- Last commit: **c6a47bc ops(project): prevent issue-seed loops by default and add robust tidy workflow (2026-02-24)**
 
 ## Repository Metrics
 
