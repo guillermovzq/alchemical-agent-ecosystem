@@ -50,6 +50,9 @@ curl -fsS http://localhost/velktharion/health
 ## Notes
 
 - Gateway token is loaded from `.env` (`ALCHEMICAL_GATEWAY_TOKEN`).
+- Optional inbound webhook secrets:
+  - `ALCHEMICAL_TELEGRAM_WEBHOOK_SECRET`
+  - `ALCHEMICAL_DISCORD_WEBHOOK_SECRET`
 - Do not store raw secrets in connector records; use `token_ref` metadata.
 
 

@@ -17,7 +17,7 @@
 - `GET /gateway/connectors` — list connectors
 - `POST /gateway/connectors` — create/update connector config
 - `POST /gateway/connectors/send` — queue outbound message
-- `POST /gateway/connectors/webhook/{channel}` — ingest inbound payload
+- `POST /gateway/connectors/webhook/{channel}` — ingest inbound payload (Telegram/Discord normalization + optional webhook secret validation)
 
 ### Planning / dispatch
 - `GET /gateway/capabilities` — skills/tools/connectors catalog

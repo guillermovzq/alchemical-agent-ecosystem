@@ -48,6 +48,9 @@ GATEWAY_TOKEN = os.getenv("ALCHEMICAL_GATEWAY_TOKEN", "")
 ADMIN_ROLE = "admin"
 OPERATOR_ROLE = "operator"
 VIEWER_ROLE = "viewer"
+
+TELEGRAM_WEBHOOK_SECRET = os.getenv("ALCHEMICAL_TELEGRAM_WEBHOOK_SECRET", "")
+DISCORD_WEBHOOK_SECRET = os.getenv("ALCHEMICAL_DISCORD_WEBHOOK_SECRET", "")
 MAX_BODY_BYTES = int(os.getenv("ALCHEMICAL_MAX_BODY_BYTES", "262144"))
 RATE_LIMIT_PER_MIN = int(os.getenv("ALCHEMICAL_RATE_LIMIT_PER_MIN", "120"))
 ALLOWED_ORIGINS = [x.strip() for x in os.getenv("ALCHEMICAL_ALLOWED_ORIGINS", "*").split(",") if x.strip()]
@@ -439,6 +442,23 @@ def enqueue_job(kind: str, payload: Dict[str, Any], max_attempts: int = 5):
     )
 
 
+def normalize_inbound(channel: str, body: Dict[str, Any]) -> Dict[str, Any]:
+  if channel == "telegram":
+    msg = body.get("message") or body.get("edited_message") or {}
+    chat = msg.get("chat") or {}
+    text = msg.get("text") or msg.get("caption") or ""
+    sender = (msg.get("from") or {}).get("username") or str((msg.get("from") or {}).get("id", "unknown"))
+    return {"channel": channel, "from": sender, "target": str(chat.get("id", "")), "text": text, "raw": body}
+
+  if channel == "discord":
+    text = body.get("content", "")
+    sender = (body.get("author") or {}).get("username") or "unknown"
+    target = str(body.get("channel_id", ""))
+    return {"channel": channel, "from": sender, "target": target, "text": text, "raw": body}
+
+  return {"channel": channel, "from": str(body.get("from", "unknown")), "target": str(body.get("target", "")), "text": str(body.get("text", "")), "raw": body}
+
+
 def parse_ts(ts: Optional[str]) -> datetime:
   if not ts:
     return datetime.now(timezone.utc)
@@ -496,8 +516,11 @@ async def job_worker():
 
         append_chat(f"connector:{channel}", message, "connector")
       elif job["kind"] == "connector_inbound":
-        append_event("info", "connector", f"Inbound from {payload.get('channel')}:{payload.get('from')}")
-        append_chat(f"inbound:{payload.get('channel')}", payload.get("text", ""), "connector")
+        ch = payload.get('channel')
+        frm = payload.get('from')
+        txt = payload.get("text", "")
+        append_event("info", "connector", f"Inbound from {ch}:{frm}")
+        append_chat(f"inbound:{ch}", txt, "connector")
       else:
         append_event("warn", "jobs", f"Unknown job kind: {job['kind']}")
 
@@ -797,11 +820,21 @@ async def connector_send(payload: ConnectorSendRequest, request: Request):
 
 @app.post('/connectors/webhook/{channel}')
 async def connector_webhook(channel: str, body: Dict[str, Any], request: Request):
-  _require_auth(request, OPERATOR_ROLE)
   if channel not in CHANNEL_CONNECTORS:
     raise HTTPException(400, f"Unsupported channel: {channel}")
 
-  enqueue_job("connector_inbound", {"channel": channel, **body})
+  if channel == "telegram" and TELEGRAM_WEBHOOK_SECRET:
+    received = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+    if received != TELEGRAM_WEBHOOK_SECRET:
+      raise HTTPException(401, "Invalid telegram webhook secret")
+
+  if channel == "discord" and DISCORD_WEBHOOK_SECRET:
+    received = request.headers.get("X-Discord-Webhook-Secret", "")
+    if received != DISCORD_WEBHOOK_SECRET:
+      raise HTTPException(401, "Invalid discord webhook secret")
+
+  normalized = normalize_inbound(channel, body)
+  enqueue_job("connector_inbound", normalized)
   return {"ok": True, "accepted": True}
 
 
