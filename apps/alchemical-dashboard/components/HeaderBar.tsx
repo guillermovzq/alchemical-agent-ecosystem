@@ -32,22 +32,22 @@ export function HeaderBar() {
   }, []);
 
   return (
-    <header className="glass-card" style={{ margin: "12px 12px 0", padding: "12px 14px", position: "sticky", top: 12, zIndex: 20, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+    <header className="glass-card gradient-frame" style={{ margin: "12px 12px 0", padding: "12px 14px", position: "sticky", top: 12, zIndex: 20, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
       <div>
         <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 24 }}>Alchemical Control Panel</div>
-        <small style={{ color: "#9ca3af" }}>Local-first orchestration · Ollama + Redis + ChromaDB</small>
+        <small style={{ color: "#9ca3af" }}>Caldero local-first · Ollama + Redis + ChromaDB</small>
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 10px", borderRadius: 12, border: "1px solid rgba(255,255,255,.12)", background: "rgba(0,0,0,.24)", minWidth: 280 }}>
           <Command size={14} color="#67e8f9" />
-          <input aria-label="Buscar" placeholder="Buscar agentes, tareas, logs..." style={{ width: "100%", border: 0, outline: 0, background: "transparent", color: "#e2e8f0" }} />
+          <input aria-label="Buscar" placeholder="Invoca agentes, tareas, logs..." style={{ width: "100%", border: 0, outline: 0, background: "transparent", color: "#e2e8f0" }} />
         </div>
 
         <div style={{ display: "flex", gap: 8 }}>
           <div className="card metric"><Cpu size={14} /> <Meter label="CPU" value={m.cpu} color="#22d3ee" /></div>
           <div className="card metric"><MemoryStick size={14} /> <Meter label="RAM" value={m.ram} color="#a78bfa" /></div>
-          <div className="card metric"><CircleGauge size={14} /> <Meter label="GPU" value={m.gpu} color="#fbbf24" /></div>
+          <div className="card metric"><CircleGauge size={14} /> <Meter label="GPU" value={m.gpu} color="#34d399" /></div>
         </div>
 
         <button className="icon-btn" aria-label="Notificaciones"><Bell size={16} /></button>

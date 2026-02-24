@@ -30,7 +30,7 @@ export function Sidebar() {
   }, []);
 
   return (
-    <aside className="card" style={{ margin: 12, padding: 14, position: "sticky", top: 12, height: "calc(100vh - 24px)" }}>
+    <aside className="glass-card gradient-frame" style={{ margin: 12, padding: 14, position: "sticky", top: 12, height: "calc(100vh - 24px)" }}>
       <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 16 }}>
         <FlaskConical size={22} color="#22d3ee" />
         <strong style={{ fontFamily: "'Playfair Display', serif", fontSize: 18 }}>Alchemical</strong>
