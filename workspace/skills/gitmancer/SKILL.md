@@ -1,9 +1,9 @@
 ---
-name: github-alchemy-master
+name: gitmancer
 description: Create, structure, document, and maintain top-tier GitHub repositories with 2026 best practices. Use when a user asks for repo naming, folder architecture, README creation, governance files, CI workflows, release checklist, or long-term maintainer guidance.
 ---
 
-# GitHub Alchemy Master
+# gitmancer
 
 When invoked, produce a complete repository package with:
 1. Repository naming and topic recommendations.

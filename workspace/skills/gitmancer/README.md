@@ -1,12 +1,12 @@
-# GitHub Alchemy Master
+# gitmancer
 
 <p align="center">
-  <img src="./assets/branding/logo.svg" alt="GitHub Alchemy Master logo" width="96" />
+  <img src="./assets/branding/logo.svg" alt="gitmancer logo" width="96" />
 </p>
 
 ![Language](https://img.shields.io/badge/language-Markdown%20%2B%20Python-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![CI](https://img.shields.io/github/actions/workflow/status/smouj/githubalchemymaster/ci.yml?branch=main)
+![CI](https://img.shields.io/github/actions/workflow/status/smouj/gitmancer/ci.yml?branch=main)
 
 **Specialized skill + repository toolkit to bootstrap and maintain professional-grade GitHub repositories (2026 standards).**
 
