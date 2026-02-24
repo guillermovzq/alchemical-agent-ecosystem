@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OWNER="smouj"
+OWNER="@me"
 PROJECT_NUMBER="5"
 REPO="smouj/alchemical-agent-ecosystem"
 TITLE="Alchemical Agent Ecosystem — Roadmap & Delivery"
