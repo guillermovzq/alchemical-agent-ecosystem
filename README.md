@@ -198,7 +198,7 @@ Implemented now:
 | `/gateway/agents/{name}` | GET | Agent detail |
 | `/gateway/connectors` | GET/POST | List/upsert connectors |
 | `/gateway/connectors/send` | POST | Queue outbound connector message |
-| `/gateway/connectors/webhook/{channel}` | POST | Inbound connector webhook |
+| `/gateway/connectors/webhook/{channel}` | POST | Inbound webhook (Telegram/Discord normalized + optional secret validation) |
 | `/gateway/auth/keys` | GET/POST | List/create API keys (admin) |
 | `/gateway/auth/keys/{id}/disable` | POST | Disable API key (admin) |
 | `/gateway/jobs` | GET | Queue/job status |
@@ -278,8 +278,14 @@ cd /mnt/d/alchemical-agent-ecosystem
 # project/repo maintenance
 bash ops/project-maintenance.sh
 
-# sync project items with repo issues
+# sync project items with repo issues (safe default: link-only)
 bash ops/sync-project-with-repo.sh
+
+# optional roadmap seed (explicit)
+bash ops/sync-project-with-repo.sh seed
+
+# clean project noise/duplicates and re-link open issues
+bash ops/project-tidy.sh
 ```
 
 ---
@@ -350,8 +356,14 @@ Safe flow includes lock, backup, checks, deploy, smoke-tests.
 # project/repo maintenance
 bash ops/project-maintenance.sh
 
-# sync project items with repo issues
+# sync project items with repo issues (safe default: link-only)
 bash ops/sync-project-with-repo.sh
+
+# optional roadmap seed (explicit)
+bash ops/sync-project-with-repo.sh seed
+
+# clean project noise/duplicates and re-link open issues
+bash ops/project-tidy.sh
 ```
 
 ---

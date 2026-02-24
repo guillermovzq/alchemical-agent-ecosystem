@@ -59,7 +59,24 @@ curl -fsS http://localhost/velktharion/health
 ## Project synchronization
 
 ```bash
+# full maintenance cycle
 bash ops/project-maintenance.sh
+
+# safe sync only (no auto-seed)
+bash ops/sync-project-with-repo.sh
+
+# explicit seed only when requested
+bash ops/sync-project-with-repo.sh seed
+
+# cleanup duplicated/closed project noise and relink open issues
+bash ops/project-tidy.sh
 ```
 
-If `gh project` returns 401, refresh auth/scopes (`project`) and retry.
+If `gh project` returns 401, run:
+
+```bash
+unset GITHUB_TOKEN GH_TOKEN || true
+gh auth switch -u smouj
+```
+
+and retry (`gh auth refresh -s project` if scope is missing).

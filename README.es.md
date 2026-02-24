@@ -197,7 +197,7 @@ Implementado actualmente:
 | `/gateway/agents/{name}` | GET | Detalle de agente |
 | `/gateway/connectors` | GET/POST | Listado/upsert de conectores |
 | `/gateway/connectors/send` | POST | Encolar mensaje saliente de conector |
-| `/gateway/connectors/webhook/{channel}` | POST | Ingesta de webhook entrante |
+| `/gateway/connectors/webhook/{channel}` | POST | Ingesta webhook entrante (Telegram/Discord normalizado + validación opcional de secreto) |
 | `/gateway/auth/keys` | GET/POST | Listar/crear API keys (admin) |
 | `/gateway/auth/keys/{id}/disable` | POST | Desactivar API key (admin) |
 | `/gateway/jobs` | GET | Estado de cola/jobs |
@@ -277,8 +277,14 @@ cd /mnt/d/alchemical-agent-ecosystem
 # mantenimiento project/repo
 bash ops/project-maintenance.sh
 
-# sincronizar items del project con issues del repo
+# sincronizar items del project con issues del repo (default seguro: link-only)
 bash ops/sync-project-with-repo.sh
+
+# seed del roadmap (solo explícito)
+bash ops/sync-project-with-repo.sh seed
+
+# limpieza de ruido/duplicados + relink de issues abiertas
+bash ops/project-tidy.sh
 ```
 
 ---
@@ -349,8 +355,14 @@ Incluye lock, backup, checks, deploy y smoke-tests.
 # mantenimiento project/repo
 bash ops/project-maintenance.sh
 
-# sincronizar items del project con issues del repo
+# sincronizar items del project con issues del repo (default seguro: link-only)
 bash ops/sync-project-with-repo.sh
+
+# seed del roadmap (solo explícito)
+bash ops/sync-project-with-repo.sh seed
+
+# limpieza de ruido/duplicados + relink de issues abiertas
+bash ops/project-tidy.sh
 ```
 
 ---
