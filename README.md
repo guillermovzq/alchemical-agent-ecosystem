@@ -35,5 +35,28 @@ bash infra/scripts/install.sh --domain localhost
 curl -fsSL https://smouj.ai/install.sh | bash -s -- --domain your-domain.com
 ```
 
+## Alchemical Control Panel (Dashboard)
+Nuevo frontend premium (dark-only, glassmorphism + neumorphism sutil) para operar el ecosistema multi-agente local.
+
+**Ruta:** `apps/alchemical-dashboard`
+
+### Ejecutar (local)
+```bash
+cd /mnt/d/alchemical-agent-ecosystem/apps/alchemical-dashboard
+npm install
+npm run dev
+```
+
+### Mapa rápido
+- `app/layout.tsx` → shell principal (sidebar fija + header sticky)
+- `app/page.tsx` → home del dashboard
+- `app/globals.css` → tokens visuales 2026 + efectos glass/grain
+- `components/Sidebar.tsx` → navegación y estados Ollama/Redis/ChromaDB
+- `components/AgentCard.tsx` → tarjeta de agente
+- `components/CreateAgentWizard.tsx` → wizard 4 pasos + CTA "Transmutar Agente"
+- `components/AgentsTable.tsx` → tabla de gestión de agentes
+- `components/LogsMonitor.tsx` → panel terminal-like
+- `lib/mock-data.ts` → datos de ejemplo
+
 ## License
 MIT

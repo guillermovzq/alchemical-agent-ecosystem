@@ -1,0 +1,40 @@
+:root {
+  --bg: #0a0e17;
+  --panel: rgba(17, 24, 39, 0.62);
+  --panel-soft: rgba(124, 58, 237, 0.08);
+  --text: #f5f7ff;
+  --muted: #9ca3af;
+  --accent-1: #7c3aed;
+  --accent-2: #22d3ee;
+  --accent-3: #fbbf24;
+  --accent-4: #ec4899;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events:none; background: radial-gradient(circle at 15% 20%, rgba(124,58,237,.16), transparent 40%), radial-gradient(circle at 90% 10%, rgba(34,211,238,.13), transparent 33%); }
+.grain { position: fixed; inset: 0; pointer-events: none; opacity: .03; background-image: radial-gradient(#fff 0.5px, transparent 0.5px); background-size: 3px 3px; }
+.aura { position: fixed; filter: blur(80px); border-radius: 999px; pointer-events:none; opacity:.25; }
+.a1 { width: 420px; height: 420px; background: #7c3aed; top:-120px; left:-60px; }
+.a2 { width: 360px; height: 360px; background: #22d3ee; right:-80px; top:120px; }
+.shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.content { display:flex; flex-direction:column; }
+.page { padding: 1.1rem 1.2rem 1.6rem; }
+.glass-card, .card {
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border-radius: 18px;
+  box-shadow: 0 10px 32px rgba(0,0,0,.28);
+}
+.dashboard-grid { display:flex; flex-direction:column; gap: 1rem; }
+.widgets { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:.8rem; }
+.two-col { display:grid; grid-template-columns: 1.35fr .85fr; gap:1rem; }
+.stack { display:flex; flex-direction:column; gap:1rem; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent-2); outline-offset: 2px; box-shadow: 0 0 0 6px rgba(34,211,238,.16);
+}
+@media (max-width: 1200px) {
+  .shell { grid-template-columns: 1fr; }
+  .widgets, .two-col { grid-template-columns: 1fr; }
+}
