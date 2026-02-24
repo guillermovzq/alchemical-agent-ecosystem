@@ -33,6 +33,8 @@ cd /mnt/d/alchemical-agent-ecosystem
 ### CLI (one-command ops)
 ```bash
 ./scripts/alchemical doctor
+./scripts/alchemical setup-hooks
+./scripts/alchemical scan-secrets
 ./scripts/alchemical install --domain localhost --model phi3:mini
 ./scripts/alchemical up
 ./scripts/alchemical status

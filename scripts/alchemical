@@ -27,7 +27,9 @@ Commands:
   status                   Estado de servicios
   logs [service]           Logs en vivo (opcional: servicio)
   dashboard                Arranca dashboard (apps/alchemical-dashboard)
-  doctor                   Chequeo rápido de entorno
+  doctor                   Chequeo rápido de entorno + secret scan
+  scan-secrets             Escaneo manual de secretos en archivos trackeados
+  setup-hooks              Activa hook local pre-commit de seguridad
 
 Examples:
   ./scripts/alchemical wizard
@@ -41,6 +43,13 @@ doctor(){
   command -v docker >/dev/null && echo -e "${C_GREEN}✓ docker${C_RESET}" || echo "✗ docker missing"
   docker compose version >/dev/null 2>&1 && echo -e "${C_GREEN}✓ docker compose${C_RESET}" || echo "✗ docker compose missing"
   command -v node >/dev/null && echo -e "${C_GREEN}✓ node${C_RESET}" || echo -e "${C_YELLOW}• node missing (solo necesario para dashboard)${C_RESET}"
+  echo -e "${C_CYAN}Security${C_RESET}"
+  scripts/security/check-secrets.sh
+}
+
+setup_hooks(){
+  git config core.hooksPath .githooks
+  echo -e "${C_GREEN}✓ hooks activados (.githooks/pre-commit)${C_RESET}"
 }
 
 wizard(){
@@ -63,6 +72,8 @@ case "${1:-help}" in
     npm run dev
     ;;
   doctor) doctor ;;
+  scan-secrets) scripts/security/check-secrets.sh ;;
+  setup-hooks) setup_hooks ;;
   help|-h|--help) help ;;
   *) echo "Unknown command: $1"; help; exit 1 ;;
 esac
