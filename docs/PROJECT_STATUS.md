@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 13:26:46 UTC**
+- Generated: **2026-02-24 14:33:41 UTC**
 - Branch: **main**
-- HEAD: **ef01994**
-- Last commit: **ef01994 chore(ops): add go-beta checklist and project/repo maintenance automation scaffolding (2026-02-24)**
+- HEAD: **4577c74**
+- Last commit: **4577c74 feat(gateway+dashboard): add realtime usage/cost tracking, usage streams, and admin connector/key ops panel (2026-02-24)**
 
 ## Repository Metrics
 
@@ -15,8 +15,8 @@ _Auto-generated from repository state. Do not edit manually._
 |---|---:|
 | Runtime services | 10 |
 | Skills repos | 11 |
-| Dashboard API routes | 14 |
-| Gateway endpoints | 22 |
+| Dashboard API routes | 21 |
+| Gateway endpoints | 24 |
 
 ## Runtime Services (from /services)
 
