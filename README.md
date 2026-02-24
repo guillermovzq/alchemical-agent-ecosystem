@@ -1,4 +1,4 @@
-<h1 align="center">🜂 Alchemical Agent Ecosystem</h1>
+<h1 align="center">⚗️ Alchemical Agent Ecosystem</h1>
 
 <p align="center">
   <img src="./assets/branding/logo.svg" alt="Alchemical Agent Ecosystem Logo" width="180" />
@@ -47,6 +47,7 @@ It combines:
 - [📦 RAM Profiles](#-ram-profiles)
 - [🔒 Security Model](#-security-model)
 - [🔄 Update & Rollback](#-update--rollback)
+- [📚 Documentation Map](#-documentation-map)
 - [📁 Project Structure](#-project-structure)
 - [📌 Current Limitations](#-current-limitations)
 - [📜 License](#-license)
@@ -115,8 +116,8 @@ The gateway seeds 5 editable logical agents:
 
 | Agent | Mission |
 |---|---|
-| 🜂 Alquimista Mayor | Global orchestration, routing, quality gate |
-| 🜁 Investigador/Analista | Research, verification, source comparison |
+| 👑 Alquimista Mayor | Global orchestration, routing, quality gate |
+| 🔎 Investigador/Analista | Research, verification, source comparison |
 | 🔥 Ingeniero/Constructor | Code, integration, debugging, delivery |
 | 🎨 Creador Visual | UI/UX, branding, visual outputs |
 | ✍️ Redactor/Narrador | Copywriting, storytelling, SEO content |
@@ -265,6 +266,17 @@ Wizard auto-detects host RAM and suggests profile.
 - 🧹 Secret scanning (`./scripts/alchemical scan-secrets`)
 - 🪝 Pre-commit hook support (`setup-hooks`)
 - 🧾 Connectors store `token_ref` metadata (no raw secret policy)
+
+---
+
+## 📚 Documentation Map
+
+- `docs/README.md` — docs index and policy
+- `docs/ARCHITECTURE.md` — technical architecture
+- `docs/API_REFERENCE.md` — gateway + dashboard APIs
+- `docs/OPERATIONS_RUNBOOK.md` — update/rollback/runbook
+- `docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md` — roadmap
+- `docs/INTEGRATION_WORKPLAN.md` — integration plan
 
 ---
 

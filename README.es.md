@@ -209,7 +209,20 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical logs velktharion
 ./scripts/alchemical dashboard
 ./scripts/alchemical update
+./scripts/alchemical update-safe
+./scripts/alchemical rollback
 ```
+
+---
+
+## Mapa de documentación
+
+- `docs/README.md` — índice y política de documentación
+- `docs/ARCHITECTURE.md` — arquitectura técnica
+- `docs/API_REFERENCE.md` — referencia de APIs (gateway + dashboard)
+- `docs/OPERATIONS_RUNBOOK.md` — operaciones diarias, update y rollback
+- `docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md` — roadmap por fases
+- `docs/INTEGRATION_WORKPLAN.md` — plan de integración
 
 ---
 
