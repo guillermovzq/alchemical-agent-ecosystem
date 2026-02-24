@@ -1,10 +1,11 @@
 import json
+import os
 import asyncio
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import httpx
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -158,7 +159,8 @@ async def health():
 
 
 @app.get('/capabilities')
-async def capabilities():
+async def capabilities(request: Request):
+  _require_token(request)
   return {
     "skills": SKILLS_CATALOG,
     "tools": TOOLS_CATALOG,
@@ -169,14 +171,16 @@ async def capabilities():
 
 
 @app.get('/agents')
-async def list_agents():
+async def list_agents(request: Request):
+  _require_token(request)
   _ensure_registry_seeded()
   data = _read_json(AGENTS_REGISTRY, CORE_AGENT_TEMPLATES)
   return {"items": data, "count": len(data)}
 
 
 @app.post('/agents')
-async def register_agent(payload: AgentConfig):
+async def register_agent(payload: AgentConfig, request: Request):
+  _require_token(request)
   _ensure_registry_seeded()
   data = _read_json(AGENTS_REGISTRY, CORE_AGENT_TEMPLATES)
 
@@ -194,13 +198,15 @@ async def register_agent(payload: AgentConfig):
 
 
 @app.get('/connectors')
-async def list_connectors():
+async def list_connectors(request: Request):
+  _require_token(request)
   data = _read_json(CONNECTORS_REGISTRY, [])
   return {"items": data, "supported": CHANNEL_CONNECTORS}
 
 
 @app.post('/connectors')
-async def configure_connector(payload: ConnectorConfig):
+async def configure_connector(payload: ConnectorConfig, request: Request):
+  _require_token(request)
   if payload.channel not in CHANNEL_CONNECTORS:
     raise HTTPException(400, f"Unsupported channel: {payload.channel}")
 
@@ -218,7 +224,8 @@ async def configure_connector(payload: ConnectorConfig):
 
 
 @app.post('/chat/actions/plan')
-async def chat_action_plan(payload: ChatActionRequest):
+async def chat_action_plan(payload: ChatActionRequest, request: Request):
+  _require_token(request)
   plan = {
     "goal": payload.goal,
     "steps": [
@@ -246,6 +253,16 @@ class ChatMessage(BaseModel):
 CHAT_THREAD = RUNTIME_DIR / "chat.thread.json"
 
 
+GATEWAY_TOKEN = os.getenv("ALCHEMICAL_GATEWAY_TOKEN", "")
+
+def _require_token(request: Request):
+  if not GATEWAY_TOKEN:
+    return
+  token = request.headers.get("x-alchemy-token", "")
+  if token != GATEWAY_TOKEN:
+    raise HTTPException(401, "Invalid or missing gateway token")
+
+
 def _load_thread() -> List[Dict[str, Any]]:
   return _read_json(CHAT_THREAD, [])
 
@@ -255,14 +272,16 @@ def _save_thread(items: List[Dict[str, Any]]):
 
 
 @app.get('/chat/thread')
-async def chat_thread(limit: int = 100):
+async def chat_thread(request: Request, limit: int = 100):
+  _require_token(request)
   items = _load_thread()
   lim = max(1, min(limit, 500))
   return {"items": items[-lim:], "count": len(items)}
 
 
 @app.post('/chat/thread')
-async def chat_post(payload: ChatMessage):
+async def chat_post(payload: ChatMessage, request: Request):
+  _require_token(request)
   items = _load_thread()
   msg = payload.model_dump()
   msg["ts"] = __import__('datetime').datetime.utcnow().isoformat() + "Z"
@@ -275,7 +294,8 @@ async def chat_post(payload: ChatMessage):
 
 
 @app.get('/chat/stream')
-async def chat_stream(limit: int = 120):
+async def chat_stream(request: Request, limit: int = 120):
+  _require_token(request)
   async def event_gen():
     last_count = 0
     lim = max(1, min(limit, 500))
@@ -291,7 +311,8 @@ async def chat_stream(limit: int = 120):
   return StreamingResponse(event_gen(), media_type='text/event-stream')
 
 @app.post('/dispatch/{agent}/{action}')
-async def dispatch(agent: str, action: str, payload: Dict[str, Any]):
+async def dispatch(agent: str, action: str, payload: Dict[str, Any], request: Request):
+  _require_token(request)
   _ensure_registry_seeded()
   registry = _read_json(AGENTS_REGISTRY, CORE_AGENT_TEMPLATES)
   reg = next((a for a in registry if a.get("name") == agent), None)

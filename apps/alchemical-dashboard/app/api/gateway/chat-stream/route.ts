@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
 
+const gatewayHeaders = (): Record<string, string> => {
+  const token = process.env.ALCHEMICAL_GATEWAY_TOKEN || "";
+  const h: Record<string, string> = {};
+  if (token) h["x-alchemy-token"] = token;
+  return h;
+};
+
 export async function GET() {
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
@@ -8,7 +15,7 @@ export async function GET() {
       const send = (txt: string) => controller.enqueue(encoder.encode(txt));
       const loop = async () => {
         try {
-          const r = await fetch("http://localhost/gateway/chat/thread?limit=160", { cache: "no-store" });
+          const r = await fetch("http://localhost/gateway/chat/thread?limit=160", { cache: "no-store", headers: gatewayHeaders() });
           const j = await r.json();
           const payload = JSON.stringify(j);
           if (payload !== last) {

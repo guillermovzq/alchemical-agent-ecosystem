@@ -31,6 +31,30 @@ default_model_for_profile() {
   esac
 }
 
+
+
+resolve_gateway_token() {
+  if [[ -n "${ALCHEMICAL_GATEWAY_TOKEN:-}" ]]; then
+    echo "$ALCHEMICAL_GATEWAY_TOKEN"
+    return
+  fi
+  if [[ -f .env ]]; then
+    existing=$(grep -E '^ALCHEMICAL_GATEWAY_TOKEN=' .env | head -n1 | cut -d'=' -f2- || true)
+    if [[ -n "$existing" ]]; then
+      echo "$existing"
+      return
+    fi
+  fi
+  if command -v openssl >/dev/null 2>&1; then
+    openssl rand -hex 24
+  else
+    python3 - <<'PYN'
+import secrets
+print(secrets.token_hex(24))
+PYN
+  fi
+}
+
 validate_profile() {
   case "$1" in
     2g|4g|8g|16g|32g) return 0 ;;
@@ -125,6 +149,7 @@ fi
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
+GATEWAY_TOKEN="$(resolve_gateway_token)"
 
 log "[1/6] Preflight"
 command -v docker >/dev/null || { err "Docker missing"; exit 1; }
@@ -138,6 +163,7 @@ cat > .env <<ENV
 ALCHEMICAL_DOMAIN=${DOMAIN}
 ALCHEMICAL_PROFILE=${PROFILE}
 ALCHEMICAL_MODEL=${OLLAMA_MODEL}
+ALCHEMICAL_GATEWAY_TOKEN=${GATEWAY_TOKEN}
 ENV
 
 log "[4/6] Building and starting platform"
@@ -169,6 +195,7 @@ echo "✅ Alchemical ecosystem ready"
 echo "Domain: ${DOMAIN}"
 echo "Profile: ${PROFILE}"
 echo "Model: ${OLLAMA_MODEL}"
+echo "Gateway token: configured (hidden)"
 echo "Health checks:"
 echo "  curl http://localhost/velktharion/health"
 echo "  curl http://localhost/synapsara/health"

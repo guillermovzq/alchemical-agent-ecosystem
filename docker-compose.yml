@@ -101,6 +101,10 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     container_name: alchemical-gateway
+    environment:
+      - ALCHEMICAL_GATEWAY_TOKEN=${ALCHEMICAL_GATEWAY_TOKEN}
+    volumes:
+      - ./.runtime:/app/.runtime
     networks: [alchemical-net]
 
   fluxenrath:

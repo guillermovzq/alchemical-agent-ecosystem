@@ -167,6 +167,7 @@ Path: `apps/alchemical-dashboard`
 | `/api/gateway/agents` | GET/POST | Agent/subagent registry |
 | `/api/gateway/chat-thread` | GET/POST | Shared chat thread between operator and agents |
 | `/api/gateway/chat-stream` | GET (SSE) | Real-time thread updates over Server-Sent Events |
+| Gateway auth | Header `x-alchemy-token` | Tokenized access for gateway endpoints |
 | `/api/gateway/connectors` | GET/POST | Connector registry (Telegram/WhatsApp/Discord/...) |
 | `/api/logs/stream` | GET (SSE) | Real-time service logs over Server-Sent Events |
 
@@ -195,6 +196,7 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical status
 ./scripts/alchemical logs velktharion
 ./scripts/alchemical dashboard
+./scripts/alchemical update
 ```
 
 ---

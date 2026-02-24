@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Capabilities = {
   skills: string[];
@@ -24,6 +24,8 @@ export function ChatWorkbench() {
   const [msg, setMsg] = useState("");
   const [chatText, setChatText] = useState("Actualizar estado y coordinar agentes");
   const [thread, setThread] = useState<Array<{ sender: string; text: string; ts?: string; kind?: string }>>([]);
+  const [conn, setConn] = useState<"connected"|"disconnected"|"connecting">("connecting");
+  const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
     fetch("/api/gateway/capabilities", { cache: "no-store" })
@@ -36,8 +38,13 @@ export function ChatWorkbench() {
       }));
   }, []);
 
-  useEffect(() => {
+  const connectStream = () => {
+    if (esRef.current) esRef.current.close();
+    setConn("connecting");
     const es = new EventSource("/api/gateway/chat-stream");
+    esRef.current = es;
+    es.onopen = () => setConn("connected");
+    es.onerror = () => setConn("disconnected");
     es.onmessage = (ev) => {
       try {
         const payload = JSON.parse(ev.data);
@@ -46,7 +53,22 @@ export function ChatWorkbench() {
         // ignore invalid frame
       }
     };
-    return () => es.close();
+  };
+
+  const disconnectStream = () => {
+    if (esRef.current) esRef.current.close();
+    esRef.current = null;
+    setConn("disconnected");
+  };
+
+  const reconnectStream = () => {
+    disconnectStream();
+    connectStream();
+  };
+
+  useEffect(() => {
+    connectStream();
+    return () => disconnectStream();
   }, []);
 
   const subagentList = useMemo(() => subagents.split(",").map((x) => x.trim()).filter(Boolean), [subagents]);
@@ -143,7 +165,15 @@ export function ChatWorkbench() {
       </div>
       <button className="card" style={{ padding: "8px 10px", marginTop: 8 }} onClick={saveConnector}>Guardar conector</button>
 
-      <h4 style={{ margin: "14px 0 6px" }}>Chat compartido (agentes + operador)</h4>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
+        <h4 style={{ margin: "0 0 6px" }}>Chat compartido (agentes + operador)</h4>
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <small style={{ color: conn === "connected" ? "#34d399" : conn === "connecting" ? "#fbbf24" : "#fb7185" }}>{conn}</small>
+          <button className="card" style={{ padding: "6px 8px" }} onClick={connectStream}>Connect</button>
+          <button className="card" style={{ padding: "6px 8px" }} onClick={reconnectStream}>Reconnect</button>
+          <button className="card" style={{ padding: "6px 8px" }} onClick={disconnectStream}>Disconnect</button>
+        </div>
+      </div>
       <div style={{ display: "flex", gap: 8 }}>
         <input value={chatText} onChange={(e) => setChatText(e.target.value)} placeholder="Escribe al ecosistema..." style={field} />
         <button className="card" style={{ padding: "8px 10px" }} onClick={postChat}>Enviar</button>
