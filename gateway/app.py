@@ -34,8 +34,14 @@ MAP = {
   "fluxenrath": "http://fluxenrath:7410",
 }
 
-RUNTIME_DIR = Path("/app/.runtime")
-RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+_runtime_env = os.getenv("ALCHEMICAL_RUNTIME_DIR", ".runtime")
+RUNTIME_DIR = Path(_runtime_env)
+try:
+  RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+except PermissionError:
+  # CI/readonly fallback
+  RUNTIME_DIR = Path("/tmp/alchemical-runtime")
+  RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = RUNTIME_DIR / "gateway.db"
 
 GATEWAY_TOKEN = os.getenv("ALCHEMICAL_GATEWAY_TOKEN", "")

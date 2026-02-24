@@ -1,9 +1,13 @@
 from pathlib import Path
+import os
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+# ensure gateway runtime path is writable in CI/import time
+os.environ.setdefault("ALCHEMICAL_RUNTIME_DIR", "/tmp/alchemical-runtime-test")
 
 from fastapi.testclient import TestClient  # noqa: E402
 import gateway.app as gw  # noqa: E402
