@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 19:17:52 UTC**
+- Generated: **2026-02-24 19:37:01 UTC**
 - Branch: **main**
-- HEAD: **c42b5f2**
-- Last commit: **c42b5f2 docs(status): auto-sync project snapshot (2026-02-24)**
+- HEAD: **8478dda**
+- Last commit: **8478dda feat(gateway+ui): enable agent-interactive chat, fix sidebar navigation, and reduce SSE polling load (2026-02-24)**
 
 ## Repository Metrics
 
@@ -15,8 +15,8 @@ _Auto-generated from repository state. Do not edit manually._
 |---|---:|
 | Runtime services | 10 |
 | Skills repos | 11 |
-| Dashboard API routes | 21 |
-| Gateway endpoints | 24 |
+| Dashboard API routes | 22 |
+| Gateway endpoints | 25 |
 
 ## Runtime Services (from /services)
 
