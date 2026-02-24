@@ -14,6 +14,13 @@ log(){ printf "\033[1;36m[alchemical]\033[0m %s\n" "$*"; }
 warn(){ printf "\033[1;33m[warn]\033[0m %s\n" "$*"; }
 err(){ printf "\033[1;31m[error]\033[0m %s\n" "$*"; }
 
+banner(){
+  echo
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "⚗️  Alchemical Installer · local-first runtime bootstrap"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+}
+
 profile_services() {
   case "$1" in
     2g)  echo "caddy redis chromadb ollama alchemical-gateway velktharion synapsara" ;;
@@ -117,6 +124,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+banner
+
 if ! validate_profile "$PROFILE"; then
   err "Invalid profile: $PROFILE (valid: 2g, 4g, 8g, 16g, 32g)"
   exit 1
@@ -131,7 +140,7 @@ SUGGESTED_PROFILE="$(suggest_profile_for_ram "$HOST_RAM_GB")"
 
 if [[ $WIZARD -eq 1 ]]; then
   echo
-  echo "🜁 Alchemical Install Wizard"
+  echo "🧙 Alchemical Install Wizard"
   echo "----------------------------"
   read -r -p "Dominio [localhost]: " input_domain || true
   DOMAIN="${input_domain:-$DOMAIN}"
@@ -140,7 +149,9 @@ if [[ $WIZARD -eq 1 ]]; then
   read -r -p "Perfil RAM (2g|4g|8g|16g|32g) [${SUGGESTED_PROFILE}]: " input_profile || true
   PROFILE="${input_profile:-$SUGGESTED_PROFILE}"
 
-  if ! validate_profile "$PROFILE"; then
+  banner
+
+if ! validate_profile "$PROFILE"; then
     warn "Perfil inválido, usando sugerido: ${SUGGESTED_PROFILE}"
     PROFILE="$SUGGESTED_PROFILE"
   fi
@@ -158,6 +169,14 @@ if [[ $WIZARD -eq 1 ]]; then
   read -r -p "¿Pull del modelo ahora? (Y/n): " input_pull || true
   if [[ "${input_pull:-Y}" =~ ^[Nn]$ ]]; then NO_PULL=1; fi
   echo
+  echo "Summary (wizard selection):"
+  printf "  %-14s %s\n" "Domain" "$DOMAIN"
+  printf "  %-14s %s\n" "Profile" "$PROFILE"
+  printf "  %-14s %s\n" "Model" "$OLLAMA_MODEL"
+  printf "  %-14s %s\n" "Fast mode" "$FAST"
+  printf "  %-14s %s\n" "Skip build" "$SKIP_BUILD"
+  printf "  %-14s %s\n" "Image prefetch" "$PULL_FIRST"
+  printf "  %-14s %s\n" "Pull model" "$((1-NO_PULL))"
 fi
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"

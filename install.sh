@@ -9,5 +9,5 @@ if [[ ! -f infra/scripts/install.sh ]]; then
   exit 1
 fi
 
-echo "🜂 Alchemical one-command installer"
+echo "✨ Alchemical one-command installer"
 exec bash infra/scripts/install.sh "$@"
