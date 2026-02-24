@@ -41,6 +41,6 @@
   }
 
   handle {
-    respond 200 "Alchemical Agent Ecosystem is running"
+    respond "Alchemical Agent Ecosystem is running" 200
   }
 }
