@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 17:54:51 UTC**
-- Branch: ****
-- HEAD: **0eb2650**
-- Last commit: **0eb2650 docs(status): auto-sync project snapshot (2026-02-24)**
+- Generated: **2026-02-24 17:55:13 UTC**
+- Branch: **main**
+- HEAD: **0f12588**
+- Last commit: **0f12588 docs(architecture): redesign system map with layered flows, security boundaries, and invariants (2026-02-24)**
 
 ## Repository Metrics
 
