@@ -22,6 +22,8 @@ export function ChatWorkbench() {
   const [connector, setConnector] = useState("telegram");
   const [tokenRef, setTokenRef] = useState("telegram_bot_token_ref");
   const [msg, setMsg] = useState("");
+  const [chatText, setChatText] = useState("Actualizar estado y coordinar agentes");
+  const [thread, setThread] = useState<Array<{sender:string;text:string;ts?:string;kind?:string}>>([]);
 
   useEffect(() => {
     fetch("/api/gateway/capabilities", { cache: "no-store" })
@@ -72,6 +74,38 @@ export function ChatWorkbench() {
     setMsg(res.ok ? "Conector guardado" : "Error guardando conector");
   };
 
+
+
+  const loadThread = async () => {
+    const r = await fetch("/api/gateway/chat-thread?limit=120", { cache: "no-store" });
+    const j = await r.json();
+    setThread(j.items ?? []);
+  };
+
+  useEffect(() => {
+    loadThread();
+    const id = setInterval(loadThread, 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  const postChat = async () => {
+    await fetch("/api/gateway/chat-thread", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ sender: "operator", text: chatText, kind: "human" }),
+    });
+    setChatText("");
+    loadThread();
+  };
+
+  const simulateAgents = async () => {
+    await fetch("/api/gateway/chat-simulate", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ goal: goal || "sync-status" }),
+    });
+    loadThread();
+  };
   return (
     <section className="glass-card" style={{ padding: 14 }}>
       <h3 style={{ marginTop: 0 }}>Gateway Chat Workbench</h3>
@@ -99,6 +133,7 @@ export function ChatWorkbench() {
 
       <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
         <button className="cta" onClick={createPlan}>Generar plan</button>
+        <button className="card" style={{ padding: "8px 10px" }} onClick={simulateAgents}>Simular charla de agentes</button>
       </div>
 
       {plan && <pre style={pre}>{JSON.stringify(plan, null, 2)}</pre>}
@@ -118,6 +153,22 @@ export function ChatWorkbench() {
         <input value={tokenRef} onChange={(e) => setTokenRef(e.target.value)} placeholder="token_ref (referencia segura)" style={field} />
       </div>
       <button className="card" style={{ padding: "8px 10px", marginTop: 8 }} onClick={saveConnector}>Guardar conector</button>
+
+      <h4 style={{ margin: "14px 0 6px" }}>Chat compartido (agentes + operador)</h4>
+      <div style={{ display: "flex", gap: 8 }}>
+        <input value={chatText} onChange={(e) => setChatText(e.target.value)} placeholder="Escribe al ecosistema..." style={field} />
+        <button className="card" style={{ padding: "8px 10px" }} onClick={postChat}>Enviar</button>
+      </div>
+      <div style={{ marginTop: 8, maxHeight: 220, overflow: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,.1)", background: "#020617", padding: 10 }}>
+        {thread.length === 0 && <div style={{ color: "#64748b" }}>Sin mensajes todavía.</div>}
+        {thread.map((m, i) => (
+          <div key={`${i}-${m.ts || "x"}`} style={{ padding: "4px 0", borderBottom: "1px dashed rgba(255,255,255,.06)" }}>
+            <strong style={{ color: m.kind === "agent" ? "#22d3ee" : "#fbbf24" }}>{m.sender}</strong>
+            <span style={{ color: "#94a3b8", fontSize: 11 }}> {m.ts || ""}</span>
+            <div style={{ color: "#e2e8f0" }}>{m.text}</div>
+          </div>
+        ))}
+      </div>
 
       {msg && <div style={{ marginTop: 10, color: "#67e8f9", fontSize: 13 }}>{msg}</div>}
     </section>

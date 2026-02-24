@@ -169,6 +169,61 @@ async def chat_action_plan(payload: ChatActionRequest):
   return {"ok": True, "plan": plan}
 
 
+
+
+class ChatMessage(BaseModel):
+  sender: str = Field(min_length=2, max_length=64)
+  text: str = Field(min_length=1, max_length=4000)
+  kind: str = Field(default="message")
+
+CHAT_THREAD = RUNTIME_DIR / "chat.thread.json"
+
+
+def _load_thread() -> List[Dict[str, Any]]:
+  return _read_json(CHAT_THREAD, [])
+
+
+def _save_thread(items: List[Dict[str, Any]]):
+  _write_json(CHAT_THREAD, items[-500:])
+
+
+@app.get('/chat/thread')
+async def chat_thread(limit: int = 100):
+  items = _load_thread()
+  lim = max(1, min(limit, 500))
+  return {"items": items[-lim:], "count": len(items)}
+
+
+@app.post('/chat/thread')
+async def chat_post(payload: ChatMessage):
+  items = _load_thread()
+  msg = payload.model_dump()
+  msg["ts"] = __import__('datetime').datetime.utcnow().isoformat() + "Z"
+  items.append(msg)
+  _save_thread(items)
+  return {"ok": True, "item": msg}
+
+
+@app.post('/chat/simulate')
+async def chat_simulate(goal: str = "sync-status"):
+  participants = ["orchestrator", "velktharion", "synapsara", "kryonexus"]
+  lines = [
+    f"Objective received: {goal}",
+    "Checking system health and active services",
+    "Routing subtasks and collecting outputs",
+    "Merging responses into final action plan",
+  ]
+  items = _load_thread()
+  for i, line in enumerate(lines):
+    items.append({
+      "sender": participants[i % len(participants)],
+      "text": line,
+      "kind": "agent",
+      "ts": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+    })
+  _save_thread(items)
+  return {"ok": True, "added": len(lines)}
+
 @app.post('/dispatch/{agent}/{action}')
 async def dispatch(agent: str, action: str, payload: Dict[str, Any]):
   base = MAP.get(agent)
