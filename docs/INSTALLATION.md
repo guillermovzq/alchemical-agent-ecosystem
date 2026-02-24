@@ -65,7 +65,18 @@ docker compose up -d caddy
 - Caddy path: `http://localhost`
 - Next dev dashboard (if running `./scripts/alchemical dashboard`): `http://localhost:3000`
 
-## 7) Canonical docs after install
+## 7) Desktop shortcut (Linux/WSL GUI)
+
+Create a launcher icon on your desktop:
+
+```bash
+chmod +x ops/create-desktop-shortcut.sh
+bash ops/create-desktop-shortcut.sh
+```
+
+This launcher starts fast runtime + dashboard in one click.
+
+## 8) Canonical docs after install
 
 - `API_REFERENCE.md` for endpoint details
 - `OPERATIONS_RUNBOOK.md` for update/rollback and maintenance
