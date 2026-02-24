@@ -1,7 +1,7 @@
 <h1 align="center">⚗️ Alchemical Agent Ecosystem</h1>
 
 <p align="center">
-  <img src="./assets/branding/logo.svg" alt="Alchemical Agent Ecosystem Logo" width="180" />
+  <img src="./assets/branding/variants/logo-horizontal.svg" alt="Alchemical Agent Ecosystem Logo" width="760" />
 </p>
 
 <p align="center"><em>Local-first multi-agent platform · self-hosted · modular · production-minded</em></p>
@@ -301,6 +301,7 @@ Wizard auto-detects host RAM and suggests profile.
 - [`docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md`](./docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md) — roadmap
 - [`docs/INTEGRATION_WORKPLAN.md`](./docs/INTEGRATION_WORKPLAN.md) — integration plan
 - [`docs/RELEASE_PLAN.md`](./docs/RELEASE_PLAN.md) — release strategy and versioning
+- [`docs/BRANDING.md`](./docs/BRANDING.md) — logo usage and export guidance
 
 ---
 

@@ -1,7 +1,7 @@
 <h1 align="center">Alchemical Agent Ecosystem</h1>
 
 <p align="center">
-  <img src="./assets/branding/logo.svg" alt="Logo de Alchemical Agent Ecosystem" width="180" />
+  <img src="./assets/branding/variants/logo-horizontal.svg" alt="Logo de Alchemical Agent Ecosystem" width="180" />
 </p>
 
 <p align="center">
@@ -233,6 +233,7 @@ cd /mnt/d/alchemical-agent-ecosystem
 - `docs/ALCHEMICAL_ECOSYSTEM_ROADMAP.md` — roadmap por fases
 - `docs/INTEGRATION_WORKPLAN.md` — plan de integración
 - `docs/RELEASE_PLAN.md` — estrategia de releases y versionado
+- `docs/BRANDING.md` — guía de uso/exportación del logo
 
 ---
 
