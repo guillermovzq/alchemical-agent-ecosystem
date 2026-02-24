@@ -4,7 +4,7 @@ This folder contains the canonical technical and operational documentation for *
 
 ## Core documents
 
-- `ARCHITECTURE.md` — concise architecture summary
+- `ARCHITECTURE.md` — canonical architecture map (layers, flows, security boundaries, invariants)
 - `ALCHEMICAL_ECOSYSTEM_ROADMAP.md` — roadmap by phases
 - `INTEGRATION_WORKPLAN.md` — integration plan and execution sequence
 - `API_REFERENCE.md` — gateway and dashboard API endpoints
