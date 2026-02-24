@@ -126,6 +126,5 @@ bash ops/ritual-sync.sh
 
 ---
 
-## 📄 Licencia
-
-MIT
+## License
+MIT © 2026 **by:** [@Smouj013](https://x.com/smouj013)
