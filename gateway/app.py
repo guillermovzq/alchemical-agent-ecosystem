@@ -204,25 +204,6 @@ async def chat_post(payload: ChatMessage):
   return {"ok": True, "item": msg}
 
 
-@app.post('/chat/simulate')
-async def chat_simulate(goal: str = "sync-status"):
-  participants = ["orchestrator", "velktharion", "synapsara", "kryonexus"]
-  lines = [
-    f"Objective received: {goal}",
-    "Checking system health and active services",
-    "Routing subtasks and collecting outputs",
-    "Merging responses into final action plan",
-  ]
-  items = _load_thread()
-  for i, line in enumerate(lines):
-    items.append({
-      "sender": participants[i % len(participants)],
-      "text": line,
-      "kind": "agent",
-      "ts": __import__('datetime').datetime.utcnow().isoformat() + "Z",
-    })
-  _save_thread(items)
-  return {"ok": True, "added": len(lines)}
 
 @app.post('/dispatch/{agent}/{action}')
 async def dispatch(agent: str, action: str, payload: Dict[str, Any]):
@@ -230,9 +211,33 @@ async def dispatch(agent: str, action: str, payload: Dict[str, Any]):
   if not base:
     raise HTTPException(404, f"Unknown agent: {agent}")
   url = f"{base}/{action}"
+
+  thread = _load_thread()
+  thread.append({
+    "sender": "orchestrator",
+    "kind": "dispatch",
+    "ts": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+    "text": f"Dispatch -> {agent}/{action}",
+  })
+
   async with httpx.AsyncClient(timeout=30) as cli:
     try:
       r = await cli.post(url, json=payload)
-      return {"agent": agent, "action": action, "status": r.status_code, "result": r.json()}
+      result = r.json()
+      thread.append({
+        "sender": agent,
+        "kind": "agent",
+        "ts": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+        "text": f"Response status={r.status_code} for action={action}",
+      })
+      _save_thread(thread)
+      return {"agent": agent, "action": action, "status": r.status_code, "result": result}
     except Exception as e:
+      thread.append({
+        "sender": agent,
+        "kind": "error",
+        "ts": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+        "text": f"Dispatch error on action={action}: {e}",
+      })
+      _save_thread(thread)
       raise HTTPException(502, f"Dispatch error: {e}")

@@ -98,14 +98,6 @@ export function ChatWorkbench() {
     loadThread();
   };
 
-  const simulateAgents = async () => {
-    await fetch("/api/gateway/chat-simulate", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ goal: goal || "sync-status" }),
-    });
-    loadThread();
-  };
   return (
     <section className="glass-card" style={{ padding: 14 }}>
       <h3 style={{ marginTop: 0 }}>Gateway Chat Workbench</h3>
@@ -133,7 +125,6 @@ export function ChatWorkbench() {
 
       <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
         <button className="cta" onClick={createPlan}>Generar plan</button>
-        <button className="card" style={{ padding: "8px 10px" }} onClick={simulateAgents}>Simular charla de agentes</button>
       </div>
 
       {plan && <pre style={pre}>{JSON.stringify(plan, null, 2)}</pre>}
