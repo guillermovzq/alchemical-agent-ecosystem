@@ -31,6 +31,8 @@ Commands:
   logs [service]           Logs en vivo (opcional: servicio)
   dashboard                Arranca dashboard (apps/alchemical-dashboard)
   update                   Actualiza desde origin/main y recompone stack
+  update-safe              Actualización segura con checks + smoke tests + backup
+  rollback                 Rollback al último commit bueno desplegado
   doctor                   Chequeo rápido de entorno + secret scan
   scan-secrets             Escaneo manual de secretos en archivos trackeados
   setup-hooks              Activa hook local pre-commit de seguridad
@@ -40,6 +42,8 @@ Examples:
   ./scripts/alchemical install --domain localhost --profile 4g --model phi3:mini
   ./scripts/alchemical up-2g
   ./scripts/alchemical update
+  ./scripts/alchemical update-safe
+  ./scripts/alchemical rollback
   ./scripts/alchemical dashboard
 TXT
 }
@@ -87,6 +91,12 @@ case "${1:-help}" in
     git fetch origin main
     git pull --rebase origin main
     docker compose up -d --build
+    ;;
+  update-safe)
+    bash ops/update-safe.sh
+    ;;
+  rollback)
+    bash ops/rollback.sh
     ;;
   doctor) doctor ;;
   scan-secrets) scripts/security/check-secrets.sh ;;

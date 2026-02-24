@@ -132,7 +132,7 @@ By default, gateway seeds 5 editable logical agents:
 | Component | Purpose |
 |---|---|
 | Caddy | Reverse proxy / entrypoint |
-| alchemical-gateway | Orchestration and registries API |
+| alchemical-gateway | Orchestration, registries, auth, jobs queue, chat/events persistence API |
 | Redis | Fast key-value runtime layer |
 | ChromaDB | Vector storage layer |
 | Ollama | Local model serving |
@@ -181,6 +181,9 @@ Current implemented features:
 | `/api/gateway/chat-plan` | POST | Chat planning action |
 | `/api/gateway/chat-thread` | GET/POST | Shared thread |
 | `/api/gateway/chat-stream` | GET (SSE) | Real-time thread stream |
+| `/gateway/connectors/send` | POST | Queue outbound connector message (retry-enabled) |
+| `/gateway/connectors/webhook/{channel}` | POST | Inbound connector webhook ingestion |
+| `/gateway/jobs` | GET | Queue status and job lifecycle |
 
 ### Gateway auth
 
@@ -210,6 +213,8 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical logs velktharion
 ./scripts/alchemical dashboard
 ./scripts/alchemical update
+./scripts/alchemical update-safe
+./scripts/alchemical rollback
 ```
 
 ---
@@ -259,16 +264,31 @@ Recommended before push:
 
 ## 10) Update workflow
 
-To sync with official GitHub repository and rebuild runtime:
+Quick sync:
 
 ```bash
 ./scripts/alchemical update
 ```
 
-Current behavior:
-1. `git fetch origin main`
-2. `git pull --rebase origin main`
-3. `docker compose up -d --build`
+Safe sync (recommended):
+
+```bash
+./scripts/alchemical update-safe
+```
+
+Rollback to last good deployed commit:
+
+```bash
+./scripts/alchemical rollback
+```
+
+`update-safe` behavior:
+1. lock to avoid concurrent runs,
+2. backup runtime + store last-good commit,
+3. fetch/rebase,
+4. security + build checks,
+5. deploy,
+6. smoke tests (`/gateway/health`, `/velktharion/health`).
 
 ---
 
