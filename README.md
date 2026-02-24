@@ -55,78 +55,57 @@ It combines:
 
 ## 🏗️ Architecture
 
-### High-level topology (2026 format)
-
-```mermaid
-flowchart TB
-  U[Operator / API Client] --> D[Alchemical Dashboard
-Next.js Control Plane]
-  U --> C[Caddy Reverse Proxy :80]
-
-  D -->|SSE / REST| C
-
-  subgraph Core[Core Platform]
-    C --> G[alchemical-gateway
-FastAPI + SQLite + Queue Worker]
-    G --> R[(Redis)]
-    G --> V[(ChromaDB)]
-    G --> O[(Ollama)]
-  end
-
-  subgraph Runtime[Execution Backends :7401-7410]
-    S1[velktharion]
-    S2[synapsara]
-    S3[kryonexus]
-    S4[noctumbra-mail]
-    S5[temporaeth]
-    S6[vaeloryn-conclave]
-    S7[ignivox]
-    S8[auralith]
-    S9[resonvyr]
-    S10[fluxenrath]
-  end
-
-  G -->|dispatch| S1
-  G -->|dispatch| S2
-  G -->|dispatch| S3
-  G -->|dispatch| S4
-  G -->|dispatch| S5
-  G -->|dispatch| S6
-  G -->|dispatch| S7
-  G -->|dispatch| S8
-  G -->|dispatch| S9
-  G -->|dispatch| S10
-```
-
-### Layered architecture view
+### Simple ecosystem map (clear + modern)
 
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│ L4 — Experience Layer                                       │
-│ Dashboard UI (Next.js): control, chat, logs, canvas, config │
-├──────────────────────────────────────────────────────────────┤
-│ L3 — Orchestration Layer                                    │
-│ Gateway (FastAPI): auth, RBAC, agents registry, connectors, │
-│ jobs queue, events, chat thread, planning, dispatch         │
-├──────────────────────────────────────────────────────────────┤
-│ L2 — Execution Layer                                        │
-│ FastAPI runtime services (7401..7410) targetable per agent  │
-├──────────────────────────────────────────────────────────────┤
-│ L1 — Data/Model Layer                                       │
-│ SQLite(runtime), Redis, ChromaDB, Ollama                    │
-├──────────────────────────────────────────────────────────────┤
-│ L0 — Infra Layer                                            │
-│ Docker Compose + Caddy ingress + ops scripts (update-safe)  │
-└──────────────────────────────────────────────────────────────┘
+User / Operator
+   │
+   ▼
+Dashboard (Next.js)
+   │   - control panel
+   │   - chat + logs (SSE)
+   │   - agent/connector setup
+   ▼
+Gateway (FastAPI)
+   │   - auth + role checks
+   │   - agent registry
+   │   - skills/tools routing logic
+   │   - queue/jobs + events + thread persistence
+   ▼
+Execution Services (FastAPI, ports 7401..7410)
+   │   - real task execution endpoints
+   ▼
+Data & Model Layer
+   - SQLite (runtime state)
+   - Redis (fast state/cache)
+   - ChromaDB (vector memory)
+   - Ollama (local models)
 ```
 
-### Request flow (real)
+### How agents, skills and tools work together
 
-1. **Operator** triggers action from Dashboard or API.
-2. **Gateway** validates token/role and resolves logical agent → target backend.
-3. **Dispatch** executes against selected service endpoint.
-4. **Events + chat** are persisted and streamed via SSE.
-5. **Dashboard** renders live updates (chat, logs, status, metrics).
+| Layer | What it represents | Current behavior |
+|---|---|---|
+| **Logical Agents** | Team roles (e.g., orchestrator, researcher, engineer) | Dynamic and user-defined in gateway registry |
+| **Skills** | Reasoning capabilities used by agents | Assigned per agent as capability lists |
+| **Tools** | Action interfaces (search, shell, memory, docker, canvas, etc.) | Assigned per agent and used during planning/execution |
+| **Execution Services** | Concrete backend workers (7401-7410) | Agents resolve to a `target_service` for real dispatch |
+
+### Runtime flow (real request path)
+
+1. Operator sends instruction from Dashboard.
+2. Gateway validates token/role and reads agent config.
+3. Gateway selects `target_service` and dispatches action.
+4. Service executes and returns result.
+5. Gateway stores events/chat updates and exposes them over SSE.
+6. Dashboard updates live (chat, logs, state, metrics).
+
+### Why this design
+
+- **Flexible**: agents are not hard-coupled to fixed service names.
+- **Local-first**: all core components run self-hosted.
+- **Operational**: queue/events/health endpoints support real maintenance.
+- **Extensible**: easy to add agents, skills, connectors, and new backends.
 
 ---
 
