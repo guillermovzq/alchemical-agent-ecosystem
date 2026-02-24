@@ -5,15 +5,15 @@
 </p>
 
 <p align="center">
-  <strong>Local-first, self-hosted multi-agent AI platform</strong><br/>
-  Docker-native · No paid APIs required · Production-oriented operations
+  <strong>Local-first, self-hosted multi-agent platform</strong><br/>
+  Docker-native · Real-time control plane · No paid APIs required
 </p>
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/github/license/smouj/alchemical-agent-ecosystem" alt="License"></a>
   <a href="https://github.com/smouj/alchemical-agent-ecosystem/commits/main"><img src="https://img.shields.io/github/last-commit/smouj/alchemical-agent-ecosystem" alt="Last Commit"></a>
   <img src="https://img.shields.io/badge/runtime-Docker%20Compose-2496ED" alt="Docker Compose">
-  <img src="https://img.shields.io/badge/AI-Local%20Only-success" alt="Local AI">
+  <img src="https://img.shields.io/badge/realtime-SSE-06b6d4" alt="SSE">
   <img src="https://img.shields.io/badge/profiles-2G%2F4G%2F8G%2F16G%2F32G-blueviolet" alt="RAM profiles">
 </p>
 
@@ -23,98 +23,98 @@
 
 ---
 
-## Table of Contents
+## Contents
 
-- [Overview](#overview)
-- [Core Features](#core-features)
-- [Architecture](#architecture)
-- [Services Map](#services-map)
-- [Dashboard (Alchemical Control Panel)](#dashboard-alchemical-control-panel)
-- [Installation & Operations](#installation--operations)
-- [RAM Profiles (2G / 4G / 8G / 16G / 32G)](#ram-profiles-2g--4g--8g--16g--32g)
-- [Security Guardrails](#security-guardrails)
-- [Project Structure](#project-structure)
-- [Operational Notes](#operational-notes)
+- [1) What this project is](#1-what-this-project-is)
+- [2) Current architecture (real implementation)](#2-current-architecture-real-implementation)
+- [3) Logical agents model](#3-logical-agents-model)
+- [4) Runtime services map](#4-runtime-services-map)
+- [5) Dashboard capabilities](#5-dashboard-capabilities)
+- [6) API surface (dashboard + gateway)](#6-api-surface-dashboard--gateway)
+- [7) Installation and operations](#7-installation-and-operations)
+- [8) RAM profiles (2G/4G/8G/16G/32G)](#8-ram-profiles-2g4g8g16g32g)
+- [9) Security model](#9-security-model)
+- [10) Update workflow](#10-update-workflow)
+- [11) Project structure](#11-project-structure)
+- [12) Known limitations (honest status)](#12-known-limitations-honest-status)
 - [License](#license)
 
 ---
 
-## Overview
+## 1) What this project is
 
-**Alchemical Agent Ecosystem** is a unified, self-hosted platform to run specialized AI agents locally.
+**Alchemical Agent Ecosystem** is a self-hosted orchestration platform to run and manage AI agents locally.
 
-It is designed for:
-- low-cost infrastructure,
+It combines:
+- a **gateway** for routing, orchestration, registries, and real-time threads,
+- a **dashboard** for operations and control,
+- a **service mesh** of FastAPI agent backends,
+- a local AI stack: **Ollama + Redis + ChromaDB**.
+
+Design goals:
+- local-first execution,
 - reproducible Docker operations,
-- local model execution through Ollama,
-- secure and auditable workflows.
+- realistic controls for production-like environments,
+- extensible logical agent model (not fixed to service count).
 
 ---
 
-## Core Features
-
-| Capability | Description |
-|---|---|
-| Multi-agent runtime | Service layer supports 10 backends (ports `7401`–`7410`), while logical agents are dynamic and user-defined |
-| Local-first AI stack | Ollama + Redis + ChromaDB |
-| Reverse proxy | Caddy with service discovery (no hardcoded host IPs) |
-| One-command ops | `./scripts/alchemical` CLI for install, run, logs, doctor |
-| Premium dashboard | Real-time control panel with health, logs, actions and config |
-| Security baseline | Secret scanning + pre-commit hook guardrails |
-| RAM profiles | Tuned runtime profiles for 2G, 4G, 8G, 16G and 32G hosts |
-
----
-
-## Architecture
+## 2) Current architecture (real implementation)
 
 ```text
-                     ┌───────────────────────────────┐
-                     │      Alchemical Dashboard     │
-                     │ (Next.js + runtime API layer) │
-                     └───────────────┬───────────────┘
-                                     │
-                               HTTP / API
-                                     │
-┌────────────────────────────────────┴────────────────────────────────────┐
-│                                CADDY :80                               │
-└───────┬───────────────────────────────────────────────────────────┬──────┘
-        │                                                           │
-        │ /gateway/*                                                │ /<agent>/*
-        │                                                           │
-┌───────▼────────────────────┐                         ┌────────────▼────────────┐
-│      alchemical-gateway    │                         │   Agent services (10)   │
-│ dispatch + orchestration   │                         │ 7401..7410 (FastAPI)    │
-└───────┬────────────────────┘                         └────────────┬────────────┘
-        │                                                           │
-        └───────────────┬───────────────────────────────────────────┘
-                        │
-      ┌─────────────────▼──────────────┐
-      │        Shared local stack      │
-      │ Ollama · Redis · ChromaDB      │
-      └────────────────────────────────┘
+                        ┌────────────────────────────────┐
+                        │  Alchemical Dashboard (Next.js)│
+                        │  - Control UI                 │
+                        │  - SSE chat/logs              │
+                        │  - Gateway proxies            │
+                        └───────────────┬────────────────┘
+                                        │
+                                        │ HTTP + SSE
+                                        ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                                CADDY :80                                │
+└───────────────┬──────────────────────────────────────────────────────────┘
+                │
+                ├── /gateway/*  → alchemical-gateway
+                └── /<service>/* → agent services (7401..7410)
+
+┌────────────────────────────────┐      ┌───────────────────────────────────┐
+│       alchemical-gateway       │      │        Agent services (10)        │
+│ - capabilities/agents/connectors│     │ FastAPI containers (7401..7410)   │
+│ - dispatch + thread persistence │     │ target_service execution backends   │
+│ - tokenized API endpoints       │     └───────────────────────────────────┘
+└────────────────────────────────┘
+
+      Shared local stack: Redis · ChromaDB · Ollama
 ```
 
 ---
 
-## Core Logical Agents (default seed)
+## 3) Logical agents model
 
-The gateway now seeds 5 core logical agents (editable):
+The platform separates:
+1. **logical agents** (business roles), and
+2. **runtime services** (execution backends).
 
-| Agent | Mission |
+By default, gateway seeds 5 editable logical agents:
+
+| Logical Agent | Role |
 |---|---|
-| Alquimista Mayor | Global orchestration, planning, quality gate |
+| Alquimista Mayor | Global orchestrator, routing, quality gate |
 | Investigador/Analista | Research, verification, source comparison |
 | Ingeniero/Constructor | Code, integration, debugging, delivery |
-| Creador Visual | UI/UX, branding, visual assets |
+| Creador Visual | UI/UX, branding, visual outputs |
 | Redactor/Narrador | Copywriting, storytelling, SEO content |
 
-> Important: skills/tools are capabilities attached to agents, not fixed agents themselves.
+> Important: skills/tools are **capabilities attached to agents**, not fixed agents themselves.
 
-## Services Map
+---
 
-### Agent Services
+## 4) Runtime services map
 
-| Service | Port | Primary Endpoint |
+### Agent backend services
+
+| Service | Port | Endpoint |
 |---|---:|---|
 | velktharion | 7401 | `/navigate` |
 | synapsara | 7402 | `/query` |
@@ -127,62 +127,78 @@ The gateway now seeds 5 core logical agents (editable):
 | resonvyr | 7409 | `/voice` |
 | fluxenrath | 7410 | `/` |
 
-### Core Infrastructure
+### Core infrastructure
 
 | Component | Purpose |
 |---|---|
-| Caddy | Entry point and reverse proxy |
-| alchemical-gateway | Agent dispatch and orchestration API |
-| Redis | Fast runtime data/cache layer |
-| ChromaDB | Vector memory layer |
-| Ollama | Local LLM model hosting |
+| Caddy | Reverse proxy / entrypoint |
+| alchemical-gateway | Orchestration and registries API |
+| Redis | Fast key-value runtime layer |
+| ChromaDB | Vector storage layer |
+| Ollama | Local model serving |
 
 ---
 
-## Dashboard (Alchemical Control Panel)
+## 5) Dashboard capabilities
 
 Path: `apps/alchemical-dashboard`
 
-### What is real-time (non-mock)
-- Agent status from `docker compose ps` + `/health`
-- Start/stop/restart actions for services
-- Real logs from `docker compose logs`
-- Core service health (Caddy, Redis, ChromaDB, Ollama, Gateway)
-- CPU/RAM metrics from `docker stats`
-- Persisted dashboard settings via runtime config API
-
-### Runtime API Endpoints (dashboard)
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/agents` | GET | Real agent inventory + status |
-| `/api/system` | GET | Core services health |
-| `/api/control` | POST | Start/stop/restart allowed agent services |
-| `/api/logs` | GET | Tail logs by service |
-| `/api/metrics` | GET | CPU/RAM usage from Docker stats |
-| `/api/config` | GET/PUT | Persistent dashboard tuning |
-| `/api/agent/[name]/dispatch` | POST | Real agent request dispatch |
-| `/api/gateway/capabilities` | GET | Skills/tools/connectors catalog from gateway |
-| `/api/gateway/chat-plan` | POST | Chat action plan (goal + skills + tools + subagents + channels) |
-| `/api/gateway/agents` | GET/POST | Agent/subagent registry |
-| `/api/gateway/chat-thread` | GET/POST | Shared chat thread between operator and agents |
-| `/api/gateway/chat-stream` | GET (SSE) | Real-time thread updates over Server-Sent Events |
-| Gateway auth | Header `x-alchemy-token` | Tokenized access for gateway endpoints |
-| `/api/gateway/connectors` | GET/POST | Connector registry (Telegram/WhatsApp/Discord/...) |
-| `/api/logs/stream` | GET (SSE) | Real-time service logs over Server-Sent Events |
+Current implemented features:
+- real-time service health from Docker + `/health`,
+- start/stop/restart controls,
+- real logs viewer,
+- real chat thread with agent/operator messages,
+- SSE stream for chat + logs,
+- connector and logical agent registration UI,
+- persisted dashboard settings,
+- Canvas Lab for web visualization + snapshot dispatch trigger,
+- connect/reconnect/disconnect controls for SSE chat stream.
 
 ---
 
-## Installation & Operations
+## 6) API surface (dashboard + gateway)
 
-### Quick Start
+### Dashboard runtime APIs
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/agents` | GET | Agent inventory + runtime status |
+| `/api/system` | GET | Core health |
+| `/api/control` | POST | Start/stop/restart services |
+| `/api/logs` | GET | Log tail snapshot |
+| `/api/logs/stream` | GET (SSE) | Real-time logs stream |
+| `/api/metrics` | GET | CPU/RAM from docker stats |
+| `/api/config` | GET/PUT | Persisted dashboard config |
+| `/api/agent/[name]/dispatch` | POST | Dispatch action to target |
+
+### Gateway-proxy APIs exposed by dashboard
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/gateway/capabilities` | GET | Skills/tools/connectors catalog |
+| `/api/gateway/agents` | GET/POST | Logical agent registry |
+| `/api/gateway/connectors` | GET/POST | Channel connectors registry |
+| `/api/gateway/chat-plan` | POST | Chat planning action |
+| `/api/gateway/chat-thread` | GET/POST | Shared thread |
+| `/api/gateway/chat-stream` | GET (SSE) | Real-time thread stream |
+
+### Gateway auth
+
+Gateway protected endpoints require `x-alchemy-token` when `ALCHEMICAL_GATEWAY_TOKEN` is set.
+Dashboard proxies inject this header from env automatically.
+
+---
+
+## 7) Installation and operations
+
+### Quick start
 
 ```bash
 cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical wizard
 ```
 
-### CLI Commands
+### Main operations
 
 ```bash
 ./scripts/alchemical doctor
@@ -190,9 +206,6 @@ cd /mnt/d/alchemical-agent-ecosystem
 ./scripts/alchemical scan-secrets
 ./scripts/alchemical install --domain localhost --profile 4g --model phi3:mini
 ./scripts/alchemical up
-./scripts/alchemical up-2g
-./scripts/alchemical up-4g
-./scripts/alchemical up-8g
 ./scripts/alchemical status
 ./scripts/alchemical logs velktharion
 ./scripts/alchemical dashboard
@@ -201,18 +214,19 @@ cd /mnt/d/alchemical-agent-ecosystem
 
 ---
 
-## RAM Profiles (2G / 4G / 8G / 16G / 32G)
+## 8) RAM profiles (2G/4G/8G/16G/32G)
 
-Choose runtime footprint by host memory.
-Wizard mode now auto-detects host RAM and suggests the optimal profile at startup.
+Wizard auto-detects host RAM and suggests profile.
 
-| Profile | Recommended RAM | Services |
+| Profile | Host RAM | Runtime footprint |
 |---|---:|---|
-| `2g` | 2 GB | core + gateway + `velktharion`, `synapsara` |
-| `4g` | 4 GB | `2g` + `kryonexus`, `ignivox` |
-| `8g` | 8 GB | `4g` + `auralith`, `resonvyr` |
-| `16g` | 16 GB | full stack |
-| `32g` | 32 GB | full stack (headroom for bigger local models) |
+| `2g` | ~2 GB | Core + gateway + 2 services |
+| `4g` | ~4 GB | `2g` + extra execution services |
+| `8g` | ~8 GB | `4g` + additional execution capacity |
+| `16g` | ~16 GB | Full stack |
+| `32g` | ~32 GB | Full stack + headroom for bigger local models |
+
+Examples:
 
 ```bash
 ./scripts/alchemical install --profile 2g --domain localhost
@@ -222,32 +236,19 @@ Wizard mode now auto-detects host RAM and suggests the optimal profile at startu
 ./scripts/alchemical install --profile 32g --domain localhost
 ```
 
-Fast boot shortcuts:
-
-```bash
-./scripts/alchemical up-2g
-./scripts/alchemical up-4g
-./scripts/alchemical up-8g
-```
-
-Default model suggestion by profile:
-- `2g` → `tinyllama:1.1b`
-- `4g` → `phi3:mini`
-- `8g` → `qwen2.5:3b`
-- `16g`/`32g` → `phi3:mini` (you can override with `--model`)
-
 ---
 
-## Security Guardrails
+## 9) Security model
 
 | Control | Status |
 |---|---|
 | `.gitignore` hardened for secrets/certs/keys | ✅ |
-| `scripts/security/check-secrets.sh` | ✅ |
-| pre-commit hook (`.githooks/pre-commit`) | ✅ |
-| CLI secret scan command | ✅ (`./scripts/alchemical scan-secrets`) |
+| secret scanner (`scripts/security/check-secrets.sh`) | ✅ |
+| pre-commit guard (`.githooks/pre-commit`) | ✅ |
+| gateway token auth (`x-alchemy-token`) | ✅ |
+| connector config with `token_ref` (no raw token intended) | ✅ |
 
-Recommended before every push:
+Recommended before push:
 
 ```bash
 ./scripts/alchemical doctor
@@ -256,28 +257,43 @@ Recommended before every push:
 
 ---
 
-## Project Structure
+## 10) Update workflow
+
+To sync with official GitHub repository and rebuild runtime:
+
+```bash
+./scripts/alchemical update
+```
+
+Current behavior:
+1. `git fetch origin main`
+2. `git pull --rebase origin main`
+3. `docker compose up -d --build`
+
+---
+
+## 11) Project structure
 
 ```text
-assets/                  # Branding assets
-apps/alchemical-dashboard/  # Next.js control panel
-docs/                    # Architecture + operational docs
-gateway/                 # Alchemical gateway service
-infra/caddy/             # Reverse proxy config
-infra/scripts/           # Installer/bootstrap scripts
-scripts/                 # Operational CLI and automation helpers
-services/                # Agent services (FastAPI)
-shared/                  # Shared schemas/contracts
-workspace/skills/        # Agent skills workspace
+assets/                      # Branding resources
+apps/alchemical-dashboard/   # Next.js control plane UI
+docs/                        # Architecture and operational docs
+gateway/                     # Alchemical gateway service (FastAPI)
+infra/caddy/                 # Reverse proxy config
+infra/scripts/               # Installer/bootstrap scripts
+scripts/                     # Operational CLI + helpers
+services/                    # Runtime execution services (FastAPI)
+shared/                      # Shared schemas/contracts
+workspace/skills/            # Skill workspace artifacts
 ```
 
 ---
 
-## Operational Notes
+## 12) Known limitations (honest status)
 
-- This repository is optimized for self-hosted Linux/WSL Docker environments.
-- Keep runtime secrets out of Git (`.env`, certs, keys, token files).
-- If GPU metrics are required, add NVIDIA runtime/DCGM integration.
+- GPU metric in dashboard is currently basic placeholder unless GPU runtime integration is enabled.
+- Connector registry stores metadata/reference (`token_ref`) but does not yet execute full external messaging pipelines by itself.
+- Thread persistence is file-based runtime JSON; for high-scale/multi-node production, migrate to durable DB/event bus.
 
 ---
 
