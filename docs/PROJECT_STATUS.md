@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 14:47:01 UTC**
+- Generated: **2026-02-24 16:04:21 UTC**
 - Branch: **main**
-- HEAD: **ff39914**
-- Last commit: **ff39914 docs(sync): update usage/cost API docs, project maintenance runbook, and refresh project status snapshot (2026-02-24)**
+- HEAD: **f84bee5**
+- Last commit: **f84bee5 perf(install): add fast install mode, skip-build path, image prefetch controls, and quick CLI commands (2026-02-24)**
 
 ## Repository Metrics
 
