@@ -54,59 +54,67 @@ Combina:
 
 ## 🏗️ Arquitectura
 
-### Mapa simple del ecosistema (claro + moderno)
+<p align="center"><strong>Arquitectura runtime real (estado actual del proyecto)</strong></p>
 
-```text
-Usuario / Operador
-   │
-   ▼
-Dashboard (Next.js)
-   │   - panel de control
-   │   - chat + logs (SSE)
-   │   - configuración de agentes/conectores
-   ▼
-Gateway (FastAPI)
-   │   - auth + controles por rol
-   │   - registro de agentes
-   │   - routing skills/tools
-   │   - cola/jobs + eventos + persistencia de hilo
-   ▼
-Servicios de ejecución (FastAPI, puertos 7401..7410)
-   │   - endpoints reales de ejecución
-   ▼
-Capa de datos y modelos
-   - SQLite (estado runtime)
-   - Redis (estado/cache rápido)
-   - ChromaDB (memoria vectorial)
-   - Ollama (modelos locales)
+<div align="center">
+
+```mermaid
+flowchart TB
+  U[Operador] --> D[Dashboard
+Next.js]
+  D -->|SSE + proxy gateway| G[Gateway
+FastAPI]
+
+  G -->|dispatch agente/acción| S1[Servicios de ejecución
+7401..7410]
+  G --> DB[(SQLite estado runtime)]
+  G --> R[(Redis)]
+  G --> C[(ChromaDB)]
+  S1 --> O[(Ollama)]
+
+  CADDY[Caddy edge
+:80/:443] --> D
+  CADDY --> G
 ```
 
-### Cómo trabajan juntos agentes, skills y tools
+</div>
 
-| Capa | Qué representa | Comportamiento actual |
-|---|---|---|
-| **Agentes lógicos** | Roles de equipo (orquestador, investigador, ingeniero...) | Dinámicos y definidos en el registry del gateway |
-| **Skills** | Capacidades de razonamiento usadas por agentes | Asignadas por agente como listas de capacidades |
-| **Tools** | Interfaces de acción (search, shell, memory, docker, canvas...) | Asignadas por agente y usadas en planificación/ejecución |
-| **Servicios de ejecución** | Workers backend concretos (7401-7410) | Agentes resuelven `target_service` para dispatch real |
+<p align="center"><strong>Modelo lógico de agentes (comportamiento real)</strong></p>
 
-### Flujo runtime (ruta real)
+<div align="center">
 
-1. El operador envía instrucción desde Dashboard.
-2. El Gateway valida token/rol y lee la config del agente.
-3. El Gateway selecciona `target_service` y hace dispatch.
-4. El servicio ejecuta y devuelve resultado.
-5. El Gateway persiste eventos/chat y los expone por SSE.
-6. El Dashboard actualiza en vivo (chat, logs, estado, métricas).
+```mermaid
+flowchart LR
+  OP[Petición del operador] --> GW[Gateway]
+  GW --> REG[Registry de agentes]
+  REG --> MAP[Mapping target_service]
+  MAP --> EXEC[Servicio de ejecución]
+  EXEC --> RES[Resultado + uso]
+  RES --> EVT[Eventos / chat / jobs persistidos]
+  EVT --> UI[Dashboard en tiempo real]
+```
 
-### Por qué este diseño
+</div>
 
-- **Flexible**: agentes desacoplados de nombres fijos de servicio.
-- **Local-first**: todos los componentes core son auto-hospedados.
-- **Operable**: cola/eventos/health para operación real.
-- **Extensible**: fácil añadir agentes, skills, conectores y nuevos backends.
+<div align="center">
+<table>
+  <thead><tr><th>Capa</th><th>Responsabilidad real</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard</td><td>UI de control, streams realtime, proxies al gateway</td></tr>
+    <tr><td>Gateway</td><td>Auth/RBAC, routing, cola/jobs, conectores, persistencia</td></tr>
+    <tr><td>Agentes lógicos</td><td>Identidades estables mapeadas a <code>target_service</code></td></tr>
+    <tr><td>Servicios de ejecución</td><td>Endpoints reales de ejecución</td></tr>
+    <tr><td>Capa datos/modelos</td><td>SQLite + Redis + ChromaDB + Ollama</td></tr>
+  </tbody>
+</table>
+</div>
 
----
+### Por qué esta arquitectura es correcta
+
+1. **Límite claro**: el dashboard no bypass del gateway en operaciones protegidas.
+2. **Lógica estable**: identidad de agente desacoplada del número de contenedores.
+3. **Fiabilidad operativa**: jobs/eventos/usage persistidos y streameables.
+4. **Security-first**: token auth + RBAC + higiene de secretos en conectores.
 
 ## 🧪 Agentes lógicos (seed por defecto)
 
