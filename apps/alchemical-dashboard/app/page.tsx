@@ -45,7 +45,7 @@ const tabBtn = (active: boolean): CSSProperties => ({
 export default function Page() {
   const [data, setData] = useState<DashboardPayload | null>(null);
   const [cfg, setCfg] = useState<DashboardConfig>(defaultCfg);
-  const [tab, setTab] = useState<"ops" | "chat" | "admin">("ops");
+  const [tab, setTab] = useState<"ops" | "chat" | "admin">("chat");
   const [open, setOpen] = useState<Record<string, boolean>>({
     wizard: false,
     canvas: false,
@@ -65,6 +65,15 @@ export default function Page() {
     const id = setInterval(load, cfg.agentPollMs);
     return () => { stop = true; clearInterval(id); };
   }, [cfg.agentPollMs]);
+
+  useEffect(() => {
+    const h = (ev: Event) => {
+      const detail = (ev as CustomEvent).detail as "ops" | "chat" | "admin";
+      if (detail) setTab(detail);
+    };
+    window.addEventListener("alchemical:set-tab", h as EventListener);
+    return () => window.removeEventListener("alchemical:set-tab", h as EventListener);
+  }, []);
 
   if (!data) return <div className="glass-card" style={{ padding: 20 }}>Cargando estado real de agentes...</div>;
 

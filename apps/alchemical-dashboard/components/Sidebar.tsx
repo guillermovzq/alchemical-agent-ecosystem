@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { FlaskConical, LayoutDashboard, Bot, WandSparkles, Settings2, Logs, CircleHelp, type LucideIcon } from "lucide-react";
 
-const items: Array<{ label: string; Icon: LucideIcon; targetId: string }> = [
-  { label: "Dashboard", Icon: LayoutDashboard, targetId: "section-dashboard" },
-  { label: "Agentes", Icon: Bot, targetId: "section-agentes" },
-  { label: "Chat Gateway", Icon: WandSparkles, targetId: "section-chat" },
-  { label: "Configuración Global", Icon: Settings2, targetId: "section-settings" },
-  { label: "Logs & Monitoreo", Icon: Logs, targetId: "section-logs" },
-  { label: "Ayuda", Icon: CircleHelp, targetId: "section-ayuda" },
+const items: Array<{ label: string; Icon: LucideIcon; targetId: string; tab: "ops"|"chat"|"admin" }> = [
+  { label: "Dashboard", Icon: LayoutDashboard, targetId: "section-dashboard", tab: "ops" },
+  { label: "Agentes", Icon: Bot, targetId: "section-agentes", tab: "ops" },
+  { label: "Chat Gateway", Icon: WandSparkles, targetId: "section-chat", tab: "chat" },
+  { label: "Configuración Global", Icon: Settings2, targetId: "section-settings", tab: "admin" },
+  { label: "Logs & Monitoreo", Icon: Logs, targetId: "section-logs", tab: "ops" },
+  { label: "Ayuda", Icon: CircleHelp, targetId: "section-ayuda", tab: "admin" },
 ];
 
 type CoreService = { name: string; state: string; status: string; health: "healthy" | "down" | "unknown" };
@@ -29,7 +29,8 @@ export function Sidebar() {
     return () => { stop = true; clearInterval(id); };
   }, []);
 
-  const goTo = (targetId: string) => {
+  const goTo = (targetId: string, tab: "ops"|"chat"|"admin") => {
+    window.dispatchEvent(new CustomEvent("alchemical:set-tab", { detail: tab }));
     const el = document.getElementById(targetId);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -47,11 +48,11 @@ export function Sidebar() {
         <img src="/alchemical-logo.svg" alt="Alchemical logo" style={{ width: "100%", height: 30, objectFit: "contain", filter: "drop-shadow(0 2px 14px rgba(34,211,238,.25))" }} />
       </div>
       <nav style={{ display: "grid", gap: 8 }}>
-        {items.map(({ label, Icon, targetId }) => (
+        {items.map(({ label, Icon, targetId, tab }) => (
           <button
             key={label}
             className="card"
-            onClick={() => goTo(targetId)}
+            onClick={() => goTo(targetId, tab)}
             style={{ display: "flex", gap: 10, alignItems: "center", padding: "10px 12px", color: "#e5e7eb", background: "rgba(255,255,255,.03)", borderRadius: 12 }}
           >
             <Icon size={16} /> {label}

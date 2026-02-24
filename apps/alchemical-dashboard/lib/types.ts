@@ -2,10 +2,11 @@ export type AgentStatus = "Running" | "Paused" | "Error";
 
 export type AgentRow = {
   name: string;
-  port: number;
-  action: string;
+  role: string;
   model: string;
   description: string;
+  service: string;
+  enabled: boolean;
   status: AgentStatus;
   latencyMs: number | null;
   containerState: string;

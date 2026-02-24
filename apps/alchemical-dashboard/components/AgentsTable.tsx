@@ -35,15 +35,15 @@ export function AgentsTable({ agents }: { agents: AgentRow[] }) {
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filtrar..." style={{ ...input, maxWidth: 220 }} />
       </div>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-        <thead><tr style={{ color: "#9ca3af", textAlign: "left" }}><th>Nombre</th><th>Puerto</th><th>Estado</th><th>Modelo</th><th>Descripción</th><th>Acciones</th></tr></thead>
+        <thead><tr style={{ color: "#9ca3af", textAlign: "left" }}><th>Agente</th><th>Servicio</th><th>Estado</th><th>Modelo</th><th>Descripción</th><th>Acciones</th></tr></thead>
         <tbody>
           {rows.map((a) => (
             <tr key={a.name} onClick={() => setSelected(a)} style={{ borderTop: "1px solid rgba(255,255,255,.08)", cursor: "pointer" }}>
-              <td>{a.name}</td><td>{a.port}</td><td>{a.status}</td><td>{a.model}</td><td>{a.description}</td>
+              <td>{a.name}</td><td>{a.service}</td><td>{a.status}</td><td>{a.model}</td><td>{a.description}</td>
               <td style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <button onClick={(e) => { e.stopPropagation(); control(a.name, "start").then(() => setActionFeedback(`${a.name}: start ok`)); }}>Start</button>
-                <button onClick={(e) => { e.stopPropagation(); control(a.name, "stop").then(() => setActionFeedback(`${a.name}: stop ok`)); }}>Stop</button>
-                <button onClick={(e) => { e.stopPropagation(); control(a.name, "restart").then(() => setActionFeedback(`${a.name}: restart ok`)); }}>Restart</button>
+                <button onClick={(e) => { e.stopPropagation(); control(a.service, "start").then(() => setActionFeedback(`${a.name}: start ok`)); }}>Start</button>
+                <button onClick={(e) => { e.stopPropagation(); control(a.service, "stop").then(() => setActionFeedback(`${a.name}: stop ok`)); }}>Stop</button>
+                <button onClick={(e) => { e.stopPropagation(); control(a.service, "restart").then(() => setActionFeedback(`${a.name}: restart ok`)); }}>Restart</button>
                 <button onClick={(e) => { e.stopPropagation(); dispatch(a.name).then((x) => setActionFeedback(`${a.name}: dispatch ${x.status ?? "ok"}`)); }}>Ping</button>
               </td>
             </tr>
@@ -58,7 +58,7 @@ export function AgentsTable({ agents }: { agents: AgentRow[] }) {
           <strong>Detalle: {selected.name}</strong>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
             <pre style={panel}>requests/min: realtime pending\nlatency: {String(selected.latencyMs ?? "-")}ms\nstate: {selected.containerState}\nstatus: {selected.containerStatus}</pre>
-            <pre style={panel}>name: {selected.name}\nport: {selected.port}\nmodel: {selected.model}\ndefaultAction: {selected.action}</pre>
+            <pre style={panel}>name: {selected.name}\nservice: {selected.service}\nmodel: {selected.model}\nrole: {selected.role}</pre>
           </div>
         </aside>
       )}

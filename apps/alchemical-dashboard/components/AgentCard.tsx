@@ -10,7 +10,7 @@ export function AgentCard({ agent }: { agent: AgentRow }) {
       </div>
       <p style={{ color: "#a1a1aa", fontSize: 13 }}>{agent.description}</p>
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
-        <span>:{agent.port}</span>
+        <span>{agent.service}</span>
         <span>{agent.model}</span>
       </div>
       <div style={{ marginTop: 6, fontSize: 12, color: "#94a3b8" }}>
