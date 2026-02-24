@@ -191,6 +191,18 @@ class ChatAskRequest(BaseModel):
   agent: str = Field(min_length=2, max_length=64)
   text: str = Field(min_length=1, max_length=4000)
   action: Optional[str] = Field(default="query")
+  repo: Optional[str] = None
+  thinking: Optional[str] = Field(default="balanced")
+  auto_edit: bool = False
+  attachments: List[str] = Field(default_factory=list)
+
+
+class ChatRoundtableRequest(BaseModel):
+  topic: str = Field(min_length=3, max_length=4000)
+  agents: List[str] = Field(default_factory=list)
+  rounds: int = Field(default=1, ge=1, le=5)
+  action: str = Field(default="query")
+  thinking: Optional[str] = Field(default="balanced")
 
 
 class ConnectorSendRequest(BaseModel):
@@ -900,8 +912,17 @@ async def chat_post(payload: ChatMessage, request: Request):
 async def chat_ask(payload: ChatAskRequest, request: Request):
   _require_auth(request, OPERATOR_ROLE)
   action = payload.action or "query"
+  meta = []
+  if payload.repo:
+    meta.append(f"repo={payload.repo}")
+  meta.append(f"thinking={payload.thinking or 'balanced'}")
+  if payload.auto_edit:
+    meta.append("auto_edit=true")
+  if payload.attachments:
+    meta.append(f"attachments={len(payload.attachments)}")
+
   append_chat("operator", payload.text, "human")
-  append_chat("orchestrator", f"Ask -> {payload.agent}/{action}", "dispatch")
+  append_chat("orchestrator", f"Ask -> {payload.agent}/{action} ({', '.join(meta)})", "dispatch")
 
   with db_conn() as conn:
     row = conn.execute("SELECT * FROM agents WHERE name=?", (payload.agent,)).fetchone()
@@ -912,7 +933,16 @@ async def chat_ask(payload: ChatAskRequest, request: Request):
     raise HTTPException(404, f"Unknown agent or target service: {payload.agent}")
 
   url = f"{base}/{action}"
-  body = {"prompt": payload.text, "query": payload.text, "message": payload.text, "input": payload.text}
+  body = {
+    "prompt": payload.text,
+    "query": payload.text,
+    "message": payload.text,
+    "input": payload.text,
+    "repo": payload.repo,
+    "thinking": payload.thinking,
+    "auto_edit": payload.auto_edit,
+    "attachments": payload.attachments,
+  }
 
   async with httpx.AsyncClient(timeout=30) as cli:
     try:
@@ -929,6 +959,30 @@ async def chat_ask(payload: ChatAskRequest, request: Request):
       append_chat(payload.agent, f"chat ask failed: {e}", "error")
       append_event("error", "chat", f"{payload.agent}/{action} failed: {e}")
       raise HTTPException(502, f"Chat ask error: {e}")
+
+
+@app.post('/chat/roundtable')
+async def chat_roundtable(payload: ChatRoundtableRequest, request: Request):
+  _require_auth(request, OPERATOR_ROLE)
+  agents = payload.agents[:]
+  if not agents:
+    with db_conn() as conn:
+      rows = conn.execute("SELECT name FROM agents WHERE enabled=1 ORDER BY name LIMIT 5").fetchall()
+      agents = [r["name"] for r in rows]
+
+  transcript = []
+  append_chat("orchestrator", f"Roundtable started: {payload.topic}", "system")
+  for round_i in range(payload.rounds):
+    for ag in agents:
+      ask = ChatAskRequest(agent=ag, text=f"[Round {round_i+1}] {payload.topic}", action=payload.action, thinking=payload.thinking)
+      try:
+        res = await chat_ask(ask, request)
+        transcript.append({"agent": ag, "status": res.get("status", 200)})
+      except Exception as e:
+        transcript.append({"agent": ag, "error": str(e)})
+
+  append_chat("orchestrator", f"Roundtable finished with {len(transcript)} responses", "system")
+  return {"ok": True, "topic": payload.topic, "agents": agents, "rounds": payload.rounds, "items": transcript}
 
 
 @app.get('/chat/stream')

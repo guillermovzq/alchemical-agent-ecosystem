@@ -24,8 +24,15 @@ export function ChatWorkbench() {
   const [msg, setMsg] = useState("");
   const [chatText, setChatText] = useState("Actualizar estado y coordinar agentes");
   const [chatAgent, setChatAgent] = useState("velktharion");
+  const [repo, setRepo] = useState("smouj/alchemical-agent-ecosystem");
+  const [thinking, setThinking] = useState("balanced");
+  const [autoEdit, setAutoEdit] = useState(false);
+  const [attachments, setAttachments] = useState<string[]>([]);
+  const [roundAgents, setRoundAgents] = useState<string>("velktharion,synapsara,ignivox");
+  const [rounds, setRounds] = useState(1);
   const [thread, setThread] = useState<Array<{ sender: string; text: string; ts?: string; kind?: string }>>([]);
   const [conn, setConn] = useState<"connected"|"disconnected"|"connecting">("connecting");
+  const [magicPulse, setMagicPulse] = useState(0);
   const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
@@ -53,7 +60,15 @@ export function ChatWorkbench() {
     es.onmessage = (ev) => {
       try {
         const payload = JSON.parse(ev.data);
-        setThread(payload.items ?? []);
+        const items = payload.items ?? [];
+        setThread((prev) => {
+          const prevLast = prev[prev.length - 1];
+          const nextLast = items[items.length - 1];
+          if (nextLast && (!prevLast || nextLast.ts !== prevLast.ts) && (nextLast.kind === "agent" || nextLast.kind === "dispatch")) {
+            setMagicPulse((v) => v + 1);
+          }
+          return items;
+        });
       } catch {
         // ignore invalid frame
       }
@@ -115,6 +130,7 @@ export function ChatWorkbench() {
   };
 
   const postChat = async () => {
+    setMagicPulse((v) => v + 1);
     await fetch("/api/gateway/chat-thread", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -125,19 +141,53 @@ export function ChatWorkbench() {
 
   const askAgent = async () => {
     if (!chatText.trim()) return;
+    setMagicPulse((v) => v + 1);
     setMsg(`Enviando a ${chatAgent}...`);
     const res = await fetch("/api/gateway/chat-ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ agent: chatAgent, text: chatText, action: "query" }),
+      body: JSON.stringify({
+        agent: chatAgent,
+        text: chatText,
+        action: "query",
+        repo,
+        thinking,
+        auto_edit: autoEdit,
+        attachments,
+      }),
     });
     const j = await res.json().catch(() => ({}));
     setMsg(res.ok ? `Respuesta recibida de ${chatAgent}` : `Error: ${j?.error || "chat ask failed"}`);
     if (res.ok) setChatText("");
   };
 
+  const runRoundtable = async () => {
+    const agents = roundAgents.split(",").map((x) => x.trim()).filter(Boolean);
+    if (!agents.length) return;
+    setMsg("Ejecutando roundtable entre agentes...");
+    const res = await fetch("/api/gateway/chat-roundtable", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ topic: chatText || goal, agents, rounds, thinking, action: "query" }),
+    });
+    const j = await res.json().catch(() => ({}));
+    setMsg(res.ok ? `Roundtable completado (${j?.items?.length || 0} respuestas)` : `Error roundtable: ${j?.error || "failed"}`);
+  };
+
+  const onAttach = (files: FileList | null) => {
+    if (!files || !files.length) return;
+    const rows = Array.from(files).map((f) => `${f.name} (${Math.ceil(f.size / 1024)}KB)`);
+    setAttachments((prev) => [...prev, ...rows].slice(0, 8));
+  };
+
   return (
-    <section className="glass-card" style={{ padding: 14 }}>
+    <section className={`glass-card cauldron-chat ${magicPulse % 2 ? "spell-cast" : ""}`} style={{ padding: 14, position: "relative", overflow: "hidden" }}>
+      <div className="magic-particles" aria-hidden>
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <h3 style={{ marginTop: 0 }}>Gateway Chat Workbench (SSE)</h3>
       <p style={{ color: "#94a3b8", marginTop: 0 }}>Define objetivo, activa skills/tools, crea subagentes y conecta canales desde una sola vista.</p>
 
@@ -192,13 +242,33 @@ export function ChatWorkbench() {
           <button className="card" style={{ padding: "6px 8px" }} onClick={disconnectStream}>Disconnect</button>
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "180px 1fr auto auto", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 160px 120px", gap: 8 }}>
         <select value={chatAgent} onChange={(e) => setChatAgent(e.target.value)} style={field}>
           {(caps.agents.length ? caps.agents : ["velktharion"]).map((a) => <option key={a} value={a}>{a}</option>)}
         </select>
         <input value={chatText} onChange={(e) => setChatText(e.target.value)} placeholder="Escribe al ecosistema..." style={field} />
+        <select value={thinking} onChange={(e) => setThinking(e.target.value)} style={field}>
+          <option value="low">thinking: low</option>
+          <option value="balanced">thinking: balanced</option>
+          <option value="deep">thinking: deep</option>
+        </select>
+        <label className="card" style={{ padding: "8px 10px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+          <input type="checkbox" checked={autoEdit} onChange={(e) => setAutoEdit(e.target.checked)} /> auto-edit
+        </label>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 220px 1fr auto auto auto", gap: 8, marginTop: 8 }}>
+        <input value={repo} onChange={(e) => setRepo(e.target.value)} placeholder="repo (owner/name)" style={field} />
+        <input type="file" multiple onChange={(e) => onAttach(e.target.files)} style={field} />
+        <input value={roundAgents} onChange={(e) => setRoundAgents(e.target.value)} placeholder="agents para roundtable (coma)" style={field} />
+        <input type="number" min={1} max={5} value={rounds} onChange={(e) => setRounds(Number(e.target.value) || 1)} style={{ ...field, width: 70 }} />
         <button className="card" style={{ padding: "8px 10px" }} onClick={postChat}>Solo hilo</button>
         <button className="cta" style={{ padding: "8px 10px" }} onClick={askAgent}>Enviar a agente</button>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+        <button className="card" style={{ padding: "8px 10px" }} onClick={runRoundtable}>Roundtable agentes</button>
+        {attachments.map((a, i) => <span key={`${a}-${i}`} className="card" style={{ padding: "4px 8px", fontSize: 12 }}>{a}</span>)}
       </div>
       <div style={{ marginTop: 8, maxHeight: 220, overflow: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,.1)", background: "#020617", padding: 10 }}>
         {thread.length === 0 && <div style={{ color: "#64748b" }}>Sin mensajes todavía.</div>}

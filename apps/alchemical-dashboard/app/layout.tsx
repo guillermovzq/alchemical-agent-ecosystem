@@ -9,6 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="grain" />
         <div className="aura a1" />
         <div className="aura a2" />
+        <div className="aura a3" />
         <main className="shell">
           <Sidebar />
           <section className="content">
