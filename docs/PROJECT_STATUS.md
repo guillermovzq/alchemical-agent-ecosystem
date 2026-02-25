@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-25 03:00:27 UTC**
+- Generated: **2026-02-25 03:06:45 UTC**
 - Branch: **main**
-- HEAD: **7ced906**
-- Last commit: **7ced906 fix(chat): add safe fallback target routing so agent chat never hard-fails on unmapped logical names (2026-02-25)**
+- HEAD: **3f214b0**
+- Last commit: **3f214b0 cli(ux): fix dashboard port behavior, add open-dashboard command, and auto-open after updates (2026-02-25)**
 
 ## Repository Metrics
 
