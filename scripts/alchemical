@@ -16,6 +16,11 @@ banner(){
 
 open_url(){
   local url="$1"
+  # Prefer Windows opener in WSL for reliability
+  if grep -qi microsoft /proc/version 2>/dev/null && command -v powershell.exe >/dev/null 2>&1; then
+    powershell.exe /c start "$url" >/dev/null 2>&1 || true
+    return
+  fi
   if command -v xdg-open >/dev/null 2>&1; then
     xdg-open "$url" >/dev/null 2>&1 || true
   elif command -v powershell.exe >/dev/null 2>&1; then
@@ -67,6 +72,7 @@ Commands:
   logs [service]           Logs en vivo (opcional: servicio)
   dashboard                Arranca dashboard dev fijo en :3000 (o reutiliza si ya está arriba)
   open-dashboard           Abre dashboard runtime en navegador
+  open                     Alias de open-dashboard
   update                   Actualiza desde origin/main y recompone stack (y abre dashboard)
   update-fast              Actualiza rápido sin rebuild completo (pull + up -d, y abre dashboard)
   update-safe              Actualización segura con checks + smoke tests + backup
@@ -150,16 +156,24 @@ case "${1:-help}" in
 
     cd apps/alchemical-dashboard
     if [[ ! -d node_modules ]]; then npm install; fi
-    open_url "http://localhost:3000"
+    (
+      for _ in $(seq 1 90); do
+        if is_http_up "http://localhost:3000"; then
+          open_url "http://localhost:3000"
+          break
+        fi
+        sleep 1
+      done
+    ) >/dev/null 2>&1 &
     npm run dev -- -p 3000
     ;;
-  open-dashboard)
-    if is_http_up "http://localhost"; then
-      open_url "http://localhost"
-      echo -e "${C_GREEN}✓ abierto runtime dashboard: http://localhost${C_RESET}"
-    elif is_http_up "http://localhost:3000"; then
+  open-dashboard|open)
+    if is_http_up "http://localhost:3000"; then
       open_url "http://localhost:3000"
       echo -e "${C_GREEN}✓ abierto dashboard dev: http://localhost:3000${C_RESET}"
+    elif is_http_up "http://localhost"; then
+      open_url "http://localhost"
+      echo -e "${C_GREEN}✓ abierto runtime dashboard: http://localhost${C_RESET}"
     else
       echo -e "${C_YELLOW}• dashboard no está arriba. Usa: ./scripts/alchemical up-fast o ./scripts/alchemical dashboard${C_RESET}"
       exit 1
