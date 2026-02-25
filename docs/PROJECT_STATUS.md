@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-25 07:16:49 UTC**
+- Generated: **2026-02-25 09:46:26 UTC**
 - Branch: **main**
-- HEAD: **8bed485**
-- Last commit: **8bed485 docs(status): auto-sync project snapshot (2026-02-25)**
+- HEAD: **ea211b9**
+- Last commit: **ea211b9 fix(cli): add open alias, prefer :3000 when available, and auto-open dev dashboard when ready (2026-02-25)**
 
 ## Repository Metrics
 
