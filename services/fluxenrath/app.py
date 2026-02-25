@@ -26,5 +26,11 @@ async def ep_0(payload: dict):
 
 @app.get('/')
 async def ide():
-    return {'service': SERVICE, 'ui': 'placeholder visual IDE'}
+    return {
+        'service': SERVICE,
+        'status': 'ok',
+        'description': 'fluxenrath diagnostics and flow runtime endpoint',
+        'endpoints': ['GET /health', 'GET /', 'POST /'],
+        'timestamp': datetime.now(timezone.utc).isoformat(),
+    }
 
