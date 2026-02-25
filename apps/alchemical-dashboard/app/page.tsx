@@ -67,35 +67,22 @@ export default function Page() {
 
   const quickCards = useMemo(() => data?.items?.slice(0, 4) || [], [data]);
 
+  const title = ({
+    chat: "💬 Chat del Caldero",
+    nodes: "🧩 Agent Node Studio",
+    agents: "🤖 Runtime de Agentes",
+    ops: "📊 Operaciones",
+    logs: "📜 Logs",
+    admin: "🛠️ Administración",
+  } as const)[view];
+
   return (
     <div className="dashboard-grid" style={{ height: "100%", minHeight: 0 }}>
-      <section className="glass-card" style={{ padding: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {([
-          ["chat", "💬 Chat"],
-          ["nodes", "🧩 Nodos"],
-          ["agents", "🤖 Agentes"],
-          ["ops", "📊 Ops"],
-          ["logs", "📜 Logs"],
-          ["admin", "🛠️ Admin"],
-        ] as Array<[View, string]>).map(([v, label]) => (
-          <button
-            key={v}
-            className="card"
-            onClick={() => setView(v)}
-            style={{
-              padding: "8px 12px",
-              borderRadius: 12,
-              borderColor: view === v ? "rgba(34,211,238,.6)" : "rgba(255,255,255,.16)",
-              color: view === v ? "#67e8f9" : "#cbd5e1",
-              background: view === v ? "rgba(34,211,238,.1)" : "rgba(255,255,255,.04)",
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </section>
-
       <section className="glass-card" style={{ padding: 12, flex: 1, minHeight: 0, overflow: "auto" }}>
+        <div style={{ position: "sticky", top: 0, zIndex: 2, marginBottom: 10, paddingBottom: 8, borderBottom: "1px solid rgba(255,255,255,.08)", backdropFilter: "blur(8px)" }}>
+          <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
+          <small style={{ color: "#94a3b8" }}>Vista única activa (sin paneles duplicados) para reducir lag y ruido visual.</small>
+        </div>
         {view === "chat" && <ChatWorkbench />}
 
         {view === "nodes" && <AgentNodeStudio />}
