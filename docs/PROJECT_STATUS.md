@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-25 03:15:23 UTC**
+- Generated: **2026-02-25 03:17:20 UTC**
 - Branch: **main**
-- HEAD: **e8901f6**
-- Last commit: **e8901f6 docs(status): auto-sync project snapshot (2026-02-25)**
+- HEAD: **ae880d5**
+- Last commit: **ae880d5 fix(cli): auto-recover dashboard dev when port 3000 is occupied by stale Next process (2026-02-25)**
 
 ## Repository Metrics
 
