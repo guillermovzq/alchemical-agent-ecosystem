@@ -929,6 +929,11 @@ async def chat_ask(payload: ChatAskRequest, request: Request):
   target = row["target_service"] if row and row["target_service"] else payload.agent
   base = MAP.get(target)
   if not base:
+    # fallback: use orchestrator default target to avoid dead chat experience
+    target = "velktharion"
+    base = MAP.get(target)
+    append_event("warn", "chat", f"fallback target applied for agent={payload.agent} -> {target}")
+  if not base:
     append_chat("orchestrator", f"Unknown target service for agent: {payload.agent}", "error")
     raise HTTPException(404, f"Unknown agent or target service: {payload.agent}")
 
