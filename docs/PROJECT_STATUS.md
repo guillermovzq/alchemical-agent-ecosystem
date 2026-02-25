@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-24 23:52:32 UTC**
+- Generated: **2026-02-25 00:36:15 UTC**
 - Branch: **main**
-- HEAD: **0968059**
-- Last commit: **0968059 docs(architecture+ops): deepen real runtime model, failure matrix, and production preflight runbook (2026-02-25)**
+- HEAD: **69ae86b**
+- Last commit: **69ae86b fix(runtime): remove remaining placeholder paths and expose real GPU metric detection (2026-02-25)**
 
 ## Repository Metrics
 
