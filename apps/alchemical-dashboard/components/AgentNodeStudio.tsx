@@ -123,7 +123,7 @@ export function AgentNodeStudio() {
         <div
           ref={boardRef}
           className="card"
-          style={{ position: "relative", height: 430, overflow: "hidden", background: "radial-gradient(circle at 20% 15%, rgba(34,211,238,.09), transparent 38%), radial-gradient(circle at 85% 80%, rgba(124,58,237,.11), transparent 42%), #0a101a" }}
+          style={{ position: "relative", height: "calc(100vh - 290px)", minHeight: 420, overflow: "hidden", background: "radial-gradient(circle at 20% 15%, rgba(34,211,238,.09), transparent 38%), radial-gradient(circle at 85% 80%, rgba(124,58,237,.11), transparent 42%), #0a101a" }}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}

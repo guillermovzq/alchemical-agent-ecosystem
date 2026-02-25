@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { FlaskConical, LayoutDashboard, Bot, WandSparkles, Settings2, Logs, CircleHelp, type LucideIcon } from "lucide-react";
 
-const items: Array<{ label: string; Icon: LucideIcon; targetId: string; tab: "ops"|"chat"|"admin" }> = [
-  { label: "Dashboard", Icon: LayoutDashboard, targetId: "section-dashboard", tab: "ops" },
-  { label: "Agentes", Icon: Bot, targetId: "section-agentes", tab: "ops" },
-  { label: "Chat Gateway", Icon: WandSparkles, targetId: "section-chat", tab: "chat" },
-  { label: "Configuración Global", Icon: Settings2, targetId: "section-settings", tab: "admin" },
-  { label: "Logs & Monitoreo", Icon: Logs, targetId: "section-logs", tab: "ops" },
-  { label: "Ayuda", Icon: CircleHelp, targetId: "section-ayuda", tab: "admin" },
+type View = "chat" | "nodes" | "agents" | "ops" | "admin" | "logs";
+
+const items: Array<{ label: string; Icon: LucideIcon; view: View }> = [
+  { label: "Chat", Icon: WandSparkles, view: "chat" },
+  { label: "Nodos agentes", Icon: Bot, view: "nodes" },
+  { label: "Agentes", Icon: LayoutDashboard, view: "agents" },
+  { label: "Operaciones", Icon: CircleHelp, view: "ops" },
+  { label: "Logs", Icon: Logs, view: "logs" },
+  { label: "Admin", Icon: Settings2, view: "admin" },
 ];
 
 type CoreService = { name: string; state: string; status: string; health: "healthy" | "down" | "unknown" };
@@ -25,17 +27,15 @@ export function Sidebar() {
       if (!stop) setServices(j.services ?? []);
     };
     load();
-    const id = setInterval(load, 10000);
-    return () => { stop = true; clearInterval(id); };
+    const id = setInterval(load, 12000);
+    return () => {
+      stop = true;
+      clearInterval(id);
+    };
   }, []);
 
-  const goTo = (targetId: string, tab: "ops"|"chat"|"admin") => {
-    window.dispatchEvent(new CustomEvent("alchemical:set-tab", { detail: tab }));
-    const el = document.getElementById(targetId);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      history.replaceState(null, "", `#${targetId}`);
-    }
+  const goView = (view: View) => {
+    window.dispatchEvent(new CustomEvent("alchemical:set-view", { detail: view }));
   };
 
   return (
@@ -47,18 +47,20 @@ export function Sidebar() {
         </div>
         <img src="/alchemical-logo.svg" alt="Alchemical logo" style={{ width: "100%", height: 30, objectFit: "contain", filter: "drop-shadow(0 2px 14px rgba(34,211,238,.25))" }} />
       </div>
+
       <nav style={{ display: "grid", gap: 8 }}>
-        {items.map(({ label, Icon, targetId, tab }) => (
+        {items.map(({ label, Icon, view }) => (
           <button
             key={label}
             className="card"
-            onClick={() => goTo(targetId, tab)}
+            onClick={() => goView(view)}
             style={{ display: "flex", gap: 10, alignItems: "center", padding: "10px 12px", color: "#e5e7eb", background: "rgba(255,255,255,.03)", borderRadius: 12 }}
           >
             <Icon size={16} /> {label}
           </button>
         ))}
       </nav>
+
       <div style={{ marginTop: 16, display: "grid", gap: 8 }}>
         {services.length === 0 && <small style={{ color: "#94a3b8" }}>Cargando estado core...</small>}
         {services.map((s) => <Status key={s.name} label={s.name} state={s.health} />)}
