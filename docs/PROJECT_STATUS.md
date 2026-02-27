@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-27 15:27:28 UTC**
+- Generated: **2026-02-27 11:18:53 UTC**
 - Branch: **main**
-- HEAD: **3a81af3**
-- Last commit: **3a81af3 Merge branch 'main' of https://github.com/smouj/alchemical-agent-ecosystem (2026-02-27)**
+- HEAD: **86c953d**
+- Last commit: **86c953d Merge pull request #83 from smouj/session/agent_f9d320fb-655e-46c1-b4a2-1b0a52752052 (2026-02-27)**
 
 ## Repository Metrics
 
@@ -16,7 +16,7 @@ _Auto-generated from repository state. Do not edit manually._
 | Runtime services | 10 |
 | Skills repos | 11 |
 | Dashboard API routes | 23 |
-| Gateway endpoints | 31 |
+| Gateway endpoints | 29 |
 
 ## Runtime Services (from /services)
 
