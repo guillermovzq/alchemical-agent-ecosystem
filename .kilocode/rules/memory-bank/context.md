@@ -1,87 +1,117 @@
-# Active Context: Next.js Starter Template
+# Active Context: Alchemical Agent Ecosystem Dashboard
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ Alchemical Dashboard PERFECTED - Production Ready
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+El proyecto ha sido transformado de un template básico de Next.js a un **Dashboard de Orquestación Multi-Agente** épico con tema alquímico oscuro premium. La interfaz transmite poder, soberanía y misterio.
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+### Alchemical Dashboard Implementation
+- [x] Layout de 4 zonas colapsables (Grimorio, Studio, Panel Contextual, Consola)
+- [x] Tema visual "Magnum Opus": negro profundo #0A0A0A + oro alquímico #FFD700 + fuego naranja #FF4D00
+- [x] Agent Node Studio con React Flow (canvas gigante con zoom/pan perfecto)
+- [x] Nodos alquímicos personalizados con glows según rol (Prima Materia, Catalizador, Refinador, etc.)
+- [x] Animaciones de transmutación (Nigredo → Albedo → Citrinitas → Rubedo)
+- [x] Circle Builder modal con plantillas predefinidas
+- [x] Grimorio Sidebar con Círculos, Agentes y Skills
+- [x] Panel derecho con tabs: Inspector, Config, Memoria, Telemetría
+- [x] Consola de Transmutación con logs en tiempo real
+- [x] Zustand store para estado global
+- [x] Modo Focus (pantalla completa)
+- [x] Onboarding místico con animaciones
+- [x] Framer Motion para micro-interacciones
 
 ## Current Structure
 
-| File/Directory | Purpose | Status |
-|----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
-
-## Current Focus
-
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
-
-## Quick Start Guide
-
-### To add a new page:
-
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout con fonts Cinzel + Inter + JetBrains Mono
+│   ├── page.tsx            # Redirect a /dashboard
+│   ├── globals.css         # Design System Alquímico completo
+│   └── dashboard/
+│       └── page.tsx        # Main dashboard con 4 zonas
+├── components/
+│   ├── layout/
+│   │   └── TopBar.tsx      # Top navigation con system status
+│   ├── sidebar/
+│   │   └── GrimoireSidebar.tsx  # Left panel (Círculos, Agentes, Skills)
+│   ├── panels/
+│   │   ├── RightPanel.tsx       # Right panel con tabs
+│   │   └── AgentInspector.tsx   # Agent detail view
+│   ├── studio/
+│   │   ├── AgentNodeStudio.tsx  # React Flow canvas principal
+│   │   ├── CircleBuilder.tsx    # Modal forjar Círculos
+│   │   └── CustomNode.tsx       # Nodos alquímicos personalizados
+│   └── console/
+│       └── TransmutationConsole.tsx  # Logs en tiempo real
+└── lib/
+    └── store/
+        └── dashboard.ts    # Zustand store completo
 ```
 
-### To add components:
+## Agentes Predefinidos (7)
 
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
+| Agente | Rol | Codename | Modelo |
+|--------|-----|----------|--------|
+| Velktharion | Prima Materia | El Arquitecto | llama3.2 |
+| Synapsara | Tejedor | La Tejedora | mistral |
+| Kryonexus | Centinela | El Guardián | phi3 |
+| Pyraxis | Catalizador | El Catalizador | codellama |
+| Lumivex | Refinador | El Refinador | gemma2 |
+| Archivex | Escriba | El Escriba | llama3.2 |
+| Oraclyx | Oráculo | El Oráculo | deepseek-r1 |
 
-### To add a database:
+## Dependencies Added
 
-Follow `.kilocode/recipes/add-database.md`
+- @xyflow/react (React Flow)
+- framer-motion (Animaciones)
+- zustand (State management)
+- lucide-react (Iconos)
+- @radix-ui/* (Componentes primitivos)
+- clsx, tailwind-merge, class-variance-authority
 
-### To add API routes:
+## Key Features
 
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
+### 🎨 Design System Alquímico
+- Paleta: Void (#0A0A0A), Gold (#FFD700), Fire (#FF4D00), Mystic (#8B5CF6)
+- Tipografía: Cinzel (headers), Inter (body), JetBrains Mono (code)
+- Sombras: glow-gold, glow-fire, glow-mystic
+- Animaciones: transmutation-pulse, energy-flow, forge-ignite
 
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
+### 🧙 Flujo de Usuario
+1. Bienvenida mística con símbolo alquímico animado
+2. Grimorio sidebar para gestionar Círculos y Agentes
+3. Canvas central para diseñar flujos con drag & drop
+4. Panel derecho para inspeccionar y configurar
+5. Consola inferior para logs en tiempo real
 
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+### ⚗️ Forja de Círculos
+- Plantillas: Investigación, Forja de Código, Creación, Oracular
+- Selección de roles dinámica
+- Animación de transmutación en 4 fases
+- Auto-sugerencias de IA
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
+| 2026-02-27 | Alchemical Dashboard COMPLETED - All components, animations, theming |
 | Initial | Template created with base setup |
+
+## Quick Commands
+
+```bash
+bun typecheck  # Check TypeScript
+bun lint       # Check ESLint
+bun dev        # Start dev server (localhost:3000)
+```
+
+## Keyboard Shortcuts
+
+- `Ctrl/Cmd + B`: Toggle Grimorio sidebar
+- `Ctrl/Cmd + J`: Toggle Consola
+- `F11`: Modo Focus
+- `Escape`: Cerrar modales
