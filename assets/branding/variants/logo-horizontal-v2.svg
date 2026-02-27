@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1200 280" width="1200" height="280"
+     role="img" aria-label="Alchemical Agent Ecosystem v2.0 – Magnum Opus">
+
+  <defs>
+
+    <!-- ═══════════════════════════════════════════
+         GRADIENTS
+    ═══════════════════════════════════════════ -->
+
+    <!-- Gold → Emerald hex fill -->
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFD700" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#00FFAA" stop-opacity="1"/>
+    </linearGradient>
+
+    <!-- Radial glow behind hex -->
+    <radialGradient id="hexGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#00FFAA" stop-opacity="0.55"/>
+      <stop offset="60%"  stop-color="#4B0082" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#4B0082" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Outer ring / ouroboros gradient -->
+    <linearGradient id="ouroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#4B0082"/>
+      <stop offset="50%"  stop-color="#9D4EDD"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+
+    <!-- Node orbit line gradient -->
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#9D4EDD" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#00FFAA" stop-opacity="0.4"/>
+    </linearGradient>
+
+    <!-- Text: "Alchemical" Gold → Purple -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#9D4EDD"/>
+    </linearGradient>
+
+    <!-- ═══════════════════════════════════════════
+         FILTERS
+    ═══════════════════════════════════════════ -->
+
+    <!-- Soft glow on hex gem -->
+    <filter id="hexGlowFilter" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Tight node glow -->
+    <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Ouroboros ring glow -->
+    <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Title text glow -->
+    <filter id="textGlow" x="-10%" y="-40%" width="120%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Decorative line glow -->
+    <filter id="lineGlowFilter" x="-5%" y="-200%" width="110%" height="500%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- ═══════════════════════════════════════════
+         CLIP PATH – keep icon inside 280×280 box
+    ═══════════════════════════════════════════ -->
+    <clipPath id="iconClip">
+      <rect x="0" y="0" width="280" height="280"/>
+    </clipPath>
+
+  </defs>
+
+  <!-- ════════════════════════════════════════════════════════
+       LEFT ICON — 280×280  (centre = 140,140)
+  ════════════════════════════════════════════════════════════ -->
+  <g clip-path="url(#iconClip)">
+
+    <!-- Ambient background radial wash -->
+    <circle cx="140" cy="140" r="130" fill="url(#hexGlow)" opacity="0.6"/>
+
+    <!-- ── Outer tick / rune marks (12 evenly spaced) ── -->
+    <g stroke="#FFD700" stroke-width="1.5" opacity="0.45">
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(0   140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(30  140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(60  140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(90  140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(120 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(150 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(180 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(210 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(240 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(270 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(300 140 140)"/>
+      <line x1="140" y1="22"  x2="140" y2="12"  transform="rotate(330 140 140)"/>
+    </g>
+
+    <!-- ── Ouroboros ring (dashed arc + snake head accent) ── -->
+    <!-- Full ring base -->
+    <circle cx="140" cy="140" r="118"
+            fill="none"
+            stroke="url(#ouroGrad)"
+            stroke-width="9"
+            stroke-dasharray="680 60"
+            stroke-dashoffset="0"
+            stroke-linecap="round"
+            filter="url(#ringGlow)"
+            opacity="0.95"/>
+
+    <!-- Gold accent cap (snake tail) -->
+    <circle cx="140" cy="140" r="118"
+            fill="none"
+            stroke="#FFD700"
+            stroke-width="9"
+            stroke-dasharray="28 712"
+            stroke-dashoffset="4"
+            stroke-linecap="round"
+            opacity="0.9"/>
+
+    <!-- Snake head triangle at top -->
+    <polygon points="140,19 133,31 147,31"
+             fill="#FFD700" opacity="0.85"/>
+
+    <!-- ── Secondary inner guide ring ── -->
+    <circle cx="140" cy="140" r="96"
+            fill="none"
+            stroke="#9D4EDD"
+            stroke-width="1"
+            stroke-dasharray="4 6"
+            opacity="0.5"/>
+
+    <!-- ── Connecting lines from centre to 6 nodes ── -->
+    <!-- Node positions (r=72, angles: 90,150,210,270,330,30 → top first) -->
+    <!-- node 0: 90°  → (140, 68)   -->
+    <!-- node 1: 150° → (202, 104)  -->
+    <!-- node 2: 210° → (202, 176)  -->
+    <!-- node 3: 270° → (140, 212)  -->
+    <!-- node 4: 330° → ( 78, 176)  -->
+    <!-- node 5:  30° → ( 78, 104)  -->
+    <g stroke="#9D4EDD" stroke-width="1" opacity="0.6" stroke-dasharray="3 4">
+      <line x1="140" y1="140" x2="140" y2="68"/>
+      <line x1="140" y1="140" x2="202" y2="104"/>
+      <line x1="140" y1="140" x2="202" y2="176"/>
+      <line x1="140" y1="140" x2="140" y2="212"/>
+      <line x1="140" y1="140" x2="78"  y2="176"/>
+      <line x1="140" y1="140" x2="78"  y2="104"/>
+    </g>
+
+    <!-- ── Orbit ring for nodes ── -->
+    <circle cx="140" cy="140" r="72"
+            fill="none"
+            stroke="#00FFAA"
+            stroke-width="0.75"
+            opacity="0.25"/>
+
+    <!-- ── 6 Agent-node circles ── -->
+    <!-- Each has an outer glow ring + solid fill dot -->
+    <!-- Node 0 – top (90°) -->
+    <circle cx="140" cy="68" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="140" cy="68" r="7"  fill="#00FFAA" opacity="0.9"/>
+
+    <!-- Node 1 – upper-right (30°) -->
+    <circle cx="202" cy="104" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="202" cy="104" r="7"  fill="#FFD700" opacity="0.9"/>
+
+    <!-- Node 2 – lower-right (330°) -->
+    <circle cx="202" cy="176" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="202" cy="176" r="7"  fill="#00FFAA" opacity="0.9"/>
+
+    <!-- Node 3 – bottom (270°) -->
+    <circle cx="140" cy="212" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="140" cy="212" r="7"  fill="#FFD700" opacity="0.9"/>
+
+    <!-- Node 4 – lower-left (210°) -->
+    <circle cx="78" cy="176" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="78" cy="176" r="7"  fill="#00FFAA" opacity="0.9"/>
+
+    <!-- Node 5 – upper-left (150°) -->
+    <circle cx="78" cy="104" r="13" fill="#0A0A0A" stroke="#9D4EDD" stroke-width="2" filter="url(#nodeGlow)" opacity="0.9"/>
+    <circle cx="78" cy="104" r="7"  fill="#FFD700" opacity="0.9"/>
+
+    <!-- ── Central hexagonal gem ── -->
+    <!-- Glow halo behind hex -->
+    <polygon points="140,94 172,112 172,148 140,166 108,148 108,112"
+             fill="url(#hexGlow)"
+             filter="url(#hexGlowFilter)"
+             opacity="0.85"/>
+
+    <!-- Hex body with gradient -->
+    <polygon points="140,94 172,112 172,148 140,166 108,148 108,112"
+             fill="url(#hexGrad)"
+             stroke="#FFD700"
+             stroke-width="2"
+             opacity="0.95"/>
+
+    <!-- Hex inner highlight (top facet) -->
+    <polygon points="140,100 165,115 140,130 115,115"
+             fill="white"
+             opacity="0.1"/>
+
+    <!-- Hex inner star – 6-pointed -->
+    <polygon points="140,104 147,118 163,118 151,128 155,144 140,135 125,144 129,128 117,118 133,118"
+             fill="none"
+             stroke="#FFD700"
+             stroke-width="1.2"
+             opacity="0.6"/>
+
+    <!-- Central eye / core dot -->
+    <circle cx="140" cy="130" r="7"
+            fill="#FFD700"
+            filter="url(#nodeGlow)"
+            opacity="0.95"/>
+    <circle cx="140" cy="130" r="3.5"
+            fill="white"
+            opacity="0.7"/>
+
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════
+       RIGHT TEXT BLOCK  — starts at x=310
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- "Alchemical" — 72px, gradient, with subtle glow shadow -->
+  <text x="310" y="110"
+        font-family="'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif"
+        font-size="76"
+        font-weight="800"
+        letter-spacing="-1"
+        fill="url(#titleGrad)"
+        filter="url(#textGlow)">Alchemical</text>
+
+  <!-- "Agent Ecosystem" — 40px, near-white -->
+  <text x="313" y="163"
+        font-family="'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif"
+        font-size="40"
+        font-weight="300"
+        letter-spacing="6"
+        fill="#E8E8FF"
+        opacity="0.92">Agent Ecosystem</text>
+
+  <!-- "Magnum Opus · v2.0" — 22px, emerald -->
+  <text x="316" y="203"
+        font-family="'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif"
+        font-size="22"
+        font-weight="400"
+        letter-spacing="4"
+        fill="#00FFAA"
+        opacity="0.88">Magnum Opus · v2.0</text>
+
+  <!-- ── Decorative divider line ── -->
+  <!-- Thin glowing horizontal rule -->
+  <line x1="310" y1="222" x2="1175" y2="222"
+        stroke="#9D4EDD"
+        stroke-width="1"
+        opacity="0.45"
+        filter="url(#lineGlowFilter)"/>
+
+  <!-- Gold shimmer accent on same line -->
+  <line x1="310" y1="222" x2="560" y2="222"
+        stroke="url(#titleGrad)"
+        stroke-width="1.5"
+        opacity="0.7"/>
+
+  <!-- ── Alchemical symbol row ── -->
+  <!-- Evenly spaced across ~865px starting at x=310, step≈144 -->
+  <text font-family="'Segoe UI Symbol', 'Segoe UI', 'Arial Unicode MS', sans-serif"
+        font-size="18"
+        fill="#FFD700"
+        opacity="0.82"
+        text-anchor="middle">
+
+    <!-- ⚗ Alembic -->
+    <tspan x="352"  y="248">⚗</tspan>
+    <!-- ☿ Mercury -->
+    <tspan x="496"  y="248">☿</tspan>
+    <!-- ♄ Saturn -->
+    <tspan x="640"  y="248">♄</tspan>
+    <!-- ♃ Jupiter -->
+    <tspan x="784"  y="248">♃</tspan>
+    <!-- ☉ Sun -->
+    <tspan x="928"  y="248">☉</tspan>
+    <!-- ☽ Moon -->
+    <tspan x="1072" y="248">☽</tspan>
+
+  </text>
+
+  <!-- Small dots between symbols -->
+  <g fill="#FFD700" opacity="0.35">
+    <circle cx="424"  cy="243" r="2"/>
+    <circle cx="568"  cy="243" r="2"/>
+    <circle cx="712"  cy="243" r="2"/>
+    <circle cx="856"  cy="243" r="2"/>
+    <circle cx="1000" cy="243" r="2"/>
+  </g>
+
+  <!-- Thin bottom rule -->
+  <line x1="310" y1="262" x2="1175" y2="262"
+        stroke="#FFD700"
+        stroke-width="0.5"
+        opacity="0.2"/>
+
+</svg>

@@ -1,0 +1,758 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1024 1024" width="1024" height="1024"
+     style="background:#0A0A0A;">
+
+  <!-- ============================================================
+       ALCHEMICAL AGENT ECOSYSTEM v2.0 – MAGNUM OPUS
+       Premium SVG Logo | 1024x1024 | Self-Contained
+  ============================================================ -->
+
+  <defs>
+
+    <!-- ── GRADIENTS ── -->
+
+    <!-- Obsidian radial background -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="#12003A"/>
+      <stop offset="55%"  stop-color="#06001A"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </radialGradient>
+
+    <!-- Ouroboros ring gradient -->
+    <linearGradient id="ouroborosGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#4B0082"/>
+      <stop offset="40%"  stop-color="#7B2FBE"/>
+      <stop offset="70%"  stop-color="#9D4EDD"/>
+      <stop offset="100%" stop-color="#4B0082"/>
+    </linearGradient>
+
+    <!-- Gold scale gradient for ring -->
+    <linearGradient id="goldScaleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#FFD700" stop-opacity="0.0"/>
+      <stop offset="30%"  stop-color="#FFD700" stop-opacity="0.6"/>
+      <stop offset="60%"  stop-color="#FFF0A0" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0.0"/>
+    </linearGradient>
+
+    <!-- Philosopher's stone – face gradients -->
+    <linearGradient id="stoneTopFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFF8C0"/>
+      <stop offset="40%"  stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+
+    <linearGradient id="stoneLeftFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#9D4EDD"/>
+      <stop offset="60%"  stop-color="#4B0082"/>
+      <stop offset="100%" stop-color="#1A0035"/>
+    </linearGradient>
+
+    <linearGradient id="stoneRightFaceGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#C0840A"/>
+      <stop offset="60%"  stop-color="#7B2FBE"/>
+      <stop offset="100%" stop-color="#2A0060"/>
+    </linearGradient>
+
+    <linearGradient id="stoneFrontFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#6A20B0"/>
+      <stop offset="50%"  stop-color="#3A0070"/>
+      <stop offset="100%" stop-color="#12002A"/>
+    </linearGradient>
+
+    <linearGradient id="stoneBottomFaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#B8860B"/>
+      <stop offset="100%" stop-color="#4A2800"/>
+    </linearGradient>
+
+    <!-- Emerald inner glow radial -->
+    <radialGradient id="emeraldCoreGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%"   stop-color="#00FFAA" stop-opacity="0.95"/>
+      <stop offset="35%"  stop-color="#00CC88" stop-opacity="0.7"/>
+      <stop offset="70%"  stop-color="#004433" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#001A11" stop-opacity="0.0"/>
+    </radialGradient>
+
+    <!-- Agent node gradients (6 nodes) -->
+    <radialGradient id="nodeGrad0" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#FFD700"/>
+      <stop offset="60%"  stop-color="#B8860B"/>
+      <stop offset="100%" stop-color="#3A2800"/>
+    </radialGradient>
+    <radialGradient id="nodeGrad1" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#00FFAA"/>
+      <stop offset="60%"  stop-color="#00997A"/>
+      <stop offset="100%" stop-color="#001A11"/>
+    </radialGradient>
+    <radialGradient id="nodeGrad2" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#FF2D55"/>
+      <stop offset="60%"  stop-color="#9B0A2F"/>
+      <stop offset="100%" stop-color="#2A0010"/>
+    </radialGradient>
+    <radialGradient id="nodeGrad3" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#9D4EDD"/>
+      <stop offset="60%"  stop-color="#5A1A99"/>
+      <stop offset="100%" stop-color="#1A0035"/>
+    </radialGradient>
+    <radialGradient id="nodeGrad4" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#FF9500"/>
+      <stop offset="60%"  stop-color="#994A00"/>
+      <stop offset="100%" stop-color="#2A1500"/>
+    </radialGradient>
+    <radialGradient id="nodeGrad5" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#4FC3F7"/>
+      <stop offset="60%"  stop-color="#0277BD"/>
+      <stop offset="100%" stop-color="#001A2A"/>
+    </radialGradient>
+
+    <!-- Connection line gradient -->
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#9D4EDD" stop-opacity="0.8"/>
+      <stop offset="50%"  stop-color="#00FFAA" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#9D4EDD" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <!-- Text gold gradient -->
+    <linearGradient id="textGoldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#B8860B"/>
+      <stop offset="30%"  stop-color="#FFD700"/>
+      <stop offset="60%"  stop-color="#FFF8C0"/>
+      <stop offset="80%"  stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+
+    <!-- Badge gradient -->
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+
+    <!-- ── FILTERS ── -->
+
+    <!-- Glow / bloom filter -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="saturate" values="2.5" result="saturated"/>
+      <feMerge>
+        <feMergeNode in="saturated"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Strong glow for philosopher's stone -->
+    <filter id="stoneGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur1"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6"  result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle glow for nodes -->
+    <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Drop shadow for text -->
+    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#FFD700" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Emerald text glow -->
+    <filter id="emeraldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Inner shadow for ring -->
+    <filter id="ringInnerShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="shadow"/>
+      <feOffset dx="0" dy="2" result="offsetShadow"/>
+      <feComposite in="offsetShadow" in2="SourceAlpha" operator="in" result="innerShadow"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="innerShadow"/>
+      </feMerge>
+    </filter>
+
+    <!-- Outer ring aura -->
+    <filter id="ringAura" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="aura"/>
+      <feMerge>
+        <feMergeNode in="aura"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Clip path for canvas -->
+    <clipPath id="canvasClip">
+      <rect x="0" y="0" width="1024" height="1024"/>
+    </clipPath>
+
+  </defs>
+
+  <!-- ============================================================
+       LAYER 0: BACKGROUND
+  ============================================================ -->
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#bgGrad)"/>
+
+  <!-- Subtle background grid lines -->
+  <g opacity="0.04" stroke="#9D4EDD" stroke-width="0.5">
+    <!-- Vertical lines -->
+    <line x1="128" y1="0" x2="128" y2="1024"/>
+    <line x1="256" y1="0" x2="256" y2="1024"/>
+    <line x1="384" y1="0" x2="384" y2="1024"/>
+    <line x1="512" y1="0" x2="512" y2="1024"/>
+    <line x1="640" y1="0" x2="640" y2="1024"/>
+    <line x1="768" y1="0" x2="768" y2="1024"/>
+    <line x1="896" y1="0" x2="896" y2="1024"/>
+    <!-- Horizontal lines -->
+    <line x1="0" y1="128" x2="1024" y2="128"/>
+    <line x1="0" y1="256" x2="1024" y2="256"/>
+    <line x1="0" y1="384" x2="1024" y2="384"/>
+    <line x1="0" y1="512" x2="1024" y2="512"/>
+    <line x1="0" y1="640" x2="1024" y2="640"/>
+    <line x1="0" y1="768" x2="1024" y2="768"/>
+    <line x1="0" y1="896" x2="1024" y2="896"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 1: BACKGROUND PARTICLE FIELD
+  ============================================================ -->
+  <g opacity="0.12" clip-path="url(#canvasClip)">
+    <!-- 10 small particle circles -->
+    <circle cx="98"  cy="145" r="3" fill="#9D4EDD"/>
+    <circle cx="220" cy="80"  r="2" fill="#FFD700"/>
+    <circle cx="780" cy="110" r="3" fill="#00FFAA"/>
+    <circle cx="920" cy="200" r="2" fill="#FF2D55"/>
+    <circle cx="950" cy="820" r="3" fill="#9D4EDD"/>
+    <circle cx="75"  cy="880" r="2" fill="#FFD700"/>
+    <circle cx="160" cy="940" r="3" fill="#00FFAA"/>
+    <circle cx="840" cy="960" r="2" fill="#FF2D55"/>
+    <circle cx="490" cy="60"  r="3" fill="#9D4EDD"/>
+    <circle cx="60"  cy="490" r="2" fill="#FFD700"/>
+    <!-- 5 tiny squares -->
+    <rect x="310" y="55"  width="4" height="4" fill="#00FFAA"  transform="rotate(30,312,57)"/>
+    <rect x="700" y="75"  width="3" height="3" fill="#FFD700"  transform="rotate(15,701,76)"/>
+    <rect x="980" y="500" width="4" height="4" fill="#9D4EDD"  transform="rotate(45,982,502)"/>
+    <rect x="40"  cy="600" width="3" height="3" fill="#FF2D55" transform="rotate(20,41,601)"/>
+    <rect x="500" y="990" width="4" height="4" fill="#FFD700"  transform="rotate(60,502,992)"/>
+  </g>
+
+  <!-- Faint radial lines emanating from center (mystical rays) -->
+  <g opacity="0.06" stroke="#9D4EDD" stroke-width="1" fill="none">
+    <line x1="512" y1="512" x2="512" y2="0"/>
+    <line x1="512" y1="512" x2="865" y2="147"/><!-- 30° -->
+    <line x1="512" y1="512" x2="1024" y2="218"/><!-- 15° -->
+    <line x1="512" y1="512" x2="512" y2="1024"/>
+    <line x1="512" y1="512" x2="159" y2="877"/>
+    <line x1="512" y1="512" x2="0"   y2="218"/>
+    <line x1="512" y1="512" x2="1024" y2="512"/>
+    <line x1="512" y1="512" x2="0"   y2="512"/>
+    <line x1="512" y1="512" x2="865" y2="877"/>
+    <line x1="512" y1="512" x2="159" y2="147"/>
+    <line x1="512" y1="512" x2="218" y2="0"/>
+    <line x1="512" y1="512" x2="806" y2="0"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 2: OUROBOROS RING (serpent outer boundary)
+       Center: 512,512  |  Ring outer r=480, inner r=440
+  ============================================================ -->
+
+  <!-- Ring base – deep purple fill between two circles -->
+  <!-- Outer boundary annulus drawn as a thick stroke circle -->
+  <circle cx="512" cy="512" r="460"
+          fill="none"
+          stroke="url(#ouroborosGrad)"
+          stroke-width="42"
+          filter="url(#ringAura)"
+          opacity="0.95"/>
+
+  <!-- Second, thinner gold highlight ring on the outer edge -->
+  <circle cx="512" cy="512" r="480"
+          fill="none"
+          stroke="#FFD700"
+          stroke-width="1.5"
+          opacity="0.55"/>
+  <circle cx="512" cy="512" r="440"
+          fill="none"
+          stroke="#FFD700"
+          stroke-width="1"
+          opacity="0.35"/>
+
+  <!-- ── Gold scale texture on the ring: repeating arc dashes ── -->
+  <!-- Simulated scale pattern via stroke-dasharray arcs -->
+  <circle cx="512" cy="512" r="460"
+          fill="none"
+          stroke="url(#goldScaleGrad)"
+          stroke-width="38"
+          stroke-dasharray="18 8"
+          stroke-linecap="round"
+          opacity="0.45"/>
+  <circle cx="512" cy="512" r="460"
+          fill="none"
+          stroke="#FFF0A0"
+          stroke-width="1.5"
+          stroke-dasharray="9 17"
+          stroke-dashoffset="4"
+          opacity="0.3"/>
+
+  <!-- ── Serpent head (biting tail) at top of ring ── -->
+  <!-- Serpent body joins at roughly 90° (top). Head at ~75°, tail at ~105° -->
+  <!-- Head: a stylized wedge shape at top center -->
+  <g transform="translate(512,52) rotate(0)" filter="url(#glow)">
+    <!-- Head shape -->
+    <path d="M 0,-14 C -18,-10 -22,0 -16,12 L 0,18 L 16,12 C 22,0 18,-10 0,-14 Z"
+          fill="#4B0082" stroke="#FFD700" stroke-width="1.5"/>
+    <!-- Eyes -->
+    <circle cx="-7" cy="2" r="3" fill="#FF2D55"/>
+    <circle cx="7"  cy="2" r="3" fill="#FF2D55"/>
+    <!-- Tongue -->
+    <path d="M -3,16 L -6,24 M 3,16 L 6,24"
+          stroke="#FF2D55" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Gold crown marks on head -->
+    <path d="M -8,-8 L -5,-14 L 0,-10 L 5,-14 L 8,-8"
+          fill="none" stroke="#FFD700" stroke-width="1" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ── Serpent spine detail marks along ring ── -->
+  <g opacity="0.28" stroke="#FFD700" stroke-width="1" fill="none">
+    <!-- Small spine nubs at intervals, rotated around the ring -->
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(  0,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate( 20,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate( 40,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate( 60,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate( 80,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(100,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(120,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(140,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(160,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(180,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(200,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(220,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(240,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(260,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(280,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(300,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(320,512,512)"/>
+    <line x1="512" y1="30" x2="512" y2="42" transform="rotate(340,512,512)"/>
+  </g>
+
+  <!-- ── Rune inscription on the ring (path text) ── -->
+  <defs>
+    <path id="ringTextPath"
+          d="M 512,512 m -450,0 a 450,450 0 1,1 900,0 a 450,450 0 1,1 -900,0"/>
+  </defs>
+  <text font-size="13" fill="#FFD700" opacity="0.6"
+        font-family="serif" letter-spacing="6">
+    <textPath xlink:href="#ringTextPath" startOffset="3%">
+      ✦ SOLVE ET COAGULA ✦ PRIMA MATERIA ✦ QUINTA ESSENTIA ✦ LAPIS PHILOSOPHORUM ✦ AS ABOVE SO BELOW ✦ OMNIA UNUM ✦
+    </textPath>
+  </text>
+
+  <!-- ============================================================
+       LAYER 3: INNER GEOMETRIC FRAMEWORK
+       Large Star of David / hexagram guides
+  ============================================================ -->
+
+  <!-- Outer geometric circle (r=410) -->
+  <circle cx="512" cy="512" r="415"
+          fill="none" stroke="#4B0082" stroke-width="1" opacity="0.4"/>
+
+  <!-- Hexagram lines connecting nodes (r=340) -->
+  <!-- Triangle 1: nodes 0(top), 2(lower-right), 4(lower-left) -->
+  <polygon points="512,172 806,682 218,682"
+           fill="none" stroke="#9D4EDD" stroke-width="0.8" opacity="0.25"/>
+  <!-- Triangle 2: nodes 1(upper-right), 3(bottom), 5(upper-left) -->
+  <polygon points="806,342 512,852 218,342"
+           fill="none" stroke="#9D4EDD" stroke-width="0.8" opacity="0.25"/>
+
+  <!-- Inner hexagon connecting the 6 nodes -->
+  <polygon points="512,172 806,342 806,682 512,852 218,682 218,342"
+           fill="none" stroke="#FFD700" stroke-width="0.6" opacity="0.18"/>
+
+  <!-- ============================================================
+       LAYER 4: CONNECTION LINES (agent node to center)
+  ============================================================ -->
+  <!-- Each line connects center (512,512) to each node position -->
+  <!-- Node positions (r=340):
+       0°  → 512, 172    (top)
+       60° → 806, 342
+      120° → 806, 682
+      180° → 512, 852
+      240° → 218, 682
+      300° → 218, 342
+  -->
+  <g filter="url(#glow)" opacity="0.65">
+    <line x1="512" y1="512" x2="512" y2="172"
+          stroke="#FFD700"  stroke-width="1.5" stroke-dasharray="6 4"/>
+    <line x1="512" y1="512" x2="806" y2="342"
+          stroke="#00FFAA"  stroke-width="1.5" stroke-dasharray="6 4"/>
+    <line x1="512" y1="512" x2="806" y2="682"
+          stroke="#FF2D55"  stroke-width="1.5" stroke-dasharray="6 4"/>
+    <line x1="512" y1="512" x2="512" y2="852"
+          stroke="#9D4EDD"  stroke-width="1.5" stroke-dasharray="6 4"/>
+    <line x1="512" y1="512" x2="218" y2="682"
+          stroke="#FF9500"  stroke-width="1.5" stroke-dasharray="6 4"/>
+    <line x1="512" y1="512" x2="218" y2="342"
+          stroke="#4FC3F7"  stroke-width="1.5" stroke-dasharray="6 4"/>
+  </g>
+
+  <!-- Small energy pulses along the lines -->
+  <g opacity="0.5">
+    <circle cx="512" cy="342" r="3" fill="#FFD700" filter="url(#glow)"/>
+    <circle cx="659" cy="427" r="3" fill="#00FFAA" filter="url(#glow)"/>
+    <circle cx="659" cy="597" r="3" fill="#FF2D55" filter="url(#glow)"/>
+    <circle cx="512" cy="682" r="3" fill="#9D4EDD" filter="url(#glow)"/>
+    <circle cx="365" cy="597" r="3" fill="#FF9500" filter="url(#glow)"/>
+    <circle cx="365" cy="427" r="3" fill="#4FC3F7" filter="url(#glow)"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 5: AGENT NODE CIRCLES (6 orbiting nodes, r=340 from center)
+  ============================================================ -->
+
+  <!-- ── NODE 0: ⚗ Alembic — top (512, 172) — Gold ── -->
+  <g transform="translate(512,172)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#0D0018" stroke="#FFD700" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad0)" opacity="0.6"/>
+    <!-- Inner ring detail -->
+    <circle r="36" fill="none" stroke="#FFD700" stroke-width="0.8" opacity="0.5"/>
+    <!-- Rune symbol ⚗ -->
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#FFD700" font-family="serif" opacity="0.95">⚗</text>
+    <!-- Small decorative dots -->
+    <circle cx="-28" cy="0" r="2" fill="#FFD700" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#FFD700" opacity="0.6"/>
+  </g>
+
+  <!-- ── NODE 1: ☿ Mercury — upper-right (806, 342) — Emerald ── -->
+  <g transform="translate(806,342)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#001A0D" stroke="#00FFAA" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad1)" opacity="0.6"/>
+    <circle r="36" fill="none" stroke="#00FFAA" stroke-width="0.8" opacity="0.5"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#00FFAA" font-family="serif" opacity="0.95">☿</text>
+    <circle cx="-28" cy="0" r="2" fill="#00FFAA" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#00FFAA" opacity="0.6"/>
+  </g>
+
+  <!-- ── NODE 2: ♄ Saturn — lower-right (806, 682) — Crimson ── -->
+  <g transform="translate(806,682)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#1A0008" stroke="#FF2D55" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad2)" opacity="0.6"/>
+    <circle r="36" fill="none" stroke="#FF2D55" stroke-width="0.8" opacity="0.5"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#FF2D55" font-family="serif" opacity="0.95">♄</text>
+    <circle cx="-28" cy="0" r="2" fill="#FF2D55" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#FF2D55" opacity="0.6"/>
+  </g>
+
+  <!-- ── NODE 3: ♃ Jupiter — bottom (512, 852) — Violet ── -->
+  <g transform="translate(512,852)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#0D001A" stroke="#9D4EDD" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad3)" opacity="0.6"/>
+    <circle r="36" fill="none" stroke="#9D4EDD" stroke-width="0.8" opacity="0.5"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#9D4EDD" font-family="serif" opacity="0.95">♃</text>
+    <circle cx="-28" cy="0" r="2" fill="#9D4EDD" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#9D4EDD" opacity="0.6"/>
+  </g>
+
+  <!-- ── NODE 4: ☉ Sol — lower-left (218, 682) — Orange ── -->
+  <g transform="translate(218,682)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#1A0A00" stroke="#FF9500" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad4)" opacity="0.6"/>
+    <circle r="36" fill="none" stroke="#FF9500" stroke-width="0.8" opacity="0.5"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#FF9500" font-family="serif" opacity="0.95">☉</text>
+    <circle cx="-28" cy="0" r="2" fill="#FF9500" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#FF9500" opacity="0.6"/>
+  </g>
+
+  <!-- ── NODE 5: ☽ Luna — upper-left (218, 342) — Cyan ── -->
+  <g transform="translate(218,342)" filter="url(#nodeGlow)">
+    <circle r="46" fill="#00101A" stroke="#4FC3F7" stroke-width="2.5"/>
+    <circle r="46" fill="url(#nodeGrad5)" opacity="0.6"/>
+    <circle r="36" fill="none" stroke="#4FC3F7" stroke-width="0.8" opacity="0.5"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32"
+          fill="#4FC3F7" font-family="serif" opacity="0.95">☽</text>
+    <circle cx="-28" cy="0" r="2" fill="#4FC3F7" opacity="0.6"/>
+    <circle cx=" 28" cy="0" r="2" fill="#4FC3F7" opacity="0.6"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 6: PHILOSOPHER'S STONE — Central Hexagonal Prism
+       Center 512,512 | 3D faceted hexagonal prism
+       Hex top: flat-top hexagon, radius ~110
+       All faces drawn as explicit paths
+  ============================================================ -->
+
+  <!--
+    Hexagonal prism geometry (flat-top orientation):
+    Top-face vertices (r=110, center 512,512):
+      A = 512+110,   512        = 622, 512
+      B = 512+55,    512-95.26  = 567, 416.74
+      C = 512-55,    512-95.26  = 457, 416.74
+      D = 512-110,   512        = 402, 512
+      E = 512-55,    512+95.26  = 457, 607.26
+      F = 512+55,    512+95.26  = 567, 607.26
+
+    3D prism drop: 55px downward (the "height" of the prism)
+    Bottom-face vertices offset by (20, 55) to give perspective:
+      A'= 642, 567
+      B'= 587, 471.74
+      C'= 477, 471.74
+      D'= 422, 567
+      E'= 477, 662.26
+      F'= 587, 662.26
+  -->
+
+  <!-- Aura / glow halo behind stone -->
+  <circle cx="512" cy="512" r="155"
+          fill="none"
+          stroke="#00FFAA"
+          stroke-width="30"
+          opacity="0.12"
+          filter="url(#stoneGlow)"/>
+  <circle cx="512" cy="512" r="130"
+          fill="#00FFAA"
+          opacity="0.06"
+          filter="url(#stoneGlow)"/>
+
+  <!-- ── Right face (A, B, B', A') ── -->
+  <polygon points="622,512 567,416.74 587,471.74 642,567"
+           fill="url(#stoneRightFaceGrad)"
+           stroke="#FFD700" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <!-- ── Left face (C, D, D', C') ── -->
+  <polygon points="457,416.74 402,512 422,567 477,471.74"
+           fill="url(#stoneLeftFaceGrad)"
+           stroke="#FFD700" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <!-- ── Front-right face (A, F, F', A') ── -->
+  <polygon points="622,512 567,607.26 587,662.26 642,567"
+           fill="url(#stoneFrontFaceGrad)"
+           stroke="#9D4EDD" stroke-width="1" stroke-linejoin="round" opacity="0.9"/>
+
+  <!-- ── Front-left face (D, E, E', D') ── -->
+  <polygon points="402,512 457,607.26 477,662.26 422,567"
+           fill="url(#stoneFrontFaceGrad)"
+           stroke="#9D4EDD" stroke-width="1" stroke-linejoin="round" opacity="0.85"/>
+
+  <!-- ── Bottom face (E, F, F', E') ── -->
+  <polygon points="457,607.26 567,607.26 587,662.26 477,662.26"
+           fill="url(#stoneBottomFaceGrad)"
+           stroke="#B8860B" stroke-width="1" stroke-linejoin="round" opacity="0.8"/>
+
+  <!-- ── Top face (A B C D E F) — most visible, gold lit ── -->
+  <polygon points="622,512 567,416.74 457,416.74 402,512 457,607.26 567,607.26"
+           fill="url(#stoneTopFaceGrad)"
+           stroke="#FFD700" stroke-width="1.8" stroke-linejoin="round"
+           filter="url(#stoneGlow)"/>
+
+  <!-- ── Emerald inner glow on top face ── -->
+  <polygon points="622,512 567,416.74 457,416.74 402,512 457,607.26 567,607.26"
+           fill="url(#emeraldCoreGrad)"
+           opacity="0.75"
+           filter="url(#stoneGlow)"/>
+
+  <!-- ── Facet highlight lines on top face ── -->
+  <g stroke="#FFF8C0" stroke-width="1" opacity="0.55" fill="none">
+    <line x1="512" y1="512" x2="622" y2="512"/>
+    <line x1="512" y1="512" x2="567" y2="416.74"/>
+    <line x1="512" y1="512" x2="457" y2="416.74"/>
+    <line x1="512" y1="512" x2="402" y2="512"/>
+    <line x1="512" y1="512" x2="457" y2="607.26"/>
+    <line x1="512" y1="512" x2="567" y2="607.26"/>
+  </g>
+
+  <!-- ── Crystal interior sparkle ── -->
+  <g filter="url(#stoneGlow)" opacity="0.85">
+    <!-- Central bright point -->
+    <circle cx="512" cy="490" r="5" fill="#FFFFFF"/>
+    <!-- Star rays from central point -->
+    <line x1="512" y1="478" x2="512" y2="466" stroke="#FFFFFF" stroke-width="1.5" opacity="0.8"/>
+    <line x1="524" y1="490" x2="536" y2="490" stroke="#FFFFFF" stroke-width="1.5" opacity="0.8"/>
+    <line x1="500" y1="490" x2="488" y2="490" stroke="#FFFFFF" stroke-width="1.5" opacity="0.8"/>
+    <line x1="520" y1="482" x2="528" y2="474" stroke="#FFFFFF" stroke-width="1.2" opacity="0.6"/>
+    <line x1="504" y1="498" x2="496" y2="506" stroke="#FFFFFF" stroke-width="1.2" opacity="0.6"/>
+  </g>
+
+  <!-- ── Alchemical triangle overlay on top face (upward = fire) ── -->
+  <polygon points="512,437 569,557 455,557"
+           fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+  <!-- Downward triangle = water -->
+  <polygon points="512,587 455,467 569,467"
+           fill="none" stroke="#00FFAA" stroke-width="1.2" opacity="0.4"/>
+
+  <!-- ── Center dot emerald ── -->
+  <circle cx="512" cy="512" r="7" fill="#00FFAA" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="512" cy="512" r="3" fill="#FFFFFF" opacity="0.95"/>
+
+  <!-- ── Edge highlight: top-face top-left edge bright specular ── -->
+  <line x1="567" y1="416.74" x2="457" y2="416.74"
+        stroke="#FFF8C0" stroke-width="2.5" opacity="0.7" stroke-linecap="round"/>
+  <line x1="622" y1="512"   x2="567" y2="416.74"
+        stroke="#FFF0A0" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- ============================================================
+       LAYER 7: DECORATIVE INNER CIRCLE & RUNE RING
+  ============================================================ -->
+
+  <!-- Inner sacred circle (r=200) -->
+  <circle cx="512" cy="512" r="200"
+          fill="none"
+          stroke="#4B0082"
+          stroke-width="1.5"
+          stroke-dasharray="4 8"
+          opacity="0.5"/>
+  <!-- Second ring r=240 -->
+  <circle cx="512" cy="512" r="245"
+          fill="none"
+          stroke="#9D4EDD"
+          stroke-width="0.8"
+          stroke-dasharray="3 12"
+          opacity="0.35"/>
+
+  <!-- Orbital path circle (r=340, where nodes live) -->
+  <circle cx="512" cy="512" r="340"
+          fill="none"
+          stroke="#FFD700"
+          stroke-width="0.6"
+          stroke-dasharray="2 10"
+          opacity="0.22"/>
+
+  <!-- ── 12-point star decoration around stone (r=160) ── -->
+  <g opacity="0.2" fill="none" stroke="#9D4EDD" stroke-width="0.8">
+    <!-- 12 radial ticks at r=155..170 -->
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(  0,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate( 30,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate( 60,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate( 90,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(120,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(150,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(180,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(210,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(240,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(270,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(300,512,512)"/>
+    <line x1="512" y1="342" x2="512" y2="357" transform="rotate(330,512,512)"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 8: TEXT — MAIN TITLE & SUBTITLE
+  ============================================================ -->
+
+  <!-- "ALCHEMICAL ECOSYSTEM" — main title -->
+  <text x="512" y="960"
+        text-anchor="middle"
+        font-family="'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif"
+        font-size="44"
+        font-weight="700"
+        letter-spacing="7"
+        fill="url(#textGoldGrad)"
+        filter="url(#textShadow)">ALCHEMICAL ECOSYSTEM</text>
+
+  <!-- Decorative line above title -->
+  <line x1="180" y1="940" x2="845" y2="940"
+        stroke="url(#textGoldGrad)" stroke-width="1" opacity="0.6"/>
+  <!-- Small diamond decorators -->
+  <polygon points="180,940 186,934 192,940 186,946"
+           fill="#FFD700" opacity="0.7"/>
+  <polygon points="832,940 838,934 844,940 838,946"
+           fill="#FFD700" opacity="0.7"/>
+
+  <!-- "MAGNUM OPUS" — subtitle -->
+  <text x="512" y="993"
+        text-anchor="middle"
+        font-family="'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif"
+        font-size="22"
+        font-weight="400"
+        letter-spacing="14"
+        fill="#00FFAA"
+        filter="url(#emeraldGlow)"
+        opacity="0.9">MAGNUM OPUS</text>
+
+  <!-- Tiny decorative dots beside subtitle -->
+  <circle cx="290" cy="988" r="2.5" fill="#00FFAA" opacity="0.5" filter="url(#glow)"/>
+  <circle cx="734" cy="988" r="2.5" fill="#00FFAA" opacity="0.5" filter="url(#glow)"/>
+
+  <!-- ============================================================
+       LAYER 9: v2.0 BADGE (top-right)
+  ============================================================ -->
+
+  <!-- Badge background pill -->
+  <rect x="888" y="38" width="98" height="38" rx="8" ry="8"
+        fill="#0D0018" stroke="#FFD700" stroke-width="1.5" opacity="0.95"/>
+  <!-- Badge inner fill -->
+  <rect x="890" y="40" width="94" height="34" rx="7" ry="7"
+        fill="#1A003A" opacity="0.7"/>
+  <!-- Badge text -->
+  <text x="937" y="63"
+        text-anchor="middle"
+        font-family="'Courier New', 'Lucida Console', monospace"
+        font-size="20"
+        font-weight="700"
+        letter-spacing="1"
+        fill="url(#badgeGrad)">v2.0</text>
+
+  <!-- Small gold star / diamond beside badge -->
+  <polygon points="878,50 882,44 886,50 882,56"
+           fill="#FFD700" opacity="0.65" filter="url(#glow)"/>
+
+  <!-- ============================================================
+       LAYER 10: FINISHING TOUCHES — corner ornaments, vignette
+  ============================================================ -->
+
+  <!-- Subtle vignette overlay -->
+  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+    <stop offset="60%"  stop-color="#0A0A0A" stop-opacity="0.0"/>
+    <stop offset="100%" stop-color="#0A0A0A" stop-opacity="0.65"/>
+  </radialGradient>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#vignette)"/>
+
+  <!-- Corner alchemical marks (small ornamental) -->
+  <!-- Top-left -->
+  <g transform="translate(42,42)" opacity="0.35" stroke="#9D4EDD" stroke-width="1" fill="none">
+    <line x1="0" y1="0" x2="28" y2="0"/>
+    <line x1="0" y1="0" x2="0"  y2="28"/>
+    <circle cx="0" cy="0" r="6"/>
+  </g>
+  <!-- Top-right (excluding badge area) -->
+  <g transform="translate(982,42)" opacity="0.35" stroke="#9D4EDD" stroke-width="1" fill="none">
+    <line x1="0" y1="0" x2="-28" y2="0"/>
+    <line x1="0" y1="0" x2="0"   y2="28"/>
+    <circle cx="0" cy="0" r="6"/>
+  </g>
+  <!-- Bottom-left -->
+  <g transform="translate(42,982)" opacity="0.35" stroke="#9D4EDD" stroke-width="1" fill="none">
+    <line x1="0" y1="0" x2="28" y2="0"/>
+    <line x1="0" y1="0" x2="0"  y2="-28"/>
+    <circle cx="0" cy="0" r="6"/>
+  </g>
+  <!-- Bottom-right -->
+  <g transform="translate(982,982)" opacity="0.35" stroke="#9D4EDD" stroke-width="1" fill="none">
+    <line x1="0" y1="0" x2="-28" y2="0"/>
+    <line x1="0" y1="0" x2="0"   y2="-28"/>
+    <circle cx="0" cy="0" r="6"/>
+  </g>
+
+  <!-- Final emerald pulse ring at center (pure glow) -->
+  <circle cx="512" cy="512" r="128"
+          fill="none"
+          stroke="#00FFAA"
+          stroke-width="1"
+          opacity="0.18"
+          filter="url(#glow)"/>
+
+</svg>

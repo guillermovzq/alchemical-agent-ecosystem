@@ -1,0 +1,1286 @@
+/**
+ * Alchemical Agent Ecosystem v2.0 — "Magnum Opus"
+ * Design System: CSS Custom Properties & Utility Classes
+ * ======================================================
+ * Tokens, glow effects, gradients, animations, and utilities
+ * for the full alchemical component library.
+ */
+
+/* ============================================================
+   IMPORT FONTS
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@300;400;500;600;700&family=Uncial+Antiqua&display=swap');
+
+/* ============================================================
+   ROOT: DESIGN TOKENS
+   ============================================================ */
+:root {
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Core Obsidian (Blacks)
+     ---------------------------------------------------------- */
+  --obsidian:            #0A0A0A;
+  --obsidian-soft:       #111118;
+  --obsidian-mid:        #16161F;
+  --obsidian-light:      #1E1E2E;
+
+  /* Obsidian scale */
+  --obsidian-50:         #E8E8F0;
+  --obsidian-100:        #C8C8D8;
+  --obsidian-200:        #9898B0;
+  --obsidian-300:        #686888;
+  --obsidian-400:        #404060;
+  --obsidian-500:        #2A2A40;
+  --obsidian-600:        #1E1E2E;
+  --obsidian-700:        #16161F;
+  --obsidian-800:        #111118;
+  --obsidian-900:        #0A0A0A;
+  --obsidian-950:        #050508;
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Arcane (Deep Purple)
+     ---------------------------------------------------------- */
+  --arcane:              #4B0082;
+  --arcane-light:        #6A0DAD;
+  --arcane-glow:         #9D4EDD;
+  --arcane-mist:         rgba(75, 0, 130, 0.15);
+
+  /* Arcane scale */
+  --arcane-50:           #F3E8FF;
+  --arcane-100:          #E2C4FF;
+  --arcane-200:          #C792F5;
+  --arcane-300:          #AB60EC;
+  --arcane-400:          #9D4EDD;
+  --arcane-500:          #7B2FBE;
+  --arcane-600:          #6A0DAD;
+  --arcane-700:          #4B0082;
+  --arcane-800:          #350060;
+  --arcane-900:          #1F0040;
+  --arcane-950:          #0F0020;
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Aurum (Gold)
+     ---------------------------------------------------------- */
+  --aurum:               #FFD700;
+  --aurum-light:         #FFE566;
+  --aurum-dark:          #CC9900;
+  --aurum-mist:          rgba(255, 215, 0, 0.12);
+
+  /* Aurum scale */
+  --aurum-50:            #FFFDE7;
+  --aurum-100:           #FFF9C4;
+  --aurum-200:           #FFF176;
+  --aurum-300:           #FFE566;
+  --aurum-400:           #FFD700;
+  --aurum-500:           #F5C800;
+  --aurum-600:           #CC9900;
+  --aurum-700:           #A07400;
+  --aurum-800:           #705000;
+  --aurum-900:           #3D2C00;
+  --aurum-950:           #1F1600;
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Aether (Emerald / Cyan)
+     ---------------------------------------------------------- */
+  --aether:              #00FFAA;
+  --aether-light:        #66FFD3;
+  --aether-dark:         #00CC88;
+  --aether-mist:         rgba(0, 255, 170, 0.10);
+
+  /* Aether scale */
+  --aether-50:           #E6FFF6;
+  --aether-100:          #C0FFE8;
+  --aether-200:          #8AFFCE;
+  --aether-300:          #66FFD3;
+  --aether-400:          #00FFAA;
+  --aether-500:          #00DD92;
+  --aether-600:          #00CC88;
+  --aether-700:          #009966;
+  --aether-800:          #006644;
+  --aether-900:          #003322;
+  --aether-950:          #001A11;
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Violet & Crimson (Accents)
+     ---------------------------------------------------------- */
+  --violet:              #7C3AED;
+  --violet-light:        #A78BFA;
+  --crimson:             #FF2D55;
+  --crimson-mist:        rgba(255, 45, 85, 0.12);
+
+  /* Crimson scale */
+  --crimson-50:          #FFE8ED;
+  --crimson-100:         #FFC4CE;
+  --crimson-200:         #FF8FA2;
+  --crimson-300:         #FF5A78;
+  --crimson-400:         #FF2D55;
+  --crimson-500:         #E6003A;
+  --crimson-600:         #CC0033;
+  --crimson-700:         #990026;
+  --crimson-800:         #66001A;
+  --crimson-900:         #33000D;
+  --crimson-950:         #1A0007;
+
+  /* ----------------------------------------------------------
+     COLOR SYSTEM — Mist (Grays / Off-whites)
+     ---------------------------------------------------------- */
+  --mist:                #E8E8FF;
+  --mist-dim:            #A0A0C0;
+  --mist-ghost:          rgba(232, 232, 255, 0.06);
+
+  /* ----------------------------------------------------------
+     TYPOGRAPHY
+     ---------------------------------------------------------- */
+  --font-display:        'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  --font-body:           'Inter', 'DM Sans', system-ui, sans-serif;
+  --font-mono:           'JetBrains Mono', 'Fira Code', monospace;
+  --font-rune:           'Uncial Antiqua', cursive;
+
+  /* Font sizes — modular scale (1.25 ratio) */
+  --text-xs:             0.64rem;
+  --text-sm:             0.8rem;
+  --text-base:           1rem;
+  --text-md:             1.25rem;
+  --text-lg:             1.563rem;
+  --text-xl:             1.953rem;
+  --text-2xl:            2.441rem;
+  --text-3xl:            3.052rem;
+  --text-4xl:            3.815rem;
+
+  /* Font weights */
+  --weight-light:        300;
+  --weight-regular:      400;
+  --weight-medium:       500;
+  --weight-semibold:     600;
+  --weight-bold:         700;
+  --weight-black:        900;
+
+  /* Line heights */
+  --leading-tight:       1.2;
+  --leading-snug:        1.375;
+  --leading-normal:      1.5;
+  --leading-relaxed:     1.625;
+  --leading-loose:       2;
+
+  /* Letter spacing */
+  --tracking-tight:      -0.025em;
+  --tracking-normal:     0em;
+  --tracking-wide:       0.05em;
+  --tracking-wider:      0.1em;
+  --tracking-widest:     0.2em;
+
+  /* ----------------------------------------------------------
+     SPACING
+     ---------------------------------------------------------- */
+  --space-1:             0.25rem;
+  --space-2:             0.5rem;
+  --space-3:             0.75rem;
+  --space-4:             1rem;
+  --space-5:             1.25rem;
+  --space-6:             1.5rem;
+  --space-8:             2rem;
+  --space-10:            2.5rem;
+  --space-12:            3rem;
+  --space-16:            4rem;
+  --space-20:            5rem;
+  --space-24:            6rem;
+  --space-32:            8rem;
+
+  /* ----------------------------------------------------------
+     BORDER RADIUS
+     ---------------------------------------------------------- */
+  --radius-none:         0;
+  --radius-sm:           0.25rem;
+  --radius-md:           0.5rem;
+  --radius-lg:           0.75rem;
+  --radius-xl:           1rem;
+  --radius-2xl:          1.5rem;
+  --radius-3xl:          2rem;
+  --radius-full:         9999px;
+
+  /* ----------------------------------------------------------
+     GLOW EFFECTS — Gold (Aurum)
+     ---------------------------------------------------------- */
+  --glow-gold-sm:
+    0 0 8px  rgba(255, 215, 0, 0.40),
+    0 0 16px rgba(255, 215, 0, 0.20);
+
+  --glow-gold-md:
+    0 0 16px rgba(255, 215, 0, 0.50),
+    0 0 32px rgba(255, 215, 0, 0.25),
+    0 0 64px rgba(255, 215, 0, 0.10);
+
+  --glow-gold-lg:
+    0 0 24px rgba(255, 215, 0, 0.60),
+    0 0 48px rgba(255, 215, 0, 0.35),
+    0 0 96px rgba(255, 215, 0, 0.15);
+
+  /* ----------------------------------------------------------
+     GLOW EFFECTS — Aether (Emerald)
+     ---------------------------------------------------------- */
+  --glow-aether-sm:
+    0 0 8px  rgba(0, 255, 170, 0.40),
+    0 0 16px rgba(0, 255, 170, 0.20);
+
+  --glow-aether-md:
+    0 0 16px rgba(0, 255, 170, 0.50),
+    0 0 32px rgba(0, 255, 170, 0.25),
+    0 0 64px rgba(0, 255, 170, 0.10);
+
+  --glow-aether-lg:
+    0 0 24px rgba(0, 255, 170, 0.60),
+    0 0 48px rgba(0, 255, 170, 0.35),
+    0 0 96px rgba(0, 255, 170, 0.15);
+
+  /* ----------------------------------------------------------
+     GLOW EFFECTS — Arcane (Purple)
+     ---------------------------------------------------------- */
+  --glow-arcane-sm:
+    0 0 8px  rgba(157, 78, 221, 0.40),
+    0 0 16px rgba(157, 78, 221, 0.20);
+
+  --glow-arcane-md:
+    0 0 16px rgba(157, 78, 221, 0.50),
+    0 0 32px rgba(157, 78, 221, 0.25),
+    0 0 64px rgba(157, 78, 221, 0.10);
+
+  --glow-arcane-lg:
+    0 0 24px rgba(157, 78, 221, 0.60),
+    0 0 48px rgba(157, 78, 221, 0.35),
+    0 0 96px rgba(157, 78, 221, 0.15);
+
+  /* ----------------------------------------------------------
+     GLOW EFFECTS — Crimson
+     ---------------------------------------------------------- */
+  --glow-crimson-sm:
+    0 0 8px  rgba(255, 45, 85, 0.40),
+    0 0 16px rgba(255, 45, 85, 0.20);
+
+  --glow-crimson-md:
+    0 0 16px rgba(255, 45, 85, 0.50),
+    0 0 32px rgba(255, 45, 85, 0.25),
+    0 0 64px rgba(255, 45, 85, 0.10);
+
+  --glow-crimson-lg:
+    0 0 24px rgba(255, 45, 85, 0.60),
+    0 0 48px rgba(255, 45, 85, 0.35),
+    0 0 96px rgba(255, 45, 85, 0.15);
+
+  /* ----------------------------------------------------------
+     GRADIENTS
+     ---------------------------------------------------------- */
+  --gradient-transmutation:
+    linear-gradient(135deg, #4B0082 0%, #9D4EDD 40%, #00FFAA 100%);
+
+  --gradient-aurum:
+    linear-gradient(135deg, #CC9900 0%, #FFD700 50%, #FFE566 100%);
+
+  --gradient-aether:
+    linear-gradient(135deg, #00CC88 0%, #00FFAA 50%, #66FFD3 100%);
+
+  --gradient-arcane:
+    linear-gradient(135deg, #2D0057 0%, #4B0082 40%, #6A0DAD 100%);
+
+  --gradient-obsidian:
+    linear-gradient(180deg, #0A0A0A 0%, #111118 50%, #16161F 100%);
+
+  --gradient-hero:
+    radial-gradient(ellipse at 50% 0%, rgba(75, 0, 130, 0.30) 0%, rgba(10, 10, 10, 0) 70%);
+
+  --gradient-crimson:
+    linear-gradient(135deg, #800020 0%, #FF2D55 50%, #FF7096 100%);
+
+  --gradient-violet:
+    linear-gradient(135deg, #4C1D95 0%, #7C3AED 50%, #A78BFA 100%);
+
+  --gradient-radial-gold:
+    radial-gradient(ellipse at center, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0) 70%);
+
+  --gradient-radial-arcane:
+    radial-gradient(ellipse at center, rgba(157, 78, 221, 0.25) 0%, rgba(157, 78, 221, 0) 70%);
+
+  /* ----------------------------------------------------------
+     BORDERS
+     ---------------------------------------------------------- */
+  --border-arcane:       1px solid rgba(157, 78, 221, 0.30);
+  --border-gold:         1px solid rgba(255, 215, 0, 0.30);
+  --border-aether:       1px solid rgba(0, 255, 170, 0.25);
+  --border-mist:         1px solid rgba(232, 232, 255, 0.08);
+  --border-glass:        1px solid rgba(255, 255, 255, 0.08);
+
+  /* ----------------------------------------------------------
+     TRANSITIONS
+     ---------------------------------------------------------- */
+  --transition-fast:     150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:     250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:     400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring:   500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-glow:     300ms ease-in-out;
+
+  /* ----------------------------------------------------------
+     Z-INDEX SCALE
+     ---------------------------------------------------------- */
+  --z-base:              0;
+  --z-raised:            10;
+  --z-dropdown:          100;
+  --z-sticky:            200;
+  --z-overlay:           300;
+  --z-modal:             400;
+  --z-toast:             500;
+  --z-tooltip:           600;
+
+  /* ----------------------------------------------------------
+     ANIMATION DURATIONS & TIMING
+     ---------------------------------------------------------- */
+  --duration-instant:    100ms;
+  --duration-fast:       200ms;
+  --duration-base:       400ms;
+  --duration-slow:       800ms;
+  --duration-xslow:      1600ms;
+  --duration-glacial:    3000ms;
+
+  --ease-in-out:         cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:            cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:             cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring:         cubic-bezier(0.34, 1.56, 0.64, 1);
+
+} /* end :root */
+
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+
+/**
+ * transmute — pulsing scale + opacity, used for key alchemical
+ * transformation moments and attention-drawing highlights.
+ */
+@keyframes transmute {
+  0% {
+    transform:  scale(1.00);
+    opacity:    1;
+  }
+  25% {
+    transform:  scale(1.04);
+    opacity:    0.85;
+  }
+  50% {
+    transform:  scale(1.08);
+    opacity:    0.70;
+  }
+  75% {
+    transform:  scale(1.04);
+    opacity:    0.85;
+  }
+  100% {
+    transform:  scale(1.00);
+    opacity:    1;
+  }
+}
+
+/**
+ * glow-pulse — box-shadow cycling between low and high intensity.
+ * Pair with a CSS variable override for per-color customization.
+ */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 8px  rgba(157, 78, 221, 0.35),
+      0 0 16px rgba(157, 78, 221, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(157, 78, 221, 0.65),
+      0 0 40px rgba(157, 78, 221, 0.35),
+      0 0 80px rgba(157, 78, 221, 0.15);
+  }
+}
+
+@keyframes glow-pulse-gold {
+  0%, 100% {
+    box-shadow: var(--glow-gold-sm);
+  }
+  50% {
+    box-shadow: var(--glow-gold-lg);
+  }
+}
+
+@keyframes glow-pulse-aether {
+  0%, 100% {
+    box-shadow: var(--glow-aether-sm);
+  }
+  50% {
+    box-shadow: var(--glow-aether-lg);
+  }
+}
+
+@keyframes glow-pulse-crimson {
+  0%, 100% {
+    box-shadow: var(--glow-crimson-sm);
+  }
+  50% {
+    box-shadow: var(--glow-crimson-md);
+  }
+}
+
+/**
+ * particle-drift — slow, drifting translation movement for ambient
+ * background particles that float through the scene.
+ */
+@keyframes particle-drift {
+  0% {
+    transform: translate(0px, 0px) scale(1.0);
+    opacity:   0;
+  }
+  10% {
+    opacity:   1;
+  }
+  50% {
+    transform: translate(-18px, -36px) scale(1.05);
+    opacity:   0.7;
+  }
+  90% {
+    opacity:   0.4;
+  }
+  100% {
+    transform: translate(12px, -72px) scale(0.95);
+    opacity:   0;
+  }
+}
+
+/**
+ * rune-spin — smooth continuous 360° rotation for rune symbols
+ * and circular alchemical sigils.
+ */
+@keyframes rune-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/**
+ * rune-spin-reverse — counter-clockwise variant for inner rings.
+ */
+@keyframes rune-spin-reverse {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+/**
+ * aether-flow — hue-rotation sweep for colored elements,
+ * cycling through the full chromatic wheel over time.
+ */
+@keyframes aether-flow {
+  0% {
+    filter: hue-rotate(0deg) brightness(1.0);
+  }
+  25% {
+    filter: hue-rotate(45deg) brightness(1.1);
+  }
+  50% {
+    filter: hue-rotate(90deg) brightness(1.05);
+  }
+  75% {
+    filter: hue-rotate(135deg) brightness(1.1);
+  }
+  100% {
+    filter: hue-rotate(180deg) brightness(1.0);
+  }
+}
+
+/**
+ * materialize — fade in from below; used for cards, modals,
+ * and elements entering the scene.
+ */
+@keyframes materialize {
+  0% {
+    opacity:   0;
+    transform: translateY(20px) scale(0.97);
+  }
+  60% {
+    opacity:   1;
+  }
+  100% {
+    opacity:   1;
+    transform: translateY(0px) scale(1.00);
+  }
+}
+
+/**
+ * crystallize — element scales up from 0.8 to full size while
+ * the glow intensifies, simulating a crystal forming.
+ */
+@keyframes crystallize {
+  0% {
+    transform:  scale(0.80);
+    opacity:    0;
+    box-shadow:
+      0 0 0px   rgba(0, 255, 170, 0),
+      0 0 0px   rgba(0, 255, 170, 0);
+  }
+  40% {
+    opacity:    0.8;
+    box-shadow:
+      0 0 12px  rgba(0, 255, 170, 0.3),
+      0 0 24px  rgba(0, 255, 170, 0.15);
+  }
+  70% {
+    transform:  scale(1.03);
+  }
+  100% {
+    transform:  scale(1.00);
+    opacity:    1;
+    box-shadow:
+      0 0 20px  rgba(0, 255, 170, 0.50),
+      0 0 40px  rgba(0, 255, 170, 0.25),
+      0 0 80px  rgba(0, 255, 170, 0.10);
+  }
+}
+
+/**
+ * shimmer — diagonal shimmer sweep for metallic surfaces.
+ */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position:  200% center;
+  }
+}
+
+/**
+ * float — gentle vertical bobbing for icons and badges.
+ */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/**
+ * flicker — subtle opacity variation for torch / candle effects.
+ */
+@keyframes flicker {
+  0%, 100% { opacity: 1.0; }
+  8%        { opacity: 0.9; }
+  15%       { opacity: 1.0; }
+  28%       { opacity: 0.85; }
+  35%       { opacity: 1.0; }
+  52%       { opacity: 0.95; }
+  60%       { opacity: 1.0; }
+  78%       { opacity: 0.88; }
+  85%       { opacity: 1.0; }
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — TEXT GRADIENTS
+   ============================================================ */
+
+/**
+ * .text-gradient-gold
+ * Metallic gold gradient applied as a clipped background on text.
+ */
+.text-gradient-gold {
+  background:              var(--gradient-aurum);
+  -webkit-background-clip: text;
+  background-clip:         text;
+  -webkit-text-fill-color: transparent;
+  color:                   transparent;
+  display:                 inline-block;
+}
+
+/**
+ * .text-gradient-transmutation
+ * Full arcane-to-aether palette gradient text.
+ */
+.text-gradient-transmutation {
+  background:              var(--gradient-transmutation);
+  -webkit-background-clip: text;
+  background-clip:         text;
+  -webkit-text-fill-color: transparent;
+  color:                   transparent;
+  display:                 inline-block;
+}
+
+/**
+ * .text-gradient-aether
+ * Emerald / cyan gradient text.
+ */
+.text-gradient-aether {
+  background:              var(--gradient-aether);
+  -webkit-background-clip: text;
+  background-clip:         text;
+  -webkit-text-fill-color: transparent;
+  color:                   transparent;
+  display:                 inline-block;
+}
+
+/**
+ * .text-gradient-arcane
+ * Deep purple gradient text.
+ */
+.text-gradient-arcane {
+  background:              var(--gradient-arcane);
+  -webkit-background-clip: text;
+  background-clip:         text;
+  -webkit-text-fill-color: transparent;
+  color:                   transparent;
+  display:                 inline-block;
+}
+
+/**
+ * .text-gradient-crimson
+ * Blood-red gradient text.
+ */
+.text-gradient-crimson {
+  background:              var(--gradient-crimson);
+  -webkit-background-clip: text;
+  background-clip:         text;
+  -webkit-text-fill-color: transparent;
+  color:                   transparent;
+  display:                 inline-block;
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — GLOW BORDERS
+   ============================================================ */
+
+/**
+ * .glow-border-gold
+ */
+.glow-border-gold {
+  border:                  1px solid rgba(255, 215, 0, 0.45);
+  box-shadow:              var(--glow-gold-sm);
+  transition:              box-shadow var(--transition-glow),
+                           border-color var(--transition-glow);
+}
+
+.glow-border-gold:hover {
+  border-color:            rgba(255, 215, 0, 0.70);
+  box-shadow:              var(--glow-gold-md);
+}
+
+/**
+ * .glow-border-aether
+ */
+.glow-border-aether {
+  border:                  1px solid rgba(0, 255, 170, 0.40);
+  box-shadow:              var(--glow-aether-sm);
+  transition:              box-shadow var(--transition-glow),
+                           border-color var(--transition-glow);
+}
+
+.glow-border-aether:hover {
+  border-color:            rgba(0, 255, 170, 0.65);
+  box-shadow:              var(--glow-aether-md);
+}
+
+/**
+ * .glow-border-arcane
+ */
+.glow-border-arcane {
+  border:                  1px solid rgba(157, 78, 221, 0.40);
+  box-shadow:              var(--glow-arcane-sm);
+  transition:              box-shadow var(--transition-glow),
+                           border-color var(--transition-glow);
+}
+
+.glow-border-arcane:hover {
+  border-color:            rgba(157, 78, 221, 0.65);
+  box-shadow:              var(--glow-arcane-md);
+}
+
+/**
+ * .glow-border-crimson
+ */
+.glow-border-crimson {
+  border:                  1px solid rgba(255, 45, 85, 0.40);
+  box-shadow:              var(--glow-crimson-sm);
+  transition:              box-shadow var(--transition-glow),
+                           border-color var(--transition-glow);
+}
+
+.glow-border-crimson:hover {
+  border-color:            rgba(255, 45, 85, 0.65);
+  box-shadow:              var(--glow-crimson-md);
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — CARD
+   ============================================================ */
+
+/**
+ * .card-alchemical
+ * Base alchemical card: obsidian background, arcane border,
+ * glow intensifies on hover, smooth transition.
+ */
+.card-alchemical {
+  background:              var(--obsidian-mid);
+  border:                  1px solid rgba(157, 78, 221, 0.20);
+  border-radius:           var(--radius-xl);
+  padding:                 var(--space-6);
+  color:                   var(--mist);
+  font-family:             var(--font-body);
+  position:                relative;
+  overflow:                hidden;
+  transition:
+    box-shadow     var(--transition-slow),
+    border-color   var(--transition-slow),
+    transform      var(--transition-base);
+}
+
+.card-alchemical::before {
+  content:          '';
+  position:         absolute;
+  inset:            0;
+  background:       var(--gradient-hero);
+  opacity:          0;
+  transition:       opacity var(--transition-slow);
+  pointer-events:   none;
+  border-radius:    inherit;
+}
+
+.card-alchemical:hover {
+  border-color:     rgba(157, 78, 221, 0.45);
+  box-shadow:       var(--glow-arcane-sm);
+  transform:        translateY(-2px);
+}
+
+.card-alchemical:hover::before {
+  opacity:          1;
+}
+
+/* variant: gold accent */
+.card-alchemical--gold {
+  border-color:     rgba(255, 215, 0, 0.20);
+}
+.card-alchemical--gold:hover {
+  border-color:     rgba(255, 215, 0, 0.45);
+  box-shadow:       var(--glow-gold-sm);
+}
+
+/* variant: aether accent */
+.card-alchemical--aether {
+  border-color:     rgba(0, 255, 170, 0.20);
+}
+.card-alchemical--aether:hover {
+  border-color:     rgba(0, 255, 170, 0.45);
+  box-shadow:       var(--glow-aether-sm);
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — BUTTON
+   ============================================================ */
+
+/**
+ * .btn-transmute
+ * Primary action button; gradient background with glow on hover.
+ */
+.btn-transmute {
+  display:                 inline-flex;
+  align-items:             center;
+  justify-content:         center;
+  gap:                     var(--space-2);
+  padding:                 var(--space-3) var(--space-6);
+  border:                  1px solid rgba(157, 78, 221, 0.40);
+  border-radius:           var(--radius-full);
+  background:              var(--gradient-arcane);
+  color:                   var(--mist);
+  font-family:             var(--font-display);
+  font-size:               var(--text-sm);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wider);
+  text-transform:          uppercase;
+  text-decoration:         none;
+  cursor:                  pointer;
+  position:                relative;
+  overflow:                hidden;
+  transition:
+    box-shadow     var(--transition-glow),
+    border-color   var(--transition-glow),
+    transform      var(--transition-base),
+    background     var(--transition-base);
+  -webkit-user-select:     none;
+  user-select:             none;
+}
+
+.btn-transmute::before {
+  content:          '';
+  position:         absolute;
+  inset:            0;
+  background:       linear-gradient(
+                      135deg,
+                      transparent 0%,
+                      rgba(255, 255, 255, 0.08) 50%,
+                      transparent 100%
+                    );
+  background-size:  200% 100%;
+  opacity:          0;
+  transition:       opacity var(--transition-fast);
+}
+
+.btn-transmute:hover {
+  border-color:     rgba(157, 78, 221, 0.70);
+  box-shadow:       var(--glow-arcane-md);
+  transform:        translateY(-1px) scale(1.02);
+}
+
+.btn-transmute:hover::before {
+  opacity:          1;
+  animation:        shimmer 1s linear infinite;
+}
+
+.btn-transmute:active {
+  transform:        translateY(0) scale(0.99);
+  box-shadow:       var(--glow-arcane-sm);
+}
+
+/* variant: gold */
+.btn-transmute--gold {
+  background:       var(--gradient-aurum);
+  border-color:     rgba(255, 215, 0, 0.50);
+  color:            var(--obsidian);
+}
+.btn-transmute--gold:hover {
+  border-color:     rgba(255, 215, 0, 0.80);
+  box-shadow:       var(--glow-gold-md);
+}
+
+/* variant: aether */
+.btn-transmute--aether {
+  background:       var(--gradient-aether);
+  border-color:     rgba(0, 255, 170, 0.50);
+  color:            var(--obsidian);
+}
+.btn-transmute--aether:hover {
+  border-color:     rgba(0, 255, 170, 0.80);
+  box-shadow:       var(--glow-aether-md);
+}
+
+/* variant: ghost / outline */
+.btn-transmute--ghost {
+  background:       transparent;
+  border-color:     rgba(157, 78, 221, 0.40);
+  color:            var(--arcane-glow);
+}
+.btn-transmute--ghost:hover {
+  background:       var(--arcane-mist);
+  border-color:     rgba(157, 78, 221, 0.70);
+  box-shadow:       var(--glow-arcane-sm);
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — BADGES
+   ============================================================ */
+
+.badge-base {
+  display:                 inline-flex;
+  align-items:             center;
+  gap:                     var(--space-1);
+  padding:                 0.2em 0.75em;
+  border-radius:           var(--radius-full);
+  font-family:             var(--font-body);
+  font-size:               var(--text-xs);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wide);
+  text-transform:          uppercase;
+  line-height:             1;
+  white-space:             nowrap;
+}
+
+/**
+ * .badge-aurum — gold badge
+ */
+.badge-aurum {
+  composes:                badge-base;
+  background:              var(--aurum-mist);
+  border:                  1px solid rgba(255, 215, 0, 0.35);
+  color:                   var(--aurum-light);
+  box-shadow:              var(--glow-gold-sm);
+
+  /* fallback for browsers without composes */
+  display:                 inline-flex;
+  align-items:             center;
+  gap:                     var(--space-1);
+  padding:                 0.2em 0.75em;
+  border-radius:           var(--radius-full);
+  font-family:             var(--font-body);
+  font-size:               var(--text-xs);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wide);
+  text-transform:          uppercase;
+  line-height:             1;
+  white-space:             nowrap;
+  background:              var(--aurum-mist);
+  border:                  1px solid rgba(255, 215, 0, 0.35);
+  color:                   var(--aurum-light);
+  box-shadow:              var(--glow-gold-sm);
+}
+
+/**
+ * .badge-aether — emerald badge
+ */
+.badge-aether {
+  display:                 inline-flex;
+  align-items:             center;
+  gap:                     var(--space-1);
+  padding:                 0.2em 0.75em;
+  border-radius:           var(--radius-full);
+  font-family:             var(--font-body);
+  font-size:               var(--text-xs);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wide);
+  text-transform:          uppercase;
+  line-height:             1;
+  white-space:             nowrap;
+  background:              var(--aether-mist);
+  border:                  1px solid rgba(0, 255, 170, 0.30);
+  color:                   var(--aether-light);
+  box-shadow:              var(--glow-aether-sm);
+}
+
+/**
+ * .badge-arcane — purple badge
+ */
+.badge-arcane {
+  display:                 inline-flex;
+  align-items:             center;
+  gap:                     var(--space-1);
+  padding:                 0.2em 0.75em;
+  border-radius:           var(--radius-full);
+  font-family:             var(--font-body);
+  font-size:               var(--text-xs);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wide);
+  text-transform:          uppercase;
+  line-height:             1;
+  white-space:             nowrap;
+  background:              var(--arcane-mist);
+  border:                  1px solid rgba(157, 78, 221, 0.30);
+  color:                   var(--arcane-glow);
+  box-shadow:              var(--glow-arcane-sm);
+}
+
+/**
+ * .badge-crimson — crimson badge
+ */
+.badge-crimson {
+  display:                 inline-flex;
+  align-items:             center;
+  gap:                     var(--space-1);
+  padding:                 0.2em 0.75em;
+  border-radius:           var(--radius-full);
+  font-family:             var(--font-body);
+  font-size:               var(--text-xs);
+  font-weight:             var(--weight-semibold);
+  letter-spacing:          var(--tracking-wide);
+  text-transform:          uppercase;
+  line-height:             1;
+  white-space:             nowrap;
+  background:              var(--crimson-mist);
+  border:                  1px solid rgba(255, 45, 85, 0.30);
+  color:                   #FF7096;
+  box-shadow:              var(--glow-crimson-sm);
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — PARTICLE BACKGROUND
+   ============================================================ */
+
+/**
+ * .particle-bg
+ * Container setup for CSS / canvas particle effects.
+ * Particles are expected to be absolutely-positioned children
+ * or rendered via a canvas/WebGL layer inside this element.
+ */
+.particle-bg {
+  position:                relative;
+  overflow:                hidden;
+  isolation:                isolate;
+  background:              var(--obsidian);
+}
+
+.particle-bg::before {
+  content:         '';
+  position:        absolute;
+  inset:           0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(75,  0,  130, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,  255, 170, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(157, 78, 221, 0.06) 0%, transparent 70%);
+  pointer-events:  none;
+  z-index:         0;
+}
+
+.particle-bg > * {
+  position:        relative;
+  z-index:         1;
+}
+
+/* Individual particle element (used when particles are DOM nodes) */
+.particle {
+  position:        absolute;
+  width:           4px;
+  height:          4px;
+  border-radius:   var(--radius-full);
+  pointer-events:  none;
+  animation:       particle-drift 6s ease-in-out infinite;
+}
+
+.particle--gold   { background: var(--aurum);      box-shadow: var(--glow-gold-sm); }
+.particle--aether { background: var(--aether);     box-shadow: var(--glow-aether-sm); }
+.particle--arcane { background: var(--arcane-glow); box-shadow: var(--glow-arcane-sm); }
+
+.particle:nth-child(2)  { animation-delay: -1.0s; animation-duration: 7.2s; }
+.particle:nth-child(3)  { animation-delay: -2.2s; animation-duration: 5.8s; }
+.particle:nth-child(4)  { animation-delay: -3.4s; animation-duration: 8.0s; }
+.particle:nth-child(5)  { animation-delay: -0.6s; animation-duration: 6.5s; }
+.particle:nth-child(6)  { animation-delay: -4.1s; animation-duration: 7.0s; }
+.particle:nth-child(7)  { animation-delay: -1.7s; animation-duration: 9.0s; }
+.particle:nth-child(8)  { animation-delay: -2.9s; animation-duration: 5.5s; }
+
+
+/* ============================================================
+   UTILITY CLASSES — CRYSTAL PANEL (Glassmorphism)
+   ============================================================ */
+
+/**
+ * .crystal-panel
+ * A glassmorphism panel with backdrop blur, translucent
+ * obsidian background, and an arcane-tinted border.
+ */
+.crystal-panel {
+  background:             rgba(22, 22, 31, 0.70);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter:        blur(16px) saturate(160%);
+  border:                 1px solid rgba(157, 78, 221, 0.18);
+  border-radius:          var(--radius-2xl);
+  box-shadow:
+    0 8px  32px rgba(0, 0, 0, 0.40),
+    0 2px  8px  rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color:                  var(--mist);
+  position:               relative;
+  overflow:               hidden;
+}
+
+.crystal-panel::before {
+  content:     '';
+  position:    absolute;
+  top:         0;
+  left:        0;
+  right:       0;
+  height:      1px;
+  background:  linear-gradient(
+                 90deg,
+                 transparent       0%,
+                 rgba(157, 78, 221, 0.40) 30%,
+                 rgba(0, 255, 170, 0.30)  60%,
+                 transparent       100%
+               );
+  pointer-events: none;
+}
+
+/* variant: gold tint */
+.crystal-panel--gold {
+  border-color: rgba(255, 215, 0, 0.18);
+}
+.crystal-panel--gold::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.45) 40%,
+    transparent 100%
+  );
+}
+
+/* variant: aether tint */
+.crystal-panel--aether {
+  border-color: rgba(0, 255, 170, 0.18);
+}
+.crystal-panel--aether::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 170, 0.40) 40%,
+    transparent 100%
+  );
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — ANIMATION APPLICATORS
+   ============================================================ */
+
+/**
+ * .rune-spin
+ * Applies continuous slow clockwise rotation.
+ */
+.rune-spin {
+  animation: rune-spin 8s linear infinite;
+  display:   inline-block;
+}
+
+.rune-spin--slow    { animation-duration: 14s; }
+.rune-spin--fast    { animation-duration:  4s; }
+.rune-spin--reverse { animation-name: rune-spin-reverse; }
+
+/**
+ * .materialize
+ * Applies the enter animation — fade in + slide up from 20px.
+ */
+.materialize {
+  animation:       materialize 0.6s var(--ease-out) both;
+  animation-delay: var(--materialize-delay, 0ms);
+}
+
+.materialize--slow  { animation-duration: 0.9s; }
+.materialize--fast  { animation-duration: 0.35s; }
+
+/* Staggered children helper */
+.materialize-stagger > *:nth-child(1)  { --materialize-delay:   0ms; }
+.materialize-stagger > *:nth-child(2)  { --materialize-delay:  80ms; }
+.materialize-stagger > *:nth-child(3)  { --materialize-delay: 160ms; }
+.materialize-stagger > *:nth-child(4)  { --materialize-delay: 240ms; }
+.materialize-stagger > *:nth-child(5)  { --materialize-delay: 320ms; }
+.materialize-stagger > *:nth-child(6)  { --materialize-delay: 400ms; }
+.materialize-stagger > *:nth-child(7)  { --materialize-delay: 480ms; }
+.materialize-stagger > *:nth-child(8)  { --materialize-delay: 560ms; }
+
+/**
+ * .crystallize
+ * Applies the crystallize formation animation.
+ */
+.crystallize {
+  animation: crystallize 0.8s var(--ease-spring) both;
+}
+
+/**
+ * .transmute
+ * Applies the transmutation pulse animation.
+ */
+.transmute {
+  animation: transmute 2.5s var(--ease-in-out) infinite;
+}
+
+/**
+ * .glow-pulse
+ * Continuous arcane glow pulse animation.
+ */
+.glow-pulse          { animation: glow-pulse       2.5s ease-in-out infinite; }
+.glow-pulse--gold    { animation: glow-pulse-gold   2.5s ease-in-out infinite; }
+.glow-pulse--aether  { animation: glow-pulse-aether 2.5s ease-in-out infinite; }
+.glow-pulse--crimson { animation: glow-pulse-crimson 2.5s ease-in-out infinite; }
+
+/**
+ * .aether-flow
+ * Hue-rotation sweep for rainbow shifting elements.
+ */
+.aether-flow { animation: aether-flow 6s linear infinite; }
+
+/**
+ * .float
+ * Gentle bobbing float animation.
+ */
+.float       { animation: float 3s ease-in-out infinite; }
+
+/**
+ * .flicker
+ * Torch / candle flicker opacity animation.
+ */
+.flicker     { animation: flicker 2.5s linear infinite; }
+
+
+/* ============================================================
+   UTILITY CLASSES — SHIMMER SURFACE
+   ============================================================ */
+
+.shimmer-surface {
+  background:
+    linear-gradient(
+      105deg,
+      transparent         40%,
+      rgba(255,255,255,0.08) 50%,
+      transparent         60%
+    ),
+    var(--gradient-obsidian);
+  background-size: 200% 100%, 100% 100%;
+  animation:       shimmer 2.5s linear infinite;
+}
+
+
+/* ============================================================
+   UTILITY CLASSES — DIVIDERS
+   ============================================================ */
+
+.divider-arcane {
+  height:     1px;
+  border:     none;
+  background: linear-gradient(
+    90deg,
+    transparent           0%,
+    rgba(157, 78, 221, 0.50) 30%,
+    rgba(157, 78, 221, 0.50) 70%,
+    transparent           100%
+  );
+  margin:     var(--space-6) 0;
+}
+
+.divider-gold {
+  height:     1px;
+  border:     none;
+  background: linear-gradient(
+    90deg,
+    transparent           0%,
+    rgba(255, 215, 0, 0.50) 30%,
+    rgba(255, 215, 0, 0.50) 70%,
+    transparent           100%
+  );
+  margin:     var(--space-6) 0;
+}
+
+.divider-aether {
+  height:     1px;
+  border:     none;
+  background: linear-gradient(
+    90deg,
+    transparent           0%,
+    rgba(0, 255, 170, 0.40) 30%,
+    rgba(0, 255, 170, 0.40) 70%,
+    transparent           100%
+  );
+  margin:     var(--space-6) 0;
+}
+
+
+/* ============================================================
+   ACCESSIBILITY — REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
