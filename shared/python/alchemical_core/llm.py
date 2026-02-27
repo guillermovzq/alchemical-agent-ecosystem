@@ -2,9 +2,11 @@
 Alchemical Agent Ecosystem — KiloCode AI Integration
 =====================================================
 Unified LLM client using KiloCode AI Gateway (api.kilo.ai).
-OpenAI-compatible, supports streaming, tool calling, and vision.
+OpenAI-compatible, supports streaming, tool calling, vision,
+structured output, and batch processing.
 
-Usage:
+Usage::
+
     from alchemical_core.llm import AlchemicalLLM, LLMConfig
 
     llm = AlchemicalLLM()
@@ -13,13 +15,19 @@ Usage:
     # Streaming
     async for chunk in llm.stream("Explain alchemy step by step"):
         print(chunk, end="", flush=True)
+
+    # Module-level singleton helpers
+    from alchemical_core.llm import get_llm, quick_chat
+    answer = await quick_chat("What is transmutation?")
 """
 
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
+import threading
 import time
 from dataclasses import dataclass, field
 from typing import Any, AsyncGenerator, ClassVar, Dict, List, Optional, Union
@@ -114,7 +122,7 @@ class LLMConfig:
     ``X-KiloCode-OrganizationId`` request header."""
 
     @classmethod
-    def from_env(cls) -> "LLMConfig":
+    def from_env(cls) -> LLMConfig:
         """Construct a :class:`LLMConfig` from environment variables.
 
         All configuration is optional — missing variables fall back to their
@@ -140,26 +148,26 @@ class ModelRegistry:
     a task description to a suitable model.
     """
 
-    FREE_MODELS: ClassVar[List[str]] = [
+    FREE_MODELS: ClassVar[list[str]] = [
         "minimax/minimax-m2.5:free",
         "z-ai/glm-5:free",
     ]
     """Models that do not require an API key (marked ``:free``)."""
 
-    FAST_MODELS: ClassVar[List[str]] = [
+    FAST_MODELS: ClassVar[list[str]] = [
         "anthropic/claude-haiku-4.5",
         "minimax/minimax-m2.5:free",
         "z-ai/glm-5:free",
     ]
     """Low-latency / cost-efficient models suitable for simple tasks."""
 
-    BALANCED_MODELS: ClassVar[List[str]] = [
+    BALANCED_MODELS: ClassVar[list[str]] = [
         "anthropic/claude-sonnet-4.5",
         "openai/gpt-4o-mini",
     ]
     """Good balance between capability, latency, and cost."""
 
-    POWERFUL_MODELS: ClassVar[List[str]] = [
+    POWERFUL_MODELS: ClassVar[list[str]] = [
         "anthropic/claude-opus-4.6",
         "openai/gpt-4o",
         "anthropic/claude-sonnet-4.5",
@@ -173,7 +181,7 @@ class ModelRegistry:
     """Let the KiloCode gateway select the best model automatically."""
 
     # keyword → model mapping used by :meth:`recommend`
-    _TASK_MAP: ClassVar[Dict[str, str]] = {
+    _TASK_MAP: ClassVar[dict[str, str]] = {
         "vision": "anthropic/claude-haiku-4.5",
         "image": "anthropic/claude-haiku-4.5",
         "code": "anthropic/claude-sonnet-4.5",
@@ -219,11 +227,26 @@ class ModelRegistry:
 # ---------------------------------------------------------------------------
 
 
-def _to_messages(messages_or_prompt: Union[str, List[dict]]) -> List[dict]:
+def _to_messages(messages_or_prompt: Union[str, list[dict]]) -> list[dict]:
     """Normalise a bare string or a messages list into the OpenAI format."""
     if isinstance(messages_or_prompt, str):
         return [{"role": "user", "content": messages_or_prompt}]
     return messages_or_prompt
+
+
+def _build_client(config: LLMConfig) -> AsyncOpenAI:
+    """Construct an :class:`AsyncOpenAI` from *config*, reading the API key
+    fresh from the environment if the stored value is empty."""
+    api_key = config.api_key or os.getenv("KILO_API_KEY", "") or "no-key"
+    extra_headers: dict[str, str] = {}
+    if config.org_id:
+        extra_headers["X-KiloCode-OrganizationId"] = config.org_id
+    return AsyncOpenAI(
+        api_key=api_key,
+        base_url=config.base_url,
+        timeout=config.timeout,
+        default_headers=extra_headers,
+    )
 
 
 class AlchemicalLLM:
@@ -231,7 +254,8 @@ class AlchemicalLLM:
 
     Wraps :class:`openai.AsyncOpenAI` and targets the KiloCode AI Gateway,
     which exposes an OpenAI-compatible REST API.  Supports plain chat,
-    streaming, tool calling, embeddings, and vision.
+    streaming, tool calling, structured output, batch processing, embeddings,
+    and vision.
 
     Args:
         config: Optional :class:`LLMConfig`.  When omitted, a config is
@@ -246,18 +270,7 @@ class AlchemicalLLM:
 
     def __init__(self, config: Optional[LLMConfig] = None) -> None:
         self.config: LLMConfig = config or LLMConfig.from_env()
-
-        # Build extra headers
-        extra_headers: Dict[str, str] = {}
-        if self.config.org_id:
-            extra_headers["X-KiloCode-OrganizationId"] = self.config.org_id
-
-        self._client = AsyncOpenAI(
-            api_key=self.config.api_key or "no-key",
-            base_url=self.config.base_url,
-            timeout=self.config.timeout,
-            default_headers=extra_headers,
-        )
+        self._client: AsyncOpenAI = _build_client(self.config)
 
     # ------------------------------------------------------------------
     # Public properties
@@ -270,7 +283,27 @@ class AlchemicalLLM:
         Free models (``*:free``) can be used without a key, but paid models
         require :attr:`LLMConfig.api_key` to be set.
         """
-        return bool(self.config.api_key)
+        return bool(self.config.api_key or os.getenv("KILO_API_KEY", ""))
+
+    # ------------------------------------------------------------------
+    # Client lifecycle
+    # ------------------------------------------------------------------
+
+    def refresh_client(self) -> None:
+        """Re-create the internal :class:`AsyncOpenAI` client.
+
+        Call this after updating ``KILO_API_KEY`` (or other gateway env vars)
+        at runtime so that the next request picks up the new credentials
+        without constructing a new :class:`AlchemicalLLM` instance.
+
+        Example::
+
+            os.environ["KILO_API_KEY"] = new_key
+            llm.refresh_client()
+        """
+        # Re-read api_key from env so callers only need to update the env var
+        self.config.api_key = os.getenv("KILO_API_KEY", self.config.api_key)
+        self._client = _build_client(self.config)
 
     # ------------------------------------------------------------------
     # Core chat helpers
@@ -278,7 +311,7 @@ class AlchemicalLLM:
 
     async def chat(
         self,
-        messages_or_prompt: Union[str, List[dict]],
+        messages_or_prompt: Union[str, list[dict]],
         model: Optional[str] = None,
         **kwargs: Any,
     ) -> str:
@@ -308,7 +341,7 @@ class AlchemicalLLM:
         messages = _to_messages(messages_or_prompt)
         used_model = model or self.config.default_model
 
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "model": used_model,
             "messages": messages,
             "max_tokens": kwargs.pop("max_tokens", self.config.max_tokens),
@@ -324,7 +357,7 @@ class AlchemicalLLM:
 
     async def stream(
         self,
-        messages_or_prompt: Union[str, List[dict]],
+        messages_or_prompt: Union[str, list[dict]],
         model: Optional[str] = None,
         **kwargs: Any,
     ) -> AsyncGenerator[str, None]:
@@ -354,36 +387,39 @@ class AlchemicalLLM:
         messages = _to_messages(messages_or_prompt)
         used_model = model or self.config.default_model
 
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "model": used_model,
             "messages": messages,
             "max_tokens": kwargs.pop("max_tokens", self.config.max_tokens),
             "temperature": kwargs.pop("temperature", self.config.temperature),
-            "stream": True,
             **kwargs,
         }
 
         try:
-            async with await self._client.chat.completions.create(**params) as response:
-                async for chunk in response:
-                    delta = chunk.choices[0].delta if chunk.choices else None
-                    if delta and delta.content:
-                        yield delta.content
+            # Use create(..., stream=True) to avoid the double-await bug that
+            # arises from `await client.chat.completions.create(..., stream=True)`
+            # returning a coroutine-wrapped async context manager.
+            response = await self._client.chat.completions.create(
+                stream=True, **params
+            )
+            async for chunk in response:
+                delta = chunk.choices[0].delta if chunk.choices else None
+                if delta and delta.content:
+                    yield delta.content
         except openai.OpenAIError as exc:
             raise _wrap_openai_error(exc) from exc
 
     async def chat_with_tools(
         self,
-        messages: List[dict],
-        tools: List[dict],
+        messages: list[dict],
+        tools: list[dict],
         model: Optional[str] = None,
         **kwargs: Any,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Perform a tool-calling chat completion.
 
         Sends *messages* and *tools* to the API with ``tool_choice="auto"``
-        and returns the raw completion object as a dict so that callers can
-        inspect ``tool_calls`` and decide how to proceed.
+        and returns the completion as a dict with guaranteed top-level keys.
 
         Args:
             messages: Conversation history in OpenAI message format.
@@ -393,8 +429,8 @@ class AlchemicalLLM:
             **kwargs: Additional parameters forwarded to the API.
 
         Returns:
-            The raw completion response deserialized as a dict (via
-            ``model_dump()``).
+            A dict with at minimum the keys ``choices``, ``usage``, and
+            ``model`` (plus all other fields from ``model_dump()``).
 
         Raises:
             KiloAuthError: On authentication failure.
@@ -409,7 +445,7 @@ class AlchemicalLLM:
         """
         used_model = model or self.config.default_model
 
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "model": used_model,
             "messages": messages,
             "tools": tools,
@@ -421,15 +457,119 @@ class AlchemicalLLM:
 
         try:
             completion = await self._client.chat.completions.create(**params)
-            return completion.model_dump()
+            dumped: dict[str, Any] = completion.model_dump()
+            # Guarantee the three most-accessed keys are always present so
+            # callers do not need defensive .get() chains.
+            dumped.setdefault("choices", [])
+            dumped.setdefault("usage", {})
+            dumped.setdefault("model", used_model)
+            return dumped
         except openai.OpenAIError as exc:
             raise _wrap_openai_error(exc) from exc
 
+    async def structured_output(
+        self,
+        prompt: str,
+        schema: type,
+        model: Optional[str] = None,
+    ) -> Any:
+        """Request a structured JSON response that conforms to *schema*.
+
+        Instructs the model to respond with JSON matching the JSON Schema
+        derived from *schema* (a Pydantic model class or any type that exposes
+        a ``model_json_schema()`` class method).
+
+        Args:
+            prompt: The user prompt.
+            schema: A Pydantic ``BaseModel`` subclass (or any class that
+                exposes ``model_json_schema()``).  The response JSON is
+                validated and returned as a parsed instance of *schema*.
+            model: Model ID override.
+
+        Returns:
+            A validated instance of *schema*.
+
+        Raises:
+            KiloAuthError: On authentication failure.
+            KiloRateLimitError: When rate-limited.
+            KiloAPIError: For other API errors.
+            ValueError: When the model returns content that cannot be parsed
+                as valid JSON or does not conform to *schema*.
+
+        Example::
+
+            from pydantic import BaseModel
+
+            class Summary(BaseModel):
+                headline: str
+                body: str
+
+            summary = await llm.structured_output("Summarise alchemy", Summary)
+            print(summary.headline)
+        """
+        json_schema = schema.model_json_schema()  # type: ignore[attr-defined]
+        used_model = model or self.config.default_model
+
+        params: dict[str, Any] = {
+            "model": used_model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": self.config.max_tokens,
+            "temperature": self.config.temperature,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": schema.__name__,
+                    "schema": json_schema,
+                    "strict": True,
+                },
+            },
+        }
+
+        try:
+            completion = await self._client.chat.completions.create(**params)
+            raw = completion.choices[0].message.content or "{}"
+            data = json.loads(raw)
+            return schema(**data)  # type: ignore[call-arg]
+        except (json.JSONDecodeError, TypeError, ValueError) as exc:
+            raise ValueError(
+                f"structured_output: could not parse model response as {schema.__name__}: {exc}"
+            ) from exc
+        except openai.OpenAIError as exc:
+            raise _wrap_openai_error(exc) from exc
+
+    async def batch_chat(
+        self,
+        prompts: list[str],
+        model: Optional[str] = None,
+        concurrency: int = 5,
+    ) -> list[str]:
+        """Run multiple prompts concurrently, respecting a concurrency limit.
+
+        Args:
+            prompts: List of text prompts to send.
+            model: Model ID override applied to all prompts.
+            concurrency: Maximum number of simultaneous in-flight requests.
+
+        Returns:
+            A list of reply strings in the same order as *prompts*.
+
+        Example::
+
+            replies = await llm.batch_chat(["What is gold?", "What is silver?"])
+        """
+        semaphore = asyncio.Semaphore(concurrency)
+
+        async def _one(prompt: str) -> str:
+            async with semaphore:
+                return await self.chat(prompt, model=model)
+
+        return list(await asyncio.gather(*(_one(p) for p in prompts)))
+
     async def embed(
         self,
-        text: Union[str, List[str]],
+        text: Union[str, list[str]],
         model: str = "text-embedding-3-small",
-    ) -> List[List[float]]:
+    ) -> list[list[float]]:
         """Generate embeddings for *text*.
 
         Routes to the KiloCode-compatible embeddings endpoint.
@@ -448,7 +588,7 @@ class AlchemicalLLM:
 
             vectors = await llm.embed(["alchemy", "philosopher's stone"])
         """
-        inputs: List[str] = [text] if isinstance(text, str) else text
+        inputs: list[str] = [text] if isinstance(text, str) else text
 
         try:
             response = await self._client.embeddings.create(
@@ -493,7 +633,7 @@ class AlchemicalLLM:
                 "https://example.com/diagram.png",
             )
         """
-        messages: List[dict] = [
+        messages: list[dict] = [
             {
                 "role": "user",
                 "content": [
@@ -503,7 +643,7 @@ class AlchemicalLLM:
             }
         ]
 
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "model": model,
             "messages": messages,
             "max_tokens": kwargs.pop("max_tokens", self.config.max_tokens),
@@ -520,7 +660,7 @@ class AlchemicalLLM:
     # Model discovery
     # ------------------------------------------------------------------
 
-    def get_available_models_sync(self) -> List[dict]:
+    def get_available_models_sync(self) -> list[dict]:
         """Synchronously fetch the list of models from the KiloCode API.
 
         This is a blocking call intended for use outside async contexts (e.g.
@@ -531,15 +671,31 @@ class AlchemicalLLM:
             A list of model dicts as returned by the ``GET /models`` endpoint.
 
         Raises:
+            RuntimeError: When called from within a running asyncio event loop.
+                Use :meth:`get_available_models` (async) instead.
             KiloAPIError: When the HTTP request fails.
 
         Example::
 
             models = llm.get_available_models_sync()
         """
-        headers: Dict[str, str] = {}
-        if self.config.api_key:
-            headers["Authorization"] = f"Bearer {self.config.api_key}"
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                raise RuntimeError(
+                    "get_available_models_sync() cannot be called from within a "
+                    "running asyncio event loop. Use 'await get_available_models()' instead."
+                )
+        except RuntimeError as exc:
+            # Re-raise our own RuntimeError unchanged; ignore "no current event loop"
+            if "get_available_models_sync" in str(exc):
+                raise
+            # No event loop at all — safe to proceed with the blocking call.
+
+        api_key = self.config.api_key or os.getenv("KILO_API_KEY", "")
+        headers: dict[str, str] = {}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
         if self.config.org_id:
             headers["X-KiloCode-OrganizationId"] = self.config.org_id
 
@@ -554,7 +710,7 @@ class AlchemicalLLM:
         except httpx.HTTPError as exc:
             raise KiloAPIError(f"Failed to fetch models: {exc}", cause=exc) from exc
 
-    async def get_available_models(self) -> List[dict]:
+    async def get_available_models(self) -> list[dict]:
         """Asynchronously fetch the list of models from the KiloCode API.
 
         Returns:
@@ -567,9 +723,10 @@ class AlchemicalLLM:
 
             models = await llm.get_available_models()
         """
-        headers: Dict[str, str] = {}
-        if self.config.api_key:
-            headers["Authorization"] = f"Bearer {self.config.api_key}"
+        api_key = self.config.api_key or os.getenv("KILO_API_KEY", "")
+        headers: dict[str, str] = {}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
         if self.config.org_id:
             headers["X-KiloCode-OrganizationId"] = self.config.org_id
 
@@ -602,13 +759,12 @@ class KiloHealthCheck:
         # {'status': 'ok', 'model_count': 42, 'latency_ms': 123.4}
     """
 
-    BASE_URL: ClassVar[str] = os.getenv(
-        "KILO_BASE_URL", "https://api.kilo.ai/api/gateway"
-    )
-
     @classmethod
-    async def check(cls) -> Dict[str, Any]:
+    async def check(cls) -> dict[str, Any]:
         """Probe the KiloCode gateway by calling ``GET /models`` (unauthenticated).
+
+        The ``KILO_BASE_URL`` environment variable is read at call time so that
+        changes made after import are always respected.
 
         Returns:
             A dict with the following keys:
@@ -623,10 +779,13 @@ class KiloHealthCheck:
             if result["status"] != "ok":
                 logger.warning("KiloCode gateway degraded: %s", result)
         """
+        # Read from env at call time (H2 fix) so runtime changes are honoured.
+        base_url = os.getenv("KILO_BASE_URL", "https://api.kilo.ai/api/gateway")
+
         start = time.monotonic()
         try:
             async with httpx.AsyncClient(timeout=10) as client:
-                resp = await client.get(f"{cls.BASE_URL}/models")
+                resp = await client.get(f"{base_url}/models")
             latency_ms = (time.monotonic() - start) * 1000.0
 
             if resp.status_code == 200:
@@ -656,17 +815,19 @@ class KiloHealthCheck:
 
 
 # ---------------------------------------------------------------------------
-# Module-level singleton and convenience functions
+# Module-level thread-safe singleton and convenience functions
 # ---------------------------------------------------------------------------
 
+_llm_lock = threading.Lock()
 _llm_singleton: Optional[AlchemicalLLM] = None
 
 
 def get_llm() -> AlchemicalLLM:
     """Return the module-level singleton :class:`AlchemicalLLM` instance.
 
-    The singleton is constructed lazily on first call using
-    :meth:`LLMConfig.from_env`.  Subsequent calls return the same object.
+    Thread-safe: uses a double-checked locking pattern so that the singleton
+    is constructed at most once even when called concurrently from multiple
+    threads.
 
     Returns:
         The shared :class:`AlchemicalLLM` instance.
@@ -678,7 +839,9 @@ def get_llm() -> AlchemicalLLM:
     """
     global _llm_singleton
     if _llm_singleton is None:
-        _llm_singleton = AlchemicalLLM()
+        with _llm_lock:
+            if _llm_singleton is None:
+                _llm_singleton = AlchemicalLLM()
     return _llm_singleton
 
 
