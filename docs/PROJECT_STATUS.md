@@ -4,10 +4,10 @@ _Auto-generated from repository state. Do not edit manually._
 
 ## Metadata
 
-- Generated: **2026-02-27 11:18:53 UTC**
+- Generated: **2026-02-27 11:41:24 UTC**
 - Branch: **main**
-- HEAD: **86c953d**
-- Last commit: **86c953d Merge pull request #83 from smouj/session/agent_f9d320fb-655e-46c1-b4a2-1b0a52752052 (2026-02-27)**
+- HEAD: **6a98156**
+- Last commit: **6a98156 Merge pull request #84 from smouj/session/agent_c2077e41-fd98-4990-a0d3-41a3c919662b (2026-02-27)**
 
 ## Repository Metrics
 
@@ -16,7 +16,7 @@ _Auto-generated from repository state. Do not edit manually._
 | Runtime services | 10 |
 | Skills repos | 11 |
 | Dashboard API routes | 23 |
-| Gateway endpoints | 29 |
+| Gateway endpoints | 31 |
 
 ## Runtime Services (from /services)
 
