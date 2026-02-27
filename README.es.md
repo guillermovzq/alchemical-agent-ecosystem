@@ -43,7 +43,7 @@ Aquí, en tu propia infraestructura, conviven:
 
 - Un **dashboard visual** (`Agent Node Studio`) donde los agentes se componen como circuitos alquímicos — arrastrando nodos, trazando flujos, observando en tiempo real cómo el pensamiento se propaga de capa en capa.
 - Un **gateway inteligente** que enruta, autentica, recuerda y orquesta sin descanso, actuando como límite de política entre el mundo exterior y el núcleo de ejecución.
-- **Siete servicios de ejecución** nombrados como fuerzas elementales — `temporaeth`, `resonvyr`, `kryonexus`, `noctumbra-mail`, `fluxenrath`, `auralith`, `synapsara` — cada uno con su dominio, sus capacidades y su lugar en la Gran Obra.
+- **Diez servicios de ejecución** nombrados como fuerzas elementales — `velktharion`, `synapsara`, `kryonexus`, `noctumbra-mail`, `temporaeth`, `vaeloryn-conclave`, `ignivox`, `auralith`, `resonvyr`, `fluxenrath` — cada uno con su dominio, sus capacidades y su lugar en la Gran Obra.
 - **Memoria jerárquica** que no olvida: Redis para el instante, ChromaDB para la semántica, agentes resumen para la continuidad a largo plazo.
 - **Modelos invocados a través de KiloCode AI Gateway** — Claude, Gemini, MiniMax, y más — sin almacenar ni un solo dato tuyo en servidores externos.
 - **Círculos Alquímicos**: equipos de agentes que se auto-forman, colaboran en paralelo y producen resultados que ningún agente solitario podría alcanzar.
@@ -126,7 +126,7 @@ O directamente con Docker Compose:
 docker compose up -d
 ```
 
-Este comando inicia simultáneamente: PostgreSQL con `pgvector`, Redis, ChromaDB, el gateway FastAPI, los siete servicios de ejecución y el dashboard Next.js.
+Este comando inicia simultáneamente: PostgreSQL con `pgvector`, Redis, ChromaDB, el gateway FastAPI, los diez servicios de ejecución y el dashboard Next.js.
 
 ### Paso 4 — Verifica que todo respira
 
@@ -181,14 +181,17 @@ flowchart TB
     SSE["SSE Observabilidad\nTiempo Real"]
   end
 
-  subgraph Siete["🧪 Los Siete Círculos — Servicios de Ejecución"]
-    S1["🌊 temporaeth :7401\nScheduling y gestión temporal"]
-    S2["🔊 resonvyr :7402\nProcesamiento audio / voz"]
-    S3["❄️ kryonexus :7403\nAlmacenamiento frío y archivado"]
+  subgraph Diez["🧪 Los Diez Círculos — Servicios de Ejecución"]
+    S1["⚔️ velktharion :7401\nOrquestador y director"]
+    S2["🧠 synapsara :7402\nMeta-razonamiento y coordinación"]
+    S3["❄️ kryonexus :7403\nDatos y análisis"]
     S4["✉️ noctumbra-mail :7404\nComunicaciones y notificaciones"]
-    S5["⚡ fluxenrath :7405\nFlujos de datos en tiempo real"]
-    S6["🎵 auralith :7406\nSíntesis y análisis multimodal"]
-    S7["🧠 synapsara :7407\nOrquestación neuronal central"]
+    S5["🌊 temporaeth :7405\nRazonamiento temporal"]
+    S6["🏛️ vaeloryn-conclave :7406\nConsejo y deliberación"]
+    S7["🔥 ignivox :7407\nConstructor e ingeniero"]
+    S8["🎵 auralith :7408\nAudio y habla"]
+    S9["🔊 resonvyr :7409\nLenguaje y retórica"]
+    S10["⚡ fluxenrath :7410\nWeb y recuperación"]
   end
 
   subgraph Modelos["🤖 Capa de Modelos"]
@@ -210,10 +213,10 @@ flowchart TB
   GW --> EV
   GW --> RED
   GW --> CHR
-  GW -->|"dispatch con política"| S1 & S2 & S3 & S4 & S5 & S6 & S7
-  S1 & S2 & S3 & S4 & S5 & S6 & S7 --> KILO
-  S1 & S2 & S3 & S4 & S5 & S6 & S7 --> RED
-  S1 & S2 & S3 & S4 & S5 & S6 & S7 --> CHR
+  GW -->|"dispatch con política"| S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10
+  S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10 --> KILO
+  S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10 --> RED
+  S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10 --> CHR
 ```
 
 ### Flujo de una tarea orquestada
@@ -269,14 +272,16 @@ flowchart LR
 | `:3000` | Dashboard Next.js | Control Plane |
 | `:8000` | Gateway FastAPI | Núcleo |
 | `:8001` | ChromaDB UI | Persistencia |
-| `:7401` | temporaeth | Ejecución |
-| `:7402` | resonvyr | Ejecución |
+| `:7401` | velktharion | Ejecución |
+| `:7402` | synapsara | Ejecución |
 | `:7403` | kryonexus | Ejecución |
 | `:7404` | noctumbra-mail | Ejecución |
-| `:7405` | fluxenrath | Ejecución |
-| `:7406` | auralith | Ejecución |
-| `:7407` | synapsara | Ejecución |
-| `:7408–:7410` | Reservados | Ejecución futura |
+| `:7405` | temporaeth | Ejecución |
+| `:7406` | vaeloryn-conclave | Ejecución |
+| `:7407` | ignivox | Ejecución |
+| `:7408` | auralith | Ejecución |
+| `:7409` | resonvyr | Ejecución |
+| `:7410` | fluxenrath | Ejecución |
 
 ---
 
@@ -734,14 +739,17 @@ alchemical-agent-ecosystem/
 │   ├── models/                      # Modelos SQLAlchemy + Pydantic
 │   └── main.py                      # Punto de entrada FastAPI
 │
-├── 📂 services/                     # Los Siete Círculos
-│   ├── temporaeth/    # :7401 — Scheduling y gestión temporal
-│   ├── resonvyr/      # :7402 — Audio, voz y síntesis
-│   ├── kryonexus/     # :7403 — Almacenamiento frío y archivado
+├── 📂 services/                     # Los Diez Círculos
+│   ├── velktharion/   # :7401 — Orquestador y director
+│   ├── synapsara/     # :7402 — Meta-razonamiento y coordinación
+│   ├── kryonexus/     # :7403 — Datos y análisis
 │   ├── noctumbra-mail/ # :7404 — Email y notificaciones
-│   ├── fluxenrath/    # :7405 — Flujos de datos en tiempo real
-│   ├── auralith/      # :7406 — Multimodal y percepción
-│   └── synapsara/     # :7407 — Orquestación neuronal central
+│   ├── temporaeth/    # :7405 — Razonamiento temporal
+│   ├── vaeloryn-conclave/ # :7406 — Consejo y deliberación
+│   ├── ignivox/       # :7407 — Constructor e ingeniero
+│   ├── auralith/      # :7408 — Audio y habla
+│   ├── resonvyr/      # :7409 — Lenguaje y retórica
+│   └── fluxenrath/    # :7410 — Web y recuperación
 │
 ├── 📂 connectors/                   # Integraciones externas
 │   ├── telegram/                    # Pipeline inbound/outbound Telegram
@@ -898,7 +906,7 @@ Esta versión lleva ese nombre porque representa un punto de inflexión genuino.
 - La **memoria jerárquica** da continuidad real: un agente recuerda lo que aprendió hace semanas y lo aplica hoy sin que le recuerdes nada.
 - El **Agent Node Studio** democratiza la creación de flujos complejos sin necesidad de escribir código — el pensamiento se diseña visualmente.
 - Los **streams SSE endurecidos** convierten la observabilidad en algo tangible: ves pensar al agente, en tiempo real.
-- La **arquitectura de siete servicios** refleja una separación de responsabilidades diseñada para crecer sin acoplamiento ni fragilidad.
+- La **arquitectura de diez servicios** refleja una separación de responsabilidades diseñada para crecer sin acoplamiento ni fragilidad.
 
 Y sobre todo: sigue siendo **tuyo**. Cero dependencia de APIs externas para tus datos. Cero telemetría hacia terceros. Cero sorpresas en la factura al final del mes. La inferencia de IA corre a través de [KiloCode AI Gateway](https://kilo.ai) — con tier gratuito disponible — mientras que todos tus datos viven en tu base de datos local, el conocimiento que construyes permanece contigo para siempre.
 

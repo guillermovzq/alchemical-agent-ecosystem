@@ -24,8 +24,9 @@ def test_health_shape(client):
     r = client.get("/health")
     data = r.json()
     assert data["status"] == "ok"
-    assert "service" in data
-    assert "db" in data
+    assert "version" in data
+    assert "engine" in data
+    assert "timestamp" in data
 
 
 # ---------------------------------------------------------------------------
