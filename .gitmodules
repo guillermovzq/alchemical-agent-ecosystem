@@ -1,0 +1,30 @@
+[submodule "workspace/skills/Velktharion"]
+	path = workspace/skills/Velktharion
+	url = https://github.com/smouj/Velktharion.git
+[submodule "workspace/skills/Synapsara"]
+	path = workspace/skills/Synapsara
+	url = https://github.com/smouj/Synapsara.git
+[submodule "workspace/skills/Kryonexus"]
+	path = workspace/skills/Kryonexus
+	url = https://github.com/smouj/Kryonexus.git
+[submodule "workspace/skills/Noctumbra-Mail"]
+	path = workspace/skills/Noctumbra-Mail
+	url = https://github.com/smouj/Noctumbra-Mail.git
+[submodule "workspace/skills/Temporaeth"]
+	path = workspace/skills/Temporaeth
+	url = https://github.com/smouj/Temporaeth.git
+[submodule "workspace/skills/Vaeloryn-Conclave"]
+	path = workspace/skills/Vaeloryn-Conclave
+	url = https://github.com/smouj/Vaeloryn-Conclave.git
+[submodule "workspace/skills/Ignivox"]
+	path = workspace/skills/Ignivox
+	url = https://github.com/smouj/Ignivox.git
+[submodule "workspace/skills/Auralith"]
+	path = workspace/skills/Auralith
+	url = https://github.com/smouj/Auralith.git
+[submodule "workspace/skills/Resonvyr"]
+	path = workspace/skills/Resonvyr
+	url = https://github.com/smouj/Resonvyr.git
+[submodule "workspace/skills/Fluxenrath"]
+	path = workspace/skills/Fluxenrath
+	url = https://github.com/smouj/Fluxenrath.git

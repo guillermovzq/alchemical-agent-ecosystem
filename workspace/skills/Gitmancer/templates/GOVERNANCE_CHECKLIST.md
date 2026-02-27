@@ -1,0 +1,8 @@
+- [ ] LICENSE
+- [ ] CONTRIBUTING.md
+- [ ] CODE_OF_CONDUCT.md
+- [ ] SECURITY.md
+- [ ] PR template
+- [ ] Issue templates
+- [ ] Dependabot/Renovate
+- [ ] CI workflows

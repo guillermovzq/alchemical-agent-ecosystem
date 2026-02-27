@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentTask",
+  "type": "object",
+  "required": ["taskId", "agent", "intent", "payload"],
+  "properties": {
+    "taskId": {"type": "string"},
+    "agent": {"type": "string"},
+    "intent": {"type": "string"},
+    "payload": {"type": "object"}
+  }
+}

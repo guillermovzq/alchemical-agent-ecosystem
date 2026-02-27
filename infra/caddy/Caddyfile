@@ -1,0 +1,46 @@
+{
+  auto_https off
+}
+
+:80 {
+  encode gzip
+
+  handle_path /velktharion/* {
+    reverse_proxy velktharion:7401
+  }
+  handle_path /synapsara/* {
+    reverse_proxy synapsara:7402
+  }
+  handle_path /kryonexus/* {
+    reverse_proxy kryonexus:7403
+  }
+  handle_path /noctumbra-mail/* {
+    reverse_proxy noctumbra-mail:7404
+  }
+  handle_path /temporaeth/* {
+    reverse_proxy temporaeth:7405
+  }
+  handle_path /vaeloryn-conclave/* {
+    reverse_proxy vaeloryn-conclave:7406
+  }
+  handle_path /ignivox/* {
+    reverse_proxy ignivox:7407
+  }
+  handle_path /auralith/* {
+    reverse_proxy auralith:7408
+  }
+  handle_path /resonvyr/* {
+    reverse_proxy resonvyr:7409
+  }
+  handle_path /fluxenrath/* {
+    reverse_proxy fluxenrath:7410
+  }
+
+  handle_path /gateway/* {
+    reverse_proxy alchemical-gateway:7411
+  }
+
+  handle {
+    respond "Alchemical Agent Ecosystem is running" 200
+  }
+}

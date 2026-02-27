@@ -1,0 +1,8 @@
+* text=auto eol=lf
+
+# Keep SVGs as text for diffs
+*.svg text
+
+# Linguist hints
+workspace/skills/** linguist-vendored
+apps/alchemical-dashboard/.next/** linguist-generated

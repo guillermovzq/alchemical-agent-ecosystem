@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚗️ Alchemical Agent Ecosystem — Local-First AI Orchestration</title>
+  <meta name="description" content="El ecosistema de agentes IA definitivo. 100% local-first, cero APIs pagas, soberanía total de datos. Magnum Opus v2.0">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            alchemical: {
+              obsidian: '#0a0a0f',
+              dark: '#12121a',
+              purple: '#4B0082',
+              deep: '#1a0a2e',
+              indigo: '#2d1b69',
+              gold: '#FFD700',
+              goldLight: '#FFE55C',
+              emerald: '#00FFAA',
+              ember: '#FF6B35'
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', 'sans-serif']
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'fade-up': 'fadeUp 0.6s ease-out forwards',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 20px rgba(75, 0, 130, 0.3)' },
+              '100%': { boxShadow: '0 0 40px rgba(255, 215, 0, 0.5)' }
+            },
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            'glass': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0f;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #FFD700 0%, #FFE55C 50%, #FFD700 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-gradient {
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(75, 0, 130, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(45, 27, 105, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 70%),
+        #0a0a0f;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4B0082 0%, #2d1b69 100%);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5a1092 0%, #3d2580 100%);
+      border-color: #FFD700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      border-color: #00FFAA;
+      box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+    }
+    
+    .section-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+    
+    .section-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .code-block {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(75, 0, 130, 0.5);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .code-block pre {
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+    }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .feature-card {
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 215, 0, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #12121a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #4B0082;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6B0092;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-gradient {
+        background: 
+          radial-gradient(ellipse at 50% 30%, rgba(75, 0, 130, 0.4) 0%, transparent 60%),
+          #0a0a0f;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <i data-lucide="flask-conical" class="w-8 h-8 text-alchemical-gold"></i>
+          <span class="font-bold text-lg">Alchemical</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-sm hover:text-alchemical-gold transition">Características</a>
+          <a href="#circles" class="text-sm hover:text-alchemical-gold transition">Círculos</a>
+          <a href="#install" class="text-sm hover:text-alchemical-gold transition">Instalación</a>
+          <a href="#dashboard" class="text-sm hover:text-alchemical-gold transition">Dashboard</a>
+          <a href="#faq" class="text-sm hover:text-alchemical-gold transition">FAQ</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="https://github.com/smouj/alchemical-agent-ecosystem" target="_blank" class="p-2 hover:bg-white/10 rounded-lg transition">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="min-h-screen hero-gradient flex items-center justify-center pt-16 relative overflow-hidden">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-alchemical-purple/20 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-alchemical-indigo/20 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+    </div>
+    
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 animate-fade-up" style="animation-delay: 0.1s;">
+        <span class="w-2 h-2 bg-alchemical-emerald rounded-full animate-pulse"></span>
+        <span class="text-sm font-mono text-alchemical-gold">v2.0 Magnum Opus</span>
+      </div>
+      
+      <!-- Main Title -->
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-up" style="animation-delay: 0.2s;">
+        <span class="gradient-text">Alchemical Agent</span>
+        <br>
+        <span class="text-white">Ecosystem</span>
+      </h1>
+      
+      <!-- Subtitle -->
+      <p class="text-xl sm:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto animate-fade-up" style="animation-delay: 0.3s;">
+        Donde la inteligencia se <strong>forja</strong>, no se busca. 
+        <br class="hidden sm:block">
+        Sistema de orquestación IA 100% local-first con soberanía total de datos.
+      </p>
+      
+      <!-- Tagline badges -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12 animate-fade-up" style="animation-delay: 0.4s;">
+        <span class="px-3 py-1 text-xs font-mono bg-alchemical-purple/20 text-alchemical-gold rounded-full border border-alchemical-purple/30">
+          ⚗️ LangGraph Engine
+        </span>
+        <span class="px-3 py-1 text-xs font-mono bg-blue-900/20 text-blue-300 rounded-full border border-blue-900/30">
+          🧠 Memoria Jerárquica
+        </span>
+        <span class="px-3 py-1 text-xs font-mono bg-green-900/20 text-green-300 rounded-full border border-green-900/30">
+          🔒 Zero Paid APIs
+        </span>
+        <span class="px-3 py-1 text-xs font-mono bg-red-900/20 text-red-300 rounded-full border border-red-900/30">
+          🏠 100% Local-First
+        </span>
+      </div>
+      
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style="animation-delay: 0.5s;">
+        <a href="#install" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
+          <i data-lucide="download" class="w-5 h-5"></i>
+          Instalar en 5 minutos
+        </a>
+        <a href="#dashboard" class="btn-secondary px-8 py-4 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          Ver Dashboard
+        </a>
+      </div>
+      
+      <!-- Stars -->
+      <div class="mt-8 animate-fade-up" style="animation-delay: 0.6s;">
+        <a href="https://github.com/smouj/alchemical-agent-ecosystem" target="_blank" class="inline-flex items-center gap-2 text-gray-400 hover:text-alchemical-gold transition">
+          <i data-lucide="star" class="w-5 h-5"></i>
+          <span>⭐ Star en GitHub</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <i data-lucide="chevron-down" class="w-6 h-6 text-gray-500"></i>
+    </div>
+  </section>
+
+  <!-- What is Section -->
+  <section id="about" class="py-24 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8">
+          <span class="gradient-text">La Gran Transmutación</span>
+        </h2>
+        
+        <div class="glass-card rounded-2xl p-8 sm:p-12">
+          <p class="text-lg text-gray-300 leading-relaxed mb-6">
+            En el arte antiguo de la alquimia, el <em>Magnum Opus</em> — la Gran Obra — no era meramente la búsqueda del oro, sino la transformación sistemática de la materia prima en algo de valor perdurable mediante la aplicación de conocimiento, disciplina y voluntad.
+          </p>
+          
+          <p class="text-lg text-gray-300 leading-relaxed mb-6">
+            <strong>Alchemical Agent Ecosystem</strong> aplica este mismo principio a la inteligencia: los datos crudos entran como <em>prima materia</em>, pasan por una red soberana de agentes IA especializados vinculados en <strong>Círculos Alquímicos</strong> dinámicamente auto-formados, y emergen como acción coherente, memoria duradera y decisión rastreable.
+          </p>
+          
+          <p class="text-lg text-gray-300 leading-relaxed">
+            Todo orquestado completamente en tu propio hardware, con <strong>cero dependencia de APIs externas</strong> o nubes costosas. El motor de inferencia IA está impulsado por <a href="https://kilo.ai" target="_blank" class="text-alchemical-gold hover:underline">KiloCode AI Gateway</a> — un agregador de LLMs compatible con OpenAI con tier gratuito.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-24 px-4 bg-alchemical-dark/50">
+    <div class="max-w-6xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
+          Características <span class="gradient-text">Principales</span>
+        </h2>
+        <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto">
+          Potencia industrial meets elegancia alquímica. Cada característica diseñada para maxima funcionalidad sin sacrificar belleza.
+        </p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Feature 1 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="git-branch" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Círculos Alquímicos</h3>
+            <p class="text-gray-400 text-sm">Redes dinámicas de agentes especializados que se auto-organizan para完成任务. Cada círculo es un equipo autónomo de IA.</p>
+          </div>
+          
+          <!-- Feature 2 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="brain" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Memoria Jerárquica</h3>
+            <p class="text-gray-400 text-sm">Tres niveles de memoria: Redis (corto plazo), ChromaDB (largo plazo), y resúmenes generados por LLM.</p>
+          </div>
+          
+          <!-- Feature 3 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="workflow" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Agent Node Studio</h3>
+            <p class="text-gray-400 text-sm">Constructor visual de workflows en tiempo real. Observa la inteligencia transmutarse paso a paso, token a token.</p>
+          </div>
+          
+          <!-- Feature 4 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="shield-check" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Soberanía Total</h3>
+            <p class="text-gray-400 text-sm">Tus datos nunca salen de tu máquina. PostgreSQL, Redis, ChromaDB — todo 100% local y en tu control.</p>
+          </div>
+          
+          <!-- Feature 5 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="zap" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">10 Servicios de Ejecución</h3>
+            <p class="text-gray-400 text-sm">Diez agentes nomeados: Velktharion, Synapsara, Kryonexus, Noctumbra y más. Cada uno especializado en una tarea.</p>
+          </div>
+          
+          <!-- Feature 6 -->
+          <div class="feature-card glass-card rounded-xl p-6">
+            <div class="w-12 h-12 rounded-lg bg-alchemical-purple/20 flex items-center justify-center mb-4">
+              <i data-lucide="puzzle" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Plugin Marketplace</h3>
+            <p class="text-gray-400 text-sm">Extiende el ecosistema con skills hot-reload. Registry de plugins con actualización en vivo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Section -->
+  <section id="circles" class="py-24 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8">
+          Los <span class="gradient-text">Seis Círculos</span>
+        </h2>
+        
+        <div class="glass-card rounded-2xl p-8">
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Circle 1 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">01</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Capa de Borde</h3>
+                <p class="text-gray-400 text-sm">Caddy Reverse Proxy con TLS termination, routing y rate limits.</p>
+              </div>
+            </div>
+            
+            <!-- Circle 2 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">02</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Plano de Control</h3>
+                <p class="text-gray-400 text-sm">Agent Node Studio — Next.js 15 visual workflow builder.</p>
+              </div>
+            </div>
+            
+            <!-- Circle 3 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">03</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Núcleo de Orquestación</h3>
+                <p class="text-gray-400 text-sm">Alchemical Gateway (FastAPI) + LangGraph Engine + Plugin Registry.</p>
+              </div>
+            </div>
+            
+            <!-- Circle 4 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">04</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Nexo de Memoria</h3>
+                <p class="text-gray-400 text-sm">Redis (sesión), ChromaDB (semántica), Summary Agents (compresión).</p>
+              </div>
+            </div>
+            
+            <!-- Circle 5 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">05</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Círculo de Ejecución</h3>
+                <p class="text-gray-400 text-sm">10 servicios nomeados: Velktharion, Synapsara, Kryonexus, Noctumbra, Temporaeth, Vaeloryn, Ignivox, Auralith, Resonvyr, Fluxenrath.</p>
+              </div>
+            </div>
+            
+            <!-- Circle 6 -->
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-full bg-alchemical-purple/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-alchemical-gold font-mono text-sm">06</span>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-1">Capa LLM</h3>
+                <p class="text-gray-400 text-sm">KiloCode AI con modelos gratuitos + visión (Claude/Gemini).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section id="install" class="py-24 px-4 bg-alchemical-dark/50">
+    <div class="max-w-4xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4">
+          Instalación <span class="gradient-text">Rápida</span>
+        </h2>
+        <p class="text-gray-400 text-center mb-12">
+          Listo en 5 minutos. Solo necesitas Docker 24+ y Docker Compose v2.
+        </p>
+        
+        <!-- Prerequisites -->
+        <div class="glass-card rounded-xl p-6 mb-8">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-alchemical-emerald"></i>
+            Prerrequisitos
+          </h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="px-3 py-1.5 text-sm font-mono bg-blue-900/20 text-blue-300 rounded-lg border border-blue-900/30">Docker 24+</span>
+            <span class="px-3 py-1.5 text-sm font-mono bg-blue-900/20 text-blue-300 rounded-lg border border-blue-900/30">Docker Compose v2</span>
+            <span class="px-3 py-1.5 text-sm font-mono bg-blue-900/20 text-blue-300 rounded-lg border border-blue-900/30">Git</span>
+            <span class="px-3 py-1.5 text-sm font-mono bg-yellow-900/20 text-yellow-300 rounded-lg border border-yellow-900/30">16 GB RAM</span>
+            <span class="px-3 py-1.5 text-sm font-mono bg-green-900/20 text-green-300 rounded-lg border border-green-900/30">KILO_API_KEY (gratis)</span>
+          </div>
+        </div>
+        
+        <!-- Step 1 -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-8 h-8 rounded-full bg-alchemical-gold/20 text-alchemical-gold flex items-center justify-center font-mono text-sm font-bold">1</span>
+            <h3 class="font-semibold">Clonar el repositorio</h3>
+          </div>
+          <div class="code-block">
+            <div class="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+              <span class="text-sm text-gray-400">bash</span>
+              <button onclick="copyCode(this)" class="copy-btn px-3 py-1 text-xs bg-alchemical-purple/30 hover:bg-alchemical-purple/50 rounded transition flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                Copiar
+              </button>
+            </div>
+            <pre class="text-alchemical-gold">git clone https://github.com/smouj/alchemical-agent-ecosystem.git
+cd alchemical-agent-ecosystem</pre>
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-8 h-8 rounded-full bg-alchemical-gold/20 text-alchemical-gold flex items-center justify-center font-mono text-sm font-bold">2</span>
+            <h3 class="font-semibold">Ejecutar el asistente de instalación</h3>
+          </div>
+          <div class="code-block">
+            <div class="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+              <span class="text-sm text-gray-400">bash</span>
+              <button onclick="copyCode(this)" class="copy-btn px-3 py-1 text-xs bg-alchemical-purple/30 hover:bg-alchemical-purple/50 rounded transition flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                Copiar
+              </button>
+            </div>
+            <pre class="text-alchemical-gold">./install.sh --wizard</pre>
+          </div>
+          <p class="text-gray-400 text-sm mt-2">Este comando configura KiloCode AI, genera el archivo .env y valida el stack automáticamente.</p>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-8 h-8 rounded-full bg-alchemical-gold/20 text-alchemical-gold flex items-center justify-center font-mono text-sm font-bold">3</span>
+            <h3 class="font-semibold">Iniciar el ecosistema</h3>
+          </div>
+          <div class="code-block">
+            <div class="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+              <span class="text-sm text-gray-400">bash</span>
+              <button onclick="copyCode(this)" class="copy-btn px-3 py-1 text-xs bg-alchemical-purple/30 hover:bg-alchemical-purple/50 rounded transition flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                Copiar
+              </button>
+            </div>
+            <pre class="text-alchemical-gold">./scripts/alchemical up-fast</pre>
+          </div>
+        </div>
+        
+        <!-- Verify -->
+        <div class="glass-card rounded-xl p-6 border-alchemical-emerald/30">
+          <h3 class="font-semibold mb-4 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-alchemical-emerald"></i>
+            Verificar la instalación
+          </h3>
+          <div class="code-block">
+            <div class="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+              <span class="text-sm text-gray-400">bash</span>
+              <button onclick="copyCode(this)" class="copy-btn px-3 py-1 text-xs bg-alchemical-purple/30 hover:bg-alchemical-purple/50 rounded transition flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                Copiar
+              </button>
+            </div>
+            <pre class="text-gray-300">curl -fsS http://localhost/gateway/health | jq .</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Section -->
+  <section id="dashboard" class="py-24 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="section-reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-alchemical-emerald/10 border border-alchemical-emerald/30 mb-8">
+          <i data-lucide="rocket" class="w-4 h-4 text-alchemical-emerald"></i>
+          <span class="text-alchemical-emerald text-sm font-medium">Después de instalar</span>
+        </div>
+        
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">
+          Accede al <span class="gradient-text">Dashboard</span>
+        </h2>
+        
+        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+          Una vez que el stack está corriendo, abre el Agent Node Studio y observa la magia en tiempo real.
+        </p>
+        
+        <!-- Dashboard URL Card -->
+        <div class="glass-card rounded-2xl p-8 border-2 border-alchemical-gold/30 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-alchemical-gold/5 to-transparent"></div>
+          <div class="relative">
+            <div class="w-16 h-16 rounded-2xl bg-alchemical-gold/20 flex items-center justify-center mx-auto mb-6">
+              <i data-lucide="layout-dashboard" class="w-8 h-8 text-alchemical-gold"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-2">Agent Node Studio</h3>
+            <p class="text-gray-400 mb-6">Tu centro de comando para la orquestación de agentes IA</p>
+            
+            <a href="http://localhost:3000" 
+               class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-alchemical-gold to-alchemical-goldLight text-alchemical-obsidian font-bold text-lg rounded-xl hover:shadow-lg hover:shadow-alchemical-gold/30 transition transform hover:scale-105">
+              <i data-lucide="external-link" class="w-5 h-5"></i>
+              http://localhost:3000
+            </a>
+            
+            <p class="text-gray-500 text-sm mt-4">
+              ⚠️ Solo disponible después de ejecutar <code class="px-2 py-0.5 bg-white/10 rounded">./scripts/alchemical up-fast</code>
+            </p>
+          </div>
+        </div>
+        
+        <!-- Other endpoints -->
+        <div class="mt-8 grid sm:grid-cols-3 gap-4">
+          <div class="glass-card rounded-xl p-4">
+            <i data-lucide="server" class="w-5 h-5 text-alchemical-purple mb-2"></i>
+            <p class="text-sm text-gray-400">Gateway API</p>
+            <code class="text-alchemical-gold text-sm">http://localhost/gateway</code>
+          </div>
+          <div class="glass-card rounded-xl p-4">
+            <i data-lucide="book-open" class="w-5 h-5 text-alchemical-purple mb-2"></i>
+            <p class="text-sm text-gray-400">OpenAPI Docs</p>
+            <code class="text-alchemical-gold text-sm">http://localhost/gateway/docs</code>
+          </div>
+          <div class="glass-card rounded-xl p-4">
+            <i data-lucide="activity" class="w-5 h-5 text-alchemical-purple mb-2"></i>
+            <p class="text-sm text-gray-400">Monitoring</p>
+            <code class="text-alchemical-gold text-sm">http://localhost:6006</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section id="tech" class="py-24 px-4 bg-alchemical-dark/50">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+          Tech <span class="gradient-text">Stack</span>
+        </h2>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js 15" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Frontend Framework</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">API Gateway</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/LangGraph-1e6fff?style=for-the-badge&logoColor=white" alt="LangGraph" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Orchestration</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/PostgreSQL-0d2040?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Relational Database</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Cache & Session</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/ChromaDB-00C853?style=for-the-badge&logoColor=white" alt="ChromaDB" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Embeddings</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">Containerization</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-center">
+            <img src="https://img.shields.io/badge/KiloCode_AI-4B0082?style=for-the-badge&logoColor=white" alt="KiloCode" class="mx-auto mb-2">
+            <p class="text-gray-400 text-sm">LLM Gateway</p>
+          </div>
+        </div>
+        
+        <!-- Advantages -->
+        <div class="mt-12 grid md:grid-cols-3 gap-6">
+          <div class="glass-card rounded-xl p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-alchemical-emerald/20 flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="shield" class="w-6 h-6 text-alchemical-emerald"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Privacidad Total</h3>
+            <p class="text-gray-400 text-sm">Tus datos nunca salen de tu infraestructura. 100% local-first.</p>
+          </div>
+          <div class="glass-card rounded-xl p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-alchemical-gold/20 flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="wallet" class="w-6 h-6 text-alchemical-gold"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Costo Cero</h3>
+            <p class="text-gray-400 text-sm">Usa el tier gratuito de KiloCode. Sin tarjetas, sin suscripciones.</p>
+          </div>
+          <div class="glass-card rounded-xl p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-alchemical-purple/20 flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="server" class="w-6 h-6 text-alchemical-purple"></i>
+            </div>
+            <h3 class="font-semibold mb-2">Control Total</h3>
+            <p class="text-gray-400 text-sm">Tú controlas el hardware, el software y los datos. Sin vendor lock-in.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-24 px-4">
+    <div class="max-w-3xl mx-auto">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+          Preguntas <span class="gradient-text">Frecuentes</span>
+        </h2>
+        
+        <div class="space-y-4">
+          <div class="glass-card rounded-xl p-6">
+            <h3 class="font-semibold mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-alchemical-gold"></i>
+              ¿Necesito una API key de OpenAI?
+            </h3>
+            <p class="text-gray-400 text-sm">No. Alchemical usa <strong>KiloCode AI Gateway</strong> que tiene un tier gratuito con modelos como Claude, GPT y Gemini. No se requiere tarjeta de crédito.</p>
+          </div>
+          
+          <div class="glass-card rounded-xl p-6">
+            <h3 class="font-semibold mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-alchemical-gold"></i>
+              ¿Cuánta potencia de hardware necesito?
+            </h3>
+            <p class="text-gray-400 text-sm">Mínimo 16 GB de RAM y 20 GB de disco. Para uso producción recomendado: 32 GB RAM + 50 GB SSD.</p>
+          </div>
+          
+          <div class="glass-card rounded-xl p-6">
+            <h3 class="font-semibold mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-alchemical-gold"></i>
+              ¿Puedo ejecutarlo en producción?
+            </h3>
+            <p class="text-gray-400 text-sm">Sí. El ecosistema está diseñado para producción con RBAC, API keys, OpenTelemetry, y monitoreo integrado.</p>
+          </div>
+          
+          <div class="glass-card rounded-xl p-6">
+            <h3 class="font-semibold mb-2 flex items-center gap-2">
+              <i data-lucide="help-circle" class="w-5 h-5 text-alchemical-gold"></i>
+              ¿Qué hace diferente a Alchemical de n8n o LangFlow?
+            </h3>
+            <p class="text-gray-400 text-sm">Alchemical es 100% local-first con memoria jerárquica persistente, 10 agentes nomeados especializados, y un motor de orquestación LangGraph. Sin dependencia de clouds externas para funcionar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 px-4 bg-gradient-to-b from-transparent via-alchemical-purple/20 to-transparent">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="section-reveal">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          Comienza tu <span class="gradient-text">Gran Obra</span>
+        </h2>
+        <p class="text-gray-400 mb-8">
+          Únete a la revolución de la IA soberana. Tu inteligencia artificial, tu hardware, tus reglas.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#install" class="btn-primary px-8 py-4 rounded-xl font-semibold text-white inline-flex items-center justify-center gap-2">
+            <i data-lucide="github" class="w-5 h-5"></i>
+            Clonar desde GitHub
+          </a>
+          <a href="https://github.com/smouj/alchemical-agent-ecosystem" target="_blank" class="btn-secondary px-8 py-4 rounded-xl font-semibold text-white inline-flex items-center justify-center gap-2">
+            <i data-lucide="star" class="w-5 h-5"></i>
+            Dar una Estrella
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="flask-conical" class="w-6 h-6 text-alchemical-gold"></i>
+            <span class="font-bold">Alchemical</span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            Donde la inteligencia se forja, no se busca.
+          </p>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Recursos</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem" class="hover:text-alchemical-gold transition">GitHub</a></li>
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/wiki" class="hover:text-alchemical-gold transition">Documentación</a></li>
+            <li><a href="https://kilo.ai" class="hover:text-alchemical-gold transition">KiloCode AI</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Comunidad</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/releases" class="hover:text-alchemical-gold transition">Releases</a></li>
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/issues" class="hover:text-alchemical-gold transition">Issues</a></li>
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/discussions" class="hover:text-alchemical-gold transition">Discusiones</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/blob/main/LICENSE" class="hover:text-alchemical-gold transition">Licencia</a></li>
+            <li><a href="https://github.com/smouj/alchemical-agent-ecosystem/blob/main/CHANGELOG.md" class="hover:text-alchemical-gold transition">Changelog</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-gray-500 text-sm">
+          © 2026 Alchemical Agent Ecosystem. Construido con ⚗️ y 💜.
+        </p>
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/smouj/alchemical-agent-ecosystem" target="_blank" class="text-gray-400 hover:text-white transition">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+          <a href="https://kilo.ai" target="_blank" class="text-gray-400 hover:text-white transition">
+            <span class="text-sm font-mono">KiloCode</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Initialize Lucide icons -->
+  <script>
+    lucide.createIcons();
+    
+    // Scroll reveal animation
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.section-reveal').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // Copy code function
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const code = pre.textContent;
+      
+      navigator.clipboard.writeText(code).then(() => {
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> ✓';
+        btn.classList.add('bg-green-600');
+        lucide.createIcons();
+        
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('bg-green-600');
+          lucide.createIcons();
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
