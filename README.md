@@ -47,7 +47,7 @@
 
 ## ✦ The Grand Transmutation
 
-In the ancient art of alchemy, the *Magnum Opus* — the Great Work — was not merely the pursuit of gold, but the systematic transformation of base matter into something of profound and enduring value through the application of knowledge, discipline, and will. The **Alchemical Agent Ecosystem** applies this same principle to intelligence itself: raw data enters as *prima materia*, passes through a sovereign network of specialized AI agents bound together in dynamically self-forming **Alchemical Circles**, and emerges as coherent action, durable memory, and traceable decision — all orchestrated entirely on your own hardware, across seven named execution services, with zero dependency on costly APIs or external clouds. At the center stands the **Alchemical Gateway**, a FastAPI-powered philosopher's stone that mediates between intent and execution through a LangGraph-style stateful orchestration engine, backed by a three-tier hierarchical memory system spanning Redis, ChromaDB, and LLM-generated summaries. The **Agent Node Studio** makes the Great Work visible in real time — a Next.js 15 visual workflow builder where you watch intelligence transmute, step by step, token by token, streamed over SSE to a dashboard that feels less like a dev tool and more like a command room for a new kind of operation. This is local sovereignty in the age of dependent intelligence: a production-grade operating system for autonomous thought, version 2.0, **Magnum Opus**. AI inference is powered by [KiloCode AI Gateway](https://kilo.ai) — an OpenAI-compatible LLM aggregator with a free tier — while all data (PostgreSQL, Redis, ChromaDB) remains fully local.
+In the ancient art of alchemy, the *Magnum Opus* — the Great Work — was not merely the pursuit of gold, but the systematic transformation of base matter into something of profound and enduring value through the application of knowledge, discipline, and will. The **Alchemical Agent Ecosystem** applies this same principle to intelligence itself: raw data enters as *prima materia*, passes through a sovereign network of specialized AI agents bound together in dynamically self-forming **Alchemical Circles**, and emerges as coherent action, durable memory, and traceable decision — all orchestrated entirely on your own hardware, across ten named execution services, with zero dependency on costly APIs or external clouds. At the center stands the **Alchemical Gateway**, a FastAPI-powered philosopher's stone that mediates between intent and execution through a LangGraph-style stateful orchestration engine, backed by a three-tier hierarchical memory system spanning Redis, ChromaDB, and LLM-generated summaries. The **Agent Node Studio** makes the Great Work visible in real time — a Next.js 15 visual workflow builder where you watch intelligence transmute, step by step, token by token, streamed over SSE to a dashboard that feels less like a dev tool and more like a command room for a new kind of operation. This is local sovereignty in the age of dependent intelligence: a production-grade operating system for autonomous thought, version 2.0, **Magnum Opus**. AI inference is powered by [KiloCode AI Gateway](https://kilo.ai) — an OpenAI-compatible LLM aggregator with a free tier — while all data (PostgreSQL, Redis, ChromaDB) remains fully local.
 
 ---
 
@@ -77,7 +77,7 @@ Expected response from the health oracle:
 {
   "status": "transmuting",
   "version": "2.0.0-magnum-opus",
-  "services": 7,
+  "services": 10,
   "llm_engine": "kilo-ai:ready",
   "memory": { "redis": "ok", "chroma": "ok", "postgres": "ok" },
   "circles_active": 0
@@ -132,14 +132,17 @@ graph TB
         CHROMA -->|"request summary"| SUMM
     end
 
-    subgraph EXEC["🔮 Execution Circle — The Seven"]
-        T["temporaeth:7401\n(temporal reasoning)"]
-        R["resonvyr:7402\n(language · rhetoric)"]
+    subgraph EXEC["🔮 Execution Circle — The Ten"]
+        V["velktharion:7401\n(orchestrator · director)"]
+        SY["synapsara:7402\n(meta-reasoning · coordination)"]
         K["kryonexus:7403\n(data · analysis)"]
         N["noctumbra-mail:7404\n(comms · notifications)"]
-        F["fluxenrath:7405\n(web · retrieval)"]
-        AU["auralith:7406\n(audio · speech)"]
-        SY["synapsara:7407\n(meta-reasoning · coordination)"]
+        T["temporaeth:7405\n(temporal reasoning)"]
+        VC["vaeloryn-conclave:7406\n(council · deliberation)"]
+        IG["ignivox:7407\n(builder · engineer)"]
+        AU["auralith:7408\n(audio · speech)"]
+        R["resonvyr:7409\n(language · rhetoric)"]
+        F["fluxenrath:7410\n(web · retrieval)"]
     end
 
     subgraph LLM["🤖 LLM Layer"]
@@ -219,7 +222,7 @@ sequenceDiagram
 | Real-time SSE Observability | ✅ | Every token, every step, every trace pushed over Server-Sent Events to dashboard and API consumers |
 | RBAC + API Key Security | ✅ | Role-based access control with fine-grained policy enforcement and rotating API key management |
 | Telegram / Discord Connectors | ✅ | Production-ready bots that pipe conversations directly into the agent orchestration pipeline |
-| OpenTelemetry + Distributed Tracing | ✅ | Full W3C trace propagation across all seven execution services, collected into Jaeger + Prometheus |
+| OpenTelemetry + Distributed Tracing | ✅ | Full W3C trace propagation across all ten execution services, collected into Jaeger + Prometheus |
 | PostgreSQL + pgvector | ✅ | Agent registry, workflow persistence, and high-dimensional vector similarity search in one engine |
 | Auto-evolving Agent Prompts | 🧪 | Experimental: agents that refine their own system prompts based on observed success metrics |
 | Grimoire Export / Import | 🧪 | Serialize entire workflows, agent configs, and memory snapshots to portable JSON grimoires |
@@ -232,7 +235,7 @@ sequenceDiagram
 
 ## 🧠 The Agent Model
 
-Every entity in the ecosystem exists at two distinct layers: a **logical agent** (registered in the Gateway's PostgreSQL registry and resolved via pgvector capability matching) and an **execution context** (materialized on one of the seven named execution services at invocation time). This separation allows the registry to be the immutable source of truth for identity, capability declarations, and memory configuration, while execution services remain stateless and independently scalable.
+Every entity in the ecosystem exists at two distinct layers: a **logical agent** (registered in the Gateway's PostgreSQL registry and resolved via pgvector capability matching) and an **execution context** (materialized on one of the ten named execution services at invocation time). This separation allows the registry to be the immutable source of truth for identity, capability declarations, and memory configuration, while execution services remain stateless and independently scalable.
 
 ### Logical Agent Schema
 
@@ -243,7 +246,7 @@ Every entity in the ecosystem exists at two distinct layers: a **logical agent**
   "role": "Transcription Specialist",
   "model": "anthropic/claude-sonnet-4.5",
   "target_service": "auralith",
-  "target_port": 7406,
+  "target_port": 7408,
   "skills": [
     "audio_transcription",
     "audio_chunker",
@@ -294,9 +297,9 @@ Every circle follows the classical four-role structure:
 Circle ID:  circle_mkt_research_a3f8
 Formed:     2025-11-14T09:12:03Z
 
-● Prima Materia  →  temporaeth:7401  (task decomposition, sub-question extraction)
-● Catalyst       →  fluxenrath:7405  (web retrieval, document ingestion)
-● Refiner        →  resonvyr:7402    (synthesis, comparative framing, language polish)
+● Prima Materia  →  temporaeth:7405  (task decomposition, sub-question extraction)
+● Catalyst       →  fluxenrath:7410  (web retrieval, document ingestion)
+● Refiner        →  resonvyr:7409    (synthesis, comparative framing, language polish)
 ● Scribe         →  kryonexus:7403   (data structuring, table generation, memory write)
 
 Workflow steps:
@@ -388,7 +391,7 @@ External worlds reach the ecosystem through typed **Connectors** — each one a 
 | **Telegram Bot** | ✅ | Full message + file + voice ingestion; inline agent responses; group and DM support |
 | **Discord Bot** | ✅ | Slash commands + message listeners; thread-aware context; role-based permissions |
 | **REST Webhooks** | ✅ | Generic inbound POST endpoint; configurable topic routing; HMAC signature verification |
-| **Email (noctumbra-mail)** | ✅ | IMAP/SMTP bridge via the `noctumbra-mail:7404` execution service |
+| **Email (noctumbra-mail)** | ✅ | IMAP/SMTP bridge via the `noctumbra-mail:7404` execution service (Port 7404) |
 | **Slack** | 🔜 | Planned for v2.1 — community PRs welcome |
 | **Matrix / Element** | 🔜 | E2E-encrypted channel integration — planned for v2.2 |
 | **WhatsApp (Business API)** | 🔜 | In specification — community PRs welcome |
@@ -437,14 +440,17 @@ alchemical-agent-ecosystem/
 │   ├── models/                 # Pydantic schemas and DB models
 │   └── plugins/                # Plugin registry and loader
 │
-├── services/                   # The Seven Execution Services
-│   ├── temporaeth/             # Port 7401 — temporal reasoning
-│   ├── resonvyr/               # Port 7402 — language and rhetoric
+├── services/                   # The Ten Execution Services
+│   ├── velktharion/            # Port 7401 — orchestrator and director
+│   ├── synapsara/              # Port 7402 — meta-reasoning and coordination
 │   ├── kryonexus/              # Port 7403 — data and analysis
 │   ├── noctumbra-mail/         # Port 7404 — comms and notifications
-│   ├── fluxenrath/             # Port 7405 — web and retrieval
-│   ├── auralith/               # Port 7406 — audio and speech
-│   └── synapsara/              # Port 7407 — meta-reasoning and coordination
+│   ├── temporaeth/             # Port 7405 — temporal reasoning
+│   ├── vaeloryn-conclave/      # Port 7406 — council and deliberation
+│   ├── ignivox/                # Port 7407 — builder and engineer
+│   ├── auralith/               # Port 7408 — audio and speech
+│   ├── resonvyr/               # Port 7409 — language and rhetoric
+│   └── fluxenrath/             # Port 7410 — web and retrieval
 │
 ├── skills/                     # Hot-reloadable skill packages
 │   ├── web_surfer/
@@ -514,7 +520,7 @@ Full documentation is available at the **Alchemical Documentation Portal**, buil
 | [Memory Architecture](./docs/architecture/memory.md) | Three-tier memory system internals, eviction policies, tuning |
 | [Plugin Development Guide](./docs/plugins/development.md) | How to build, test, and publish skills to the marketplace |
 | [Gateway API Reference](./docs/api-reference/gateway.md) | Complete OpenAPI reference for all v1 endpoints |
-| [Execution Services](./docs/api-reference/services.md) | Per-service API contracts for all seven services (7401–7407) |
+| [Execution Services](./docs/api-reference/services.md) | Per-service API contracts for all ten services (7401–7410) |
 | [Connectors Guide](./docs/connectors/) | Setup guides for Telegram, Discord, and webhook connectors |
 | [Security Model](./docs/security/rbac.md) | RBAC roles, API key management, audit logging |
 | [Observability Guide](./docs/observability/otel.md) | OpenTelemetry setup, Jaeger traces, Prometheus dashboards |
@@ -618,7 +624,7 @@ The dominant narrative of AI in 2025 asks you to rent intelligence — to submit
 
 ### Alchemy as a Genuine Design Principle
 
-The alchemical metaphor is not decorative — it is the actual design principle of this system. In classical alchemy, the *Magnum Opus* proceeds through defined stages: *nigredo* (dissolution of the raw), *albedo* (purification), *citrinitas* (illumination), and *rubedo* (completion and integration into the world). In this ecosystem, every task follows the same arc: raw input is dissolved by the Prima Materia agent, purified through Catalyst retrieval and Refiner synthesis, illuminated by memory and accumulated context, and completed by the Scribe into durable output that feeds future cycles. The seven execution services are not named arbitrarily — each name encodes a character and a mode of engaging with information. **Temporaeth** thinks in time. **Resonvyr** thinks in language. **Kryonexus** thinks in structure. **Auralith** thinks in sound. **Fluxenrath** moves through the web. **Noctumbra** carries messages in the dark. **Synapsara** reflects on the whole. These are not microservices; they are *minds*, and the circles they form are the collaborative intelligence your tasks deserve.
+The alchemical metaphor is not decorative — it is the actual design principle of this system. In classical alchemy, the *Magnum Opus* proceeds through defined stages: *nigredo* (dissolution of the raw), *albedo* (purification), *citrinitas* (illumination), and *rubedo* (completion and integration into the world). In this ecosystem, every task follows the same arc: raw input is dissolved by the Prima Materia agent, purified through Catalyst retrieval and Refiner synthesis, illuminated by memory and accumulated context, and completed by the Scribe into durable output that feeds future cycles. The ten execution services are not named arbitrarily — each name encodes a character and a mode of engaging with information. **Velktharion** commands and directs. **Synapsara** reflects on the whole. **Kryonexus** thinks in structure. **Noctumbra** carries messages in the dark. **Temporaeth** thinks in time. **Vaeloryn-Conclave** deliberates and councils. **Ignivox** builds and engineers. **Auralith** thinks in sound. **Resonvyr** thinks in language. **Fluxenrath** moves through the web. These are not microservices; they are *minds*, and the circles they form are the collaborative intelligence your tasks deserve.
 
 ### The Commitment to Open-Source Excellence
 
