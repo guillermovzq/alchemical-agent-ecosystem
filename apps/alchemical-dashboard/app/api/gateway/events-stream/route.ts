@@ -9,10 +9,23 @@ const gatewayHeaders = (): Record<string, string> => {
 
 export async function GET() {
   const encoder = new TextEncoder();
+
+  // intervalId captured in closure — avoids the broken `this._id` anti-pattern
+  // that caused intervals to never be cleared on client disconnect.
+  let intervalId: ReturnType<typeof setInterval> | undefined;
+
   const stream = new ReadableStream({
     async start(controller) {
       let last = "";
-      const send = (txt: string) => controller.enqueue(encoder.encode(txt));
+
+      const send = (txt: string) => {
+        try {
+          controller.enqueue(encoder.encode(txt));
+        } catch {
+          // Controller already closed (client disconnected)
+        }
+      };
+
       const loop = async () => {
         try {
           const r = await fetch("http://localhost/gateway/events?limit=120", {
@@ -33,13 +46,14 @@ export async function GET() {
       };
 
       await loop();
-      const id = setInterval(loop, 2000);
-      // @ts-ignore
-      this._id = id;
+      intervalId = setInterval(loop, 2000);
     },
+
     cancel() {
-      // @ts-ignore
-      if (this._id) clearInterval(this._id);
+      if (intervalId !== undefined) {
+        clearInterval(intervalId);
+        intervalId = undefined;
+      }
     },
   });
 

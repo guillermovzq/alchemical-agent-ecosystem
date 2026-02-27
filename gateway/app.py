@@ -342,12 +342,15 @@ class ConnectorSendRequest(BaseModel):
 
 @contextmanager
 def db_conn():
-    """Context manager that opens a SQLite connection, commits on success, closes always."""
+    """Context manager that opens a SQLite connection, commits on success, rolls back on error."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     try:
         yield conn
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         conn.close()
 
@@ -460,6 +463,12 @@ def init_db() -> None:
             )
             """
         )
+
+        # Performance indices — created with IF NOT EXISTS so repeated calls are safe
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status, next_run_ts)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_events_ts ON events(id DESC)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_chat_messages_id ON chat_messages(id DESC)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_usage_id ON usage_samples(id DESC)")
 
         # C1 — seed bootstrap admin key with hash
         admin_key = os.getenv("ALCHEMICAL_ADMIN_API_KEY", "")
@@ -648,38 +657,59 @@ def _auth_role_from_db(api_key: str) -> Optional[str]:
 def _require_auth(request: Request, min_role: str = VIEWER_ROLE) -> None:
     """Enforce gateway token, API-key role, and minimum role checks.
 
+    Authentication logic:
+    - If GATEWAY_TOKEN is set, the x-alchemy-token header MUST match it.
+    - If x-api-key is provided, it is validated against the DB hash and its role is used.
+    - If GATEWAY_TOKEN is set and matches but no x-api-key is given, the request is
+      authenticated as ADMIN_ROLE (the gateway token is the master credential).
+    - If neither GATEWAY_TOKEN nor x-api-key is configured server-side, auth is open.
+
+    The ``x-alchemy-role`` client header is intentionally **never** trusted (C2).
+
     Raises HTTPException(401) or HTTPException(403) as appropriate.
-    The ``x-alchemy-role`` client header is intentionally **never** trusted.
     """
     _enforce_rate_limit(request)
 
-    # Primary token guard
+    token_provided = request.headers.get("x-alchemy-token", "")
+    api_key_provided = request.headers.get("x-api-key", "")
+
+    # --- Validate gateway token if one is configured ---
+    token_valid = False
     if GATEWAY_TOKEN:
-        token = request.headers.get("x-alchemy-token", "")
-        if token != GATEWAY_TOKEN:
+        if not token_provided:
             raise HTTPException(
                 status_code=401,
-                detail="Invalid or missing gateway token",
+                detail="Missing gateway token",
                 headers={"WWW-Authenticate": 'Bearer realm="alchemical-gateway"'},
             )
+        if not hmac.compare_digest(token_provided, GATEWAY_TOKEN):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid gateway token",
+                headers={"WWW-Authenticate": 'Bearer realm="alchemical-gateway"'},
+            )
+        token_valid = True
 
-    # C2 — Role derived ONLY from a validated API key; never from client header
+    # --- Resolve role from API key (C2 — role only from DB, never from header) ---
     role: Optional[str] = None
-    api_key = request.headers.get("x-api-key", "")
-    if api_key:
-        role = _auth_role_from_db(api_key)
+    if api_key_provided:
+        role = _auth_role_from_db(api_key_provided)
         if not role:
             raise HTTPException(
                 status_code=401,
                 detail="Invalid API key",
                 headers={"WWW-Authenticate": 'Bearer realm="alchemical-gateway"'},
             )
-
-    if not role:
-        # No token and no valid API key → deny
+    elif token_valid:
+        # Gateway token without API key → grant admin (master credential)
+        role = ADMIN_ROLE
+    elif not GATEWAY_TOKEN:
+        # No server-side auth configured — open access (dev mode)
+        role = ADMIN_ROLE
+    else:
         raise HTTPException(
             status_code=401,
-            detail="Authentication required",
+            detail="Authentication required: provide x-api-key or x-alchemy-token",
             headers={"WWW-Authenticate": 'Bearer realm="alchemical-gateway"'},
         )
 
@@ -833,10 +863,11 @@ async def job_worker() -> None:
                 "job_worker: job %d has failed 5 consecutive times — marking permanently failed",
                 job_id,
             )
+            attempts = int(job["attempts"])
             with db_conn() as conn:
                 conn.execute(
-                    "UPDATE jobs SET status='failed', error=?, updated_at=? WHERE id=?",
-                    ("Circuit breaker: 5 consecutive failures", now_iso(), job_id),
+                    "UPDATE jobs SET status='failed', attempts=?, error=?, updated_at=? WHERE id=?",
+                    (attempts, "Circuit breaker: 5 consecutive failures", now_iso(), job_id),
                 )
             append_event("error", "jobs", f"Job {job_id} permanently failed (circuit breaker)")
             consecutive_failures.pop(job_id, None)
@@ -1101,9 +1132,8 @@ async def stats(request: Request) -> Dict[str, Any]:
         "total_agents": agents,
         "total_jobs": sum(r["c"] for r in jobs),
         "total_chat_messages": chats,
+        "total_events": events,
         "uptime_seconds": uptime_seconds,
-        "chat_messages": chats,
-        "events": events,
         "jobs": {r["status"]: r["c"] for r in jobs},
         "usage": {
             "tokens_in": usage["tin"],
@@ -1357,6 +1387,20 @@ async def register_agent(payload: AgentConfig, request: Request) -> Dict[str, An
     return {"ok": True, "agent": payload.model_dump()}
 
 
+@app.delete("/agents/{agent_id}", tags=["agents"])
+async def delete_agent(agent_id: str, request: Request) -> Dict[str, Any]:
+    """Delete an agent by name/ID.  Core bootstrap agents can be deleted and will be
+    re-seeded on the next gateway restart if the table is empty."""
+    _require_auth(request, ADMIN_ROLE)
+    with db_conn() as conn:
+        row = conn.execute("SELECT name FROM agents WHERE name=?", (agent_id,)).fetchone()
+        if not row:
+            raise HTTPException(404, f"Agent not found: {agent_id}")
+        conn.execute("DELETE FROM agents WHERE name=?", (agent_id,))
+    append_event("info", "agents", f"Agent deleted: {agent_id}")
+    return {"ok": True, "deleted": agent_id}
+
+
 # ---------------------------------------------------------------------------
 # Auth / API-key management
 # ---------------------------------------------------------------------------
@@ -1396,8 +1440,25 @@ async def disable_key(key_id: int, request: Request) -> Dict[str, Any]:
     """Disable an API key by ID."""
     _require_auth(request, ADMIN_ROLE)
     with db_conn() as conn:
+        row = conn.execute("SELECT id FROM api_keys WHERE id=?", (key_id,)).fetchone()
+        if not row:
+            raise HTTPException(404, f"API key not found: {key_id}")
         conn.execute("UPDATE api_keys SET enabled=0 WHERE id=?", (key_id,))
+    append_event("info", "auth", f"API key {key_id} disabled")
     return {"ok": True, "id": key_id, "enabled": False}
+
+
+@app.delete("/auth/keys/{key_id}", tags=["auth"])
+async def delete_key(key_id: int, request: Request) -> Dict[str, Any]:
+    """Permanently delete an API key by ID."""
+    _require_auth(request, ADMIN_ROLE)
+    with db_conn() as conn:
+        row = conn.execute("SELECT id FROM api_keys WHERE id=?", (key_id,)).fetchone()
+        if not row:
+            raise HTTPException(404, f"API key not found: {key_id}")
+        conn.execute("DELETE FROM api_keys WHERE id=?", (key_id,))
+    append_event("info", "auth", f"API key {key_id} deleted")
+    return {"ok": True, "deleted": key_id}
 
 
 # ---------------------------------------------------------------------------

@@ -74,12 +74,18 @@ export function AgentNodeStudio() {
   const saveAgent = async () => {
     if (!selectedAgent) return;
     setMsg(`Guardando ${selectedAgent.name}...`);
+    // Gateway Pydantic model accepts `enabled` as bool; the DB layer converts to int internally.
     const res = await fetch("/api/gateway/agents", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(selectedAgent),
+      body: JSON.stringify({
+        ...selectedAgent,
+        // Ensure enabled is always a boolean (not undefined/null)
+        enabled: Boolean(selectedAgent.enabled),
+      }),
     });
-    setMsg(res.ok ? `✅ ${selectedAgent.name} actualizado` : `❌ error actualizando ${selectedAgent.name}`);
+    const j = await res.json().catch(() => ({})) as { detail?: string; error?: string };
+    setMsg(res.ok ? `✅ ${selectedAgent.name} actualizado` : `❌ ${j?.detail ?? j?.error ?? `error actualizando ${selectedAgent.name}`}`);
   };
 
   const onPointerDown = (id: string, ev: React.PointerEvent<HTMLDivElement>) => {

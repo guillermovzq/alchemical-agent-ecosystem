@@ -3,7 +3,12 @@ export interface DashboardConfig {
   logsPollMs: number;
   logsLines: number;
   defaultLogService: string;
-  /** True when KILO_API_KEY is present in the server environment. Omitted on client-side defaults. */
+  /**
+   * True when KILO_API_KEY is present in the server environment.
+   * This value is resolved server-side only (api/config GET derives it from process.env).
+   * The client-side DEFAULT_CONFIG intentionally leaves it `undefined` because
+   * KILO_API_KEY is a private env var — it is never exposed to the browser bundle.
+   */
   kiloApiConfigured?: boolean;
 }
 
@@ -13,5 +18,8 @@ export const DEFAULT_CONFIG: DashboardConfig = {
   logsPollMs: 5000,
   logsLines: 50,
   defaultLogService: "velktharion",
-  kiloApiConfigured: Boolean(process.env.KILO_API_KEY),
+  // NOTE: Do NOT read process.env.KILO_API_KEY here — this module is bundled
+  // for the browser and private env vars are not available client-side.
+  // The server-side /api/config route injects the correct value.
+  kiloApiConfigured: undefined,
 };

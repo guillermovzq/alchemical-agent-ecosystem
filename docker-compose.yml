@@ -66,8 +66,8 @@ services:
 
   alchemical-gateway:
     build:
-      context: ./gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: gateway/Dockerfile
     restart: unless-stopped
     container_name: alchemical-gateway
     environment:

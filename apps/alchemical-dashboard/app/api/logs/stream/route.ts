@@ -21,10 +21,14 @@ export async function GET(req: NextRequest) {
   const lines = Math.max(10, Math.min(200, Number(req.nextUrl.searchParams.get("lines") || "50")));
   const encoder = new TextEncoder();
 
+  // intervalId captured in closure — avoids the broken `this._id` anti-pattern
+  let intervalId: ReturnType<typeof setInterval> | undefined;
+  let closed = false;
+
   const stream = new ReadableStream({
     async start(controller) {
       let last = "";
-      let closed = false;
+
       const send = (txt: string) => {
         if (closed) return;
         try {
@@ -33,6 +37,7 @@ export async function GET(req: NextRequest) {
           closed = true;
         }
       };
+
       const loop = async () => {
         if (closed) return;
         const logs = await tailLogs(service, lines);
@@ -44,21 +49,17 @@ export async function GET(req: NextRequest) {
           send(`: keepalive\n\n`);
         }
       };
+
       await loop();
-      const id = setInterval(loop, 1500);
-      // @ts-ignore
-      this._id = id;
-      // @ts-ignore
-      this._closed = () => {
-        closed = true;
-        clearInterval(id);
-      };
+      intervalId = setInterval(loop, 1500);
     },
+
     cancel() {
-      // @ts-ignore
-      if (this._closed) this._closed();
-      // @ts-ignore
-      else if (this._id) clearInterval(this._id);
+      closed = true;
+      if (intervalId !== undefined) {
+        clearInterval(intervalId);
+        intervalId = undefined;
+      }
     },
   });
 

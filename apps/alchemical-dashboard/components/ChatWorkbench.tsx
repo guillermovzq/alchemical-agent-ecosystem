@@ -129,7 +129,10 @@ export function ChatWorkbench() {
     });
     const j = (await res.json().catch(() => ({}))) as { error?: string };
     showMsg(res.ok ? `Respuesta recibida de ${chatAgent}` : `Error: ${j?.error ?? "chat ask failed"}`);
-    if (res.ok) setChatText("");
+    if (res.ok) {
+      setChatText("");
+      setAttachments([]);
+    }
   };
 
   const runRoundtable = async () => {

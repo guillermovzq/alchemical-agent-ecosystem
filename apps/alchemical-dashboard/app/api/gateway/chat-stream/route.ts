@@ -9,13 +9,29 @@ const gatewayHeaders = (): Record<string, string> => {
 
 export async function GET() {
   const encoder = new TextEncoder();
+
+  // intervalId is captured in the closure shared by start() and cancel(),
+  // avoiding the broken `this._id` anti-pattern.
+  let intervalId: ReturnType<typeof setInterval> | undefined;
+
   const stream = new ReadableStream({
     async start(controller) {
       let last = "";
-      const send = (txt: string) => controller.enqueue(encoder.encode(txt));
+
+      const send = (txt: string) => {
+        try {
+          controller.enqueue(encoder.encode(txt));
+        } catch {
+          // Controller already closed (client disconnected)
+        }
+      };
+
       const loop = async () => {
         try {
-          const r = await fetch("http://localhost/gateway/chat/thread?limit=160", { cache: "no-store", headers: gatewayHeaders() });
+          const r = await fetch("http://localhost/gateway/chat/thread?limit=160", {
+            cache: "no-store",
+            headers: gatewayHeaders(),
+          });
           const j = await r.json();
           const payload = JSON.stringify(j);
           if (payload !== last) {
@@ -28,14 +44,16 @@ export async function GET() {
           send(`data: ${JSON.stringify({ items: [], error: "gateway unavailable" })}\n\n`);
         }
       };
+
       await loop();
-      const id = setInterval(loop, 2000);
-      // @ts-ignore
-      this._id = id;
+      intervalId = setInterval(loop, 2000);
     },
+
     cancel() {
-      // @ts-ignore
-      if (this._id) clearInterval(this._id);
+      if (intervalId !== undefined) {
+        clearInterval(intervalId);
+        intervalId = undefined;
+      }
     },
   });
 

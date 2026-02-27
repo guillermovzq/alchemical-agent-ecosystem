@@ -18,6 +18,8 @@ const UsagePanel = dynamic(() => import("../components/UsagePanel").then((m) => 
 const SettingsPanel = dynamic(() => import("../components/SettingsPanel").then((m) => m.SettingsPanel), { ssr: false });
 const LogsMonitor = dynamic(() => import("../components/LogsMonitor").then((m) => m.LogsMonitor), { ssr: false });
 
+// This view type matches the sidebar navigation items exactly.
+// The lib/types.ts View is broader (includes dashboard/studio/jobs/etc. for future use).
 type View = "chat" | "nodes" | "agents" | "ops" | "admin" | "logs";
 
 const defaultCfg: DashboardConfig = {

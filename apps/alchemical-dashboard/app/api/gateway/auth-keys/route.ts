@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// NOTE: x-alchemy-role is intentionally NOT sent — the gateway derives the role
+// exclusively from a validated x-api-key (DB lookup) or from the x-alchemy-token
+// master credential.  Sending a role header would be silently ignored.
 const headersFor = (): Record<string, string> => {
   const token = process.env.ALCHEMICAL_GATEWAY_TOKEN || "";
-  const h: Record<string, string> = { "x-alchemy-role": "admin" };
+  const apiKey = process.env.ALCHEMICAL_ADMIN_API_KEY || "";
+  const h: Record<string, string> = {};
   if (token) h["x-alchemy-token"] = token;
+  if (apiKey) h["x-api-key"] = apiKey;
   return h;
 };
 
