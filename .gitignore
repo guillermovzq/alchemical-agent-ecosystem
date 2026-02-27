@@ -37,3 +37,7 @@ node_modules/
 .next/
 dist/
 build/
+
+# Pre-commit hooks cache
+.mypy_cache/
+.ruff_cache/
