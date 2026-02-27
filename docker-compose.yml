@@ -27,66 +27,42 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: ["redis-server","--appendonly","yes"]
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-alchemical}
     volumes:
       - redis_data:/data
     networks: [alchemical-net]
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-alchemical}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+        reservations:
+          memory: 64m
 
   chromadb:
     image: chromadb/chroma:0.5.5
     restart: unless-stopped
     environment:
       - IS_PERSISTENT=TRUE
-      - ALLOW_RESET=TRUE
+      - ALLOW_RESET=${CHROMADB_ALLOW_RESET:-FALSE}
     volumes:
       - chroma_data:/chroma/chroma
     networks: [alchemical-net]
-
-  velktharion:
-    build: ./services/velktharion
-    restart: unless-stopped
-    environment: [SERVICE_NAME=velktharion, PORT=7401]
-    networks: [alchemical-net]
-  synapsara:
-    build: ./services/synapsara
-    restart: unless-stopped
-    environment: [SERVICE_NAME=synapsara, PORT=7402]
-    networks: [alchemical-net]
-  kryonexus:
-    build: ./services/kryonexus
-    restart: unless-stopped
-    environment: [SERVICE_NAME=kryonexus, PORT=7403]
-    networks: [alchemical-net]
-  noctumbra-mail:
-    build: ./services/noctumbra-mail
-    restart: unless-stopped
-    environment: [SERVICE_NAME=noctumbra-mail, PORT=7404]
-    networks: [alchemical-net]
-  temporaeth:
-    build: ./services/temporaeth
-    restart: unless-stopped
-    environment: [SERVICE_NAME=temporaeth, PORT=7405]
-    networks: [alchemical-net]
-  vaeloryn-conclave:
-    build: ./services/vaeloryn-conclave
-    restart: unless-stopped
-    environment: [SERVICE_NAME=vaeloryn-conclave, PORT=7406]
-    networks: [alchemical-net]
-  ignivox:
-    build: ./services/ignivox
-    restart: unless-stopped
-    environment: [SERVICE_NAME=ignivox, PORT=7407]
-    networks: [alchemical-net]
-  auralith:
-    build: ./services/auralith
-    restart: unless-stopped
-    environment: [SERVICE_NAME=auralith, PORT=7408]
-    networks: [alchemical-net]
-  resonvyr:
-    build: ./services/resonvyr
-    restart: unless-stopped
-    environment: [SERVICE_NAME=resonvyr, PORT=7409]
-    networks: [alchemical-net]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+        reservations:
+          memory: 64m
 
   alchemical-gateway:
     build:
@@ -97,16 +73,289 @@ services:
     environment:
       - ALCHEMICAL_GATEWAY_TOKEN=${ALCHEMICAL_GATEWAY_TOKEN}
       - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
       - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-alchemical}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
     volumes:
       - ./.runtime:/app/.runtime
     networks: [alchemical-net]
+    depends_on:
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 128m
+
+  velktharion:
+    build: ./services/velktharion
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=velktharion
+      - PORT=7401
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7401/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  synapsara:
+    build: ./services/synapsara
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=synapsara
+      - PORT=7402
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7402/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  kryonexus:
+    build: ./services/kryonexus
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=kryonexus
+      - PORT=7403
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7403/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  noctumbra-mail:
+    build: ./services/noctumbra-mail
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=noctumbra-mail
+      - PORT=7404
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7404/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  temporaeth:
+    build: ./services/temporaeth
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=temporaeth
+      - PORT=7405
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7405/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  vaeloryn-conclave:
+    build: ./services/vaeloryn-conclave
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=vaeloryn-conclave
+      - PORT=7406
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7406/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  ignivox:
+    build: ./services/ignivox
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=ignivox
+      - PORT=7407
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7407/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  auralith:
+    build: ./services/auralith
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=auralith
+      - PORT=7408
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7408/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
+
+  resonvyr:
+    build: ./services/resonvyr
+    restart: unless-stopped
+    environment:
+      - SERVICE_NAME=resonvyr
+      - PORT=7409
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7409/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
 
   fluxenrath:
     build: ./services/fluxenrath
     restart: unless-stopped
-    environment: [SERVICE_NAME=fluxenrath, PORT=7410]
+    environment:
+      - SERVICE_NAME=fluxenrath
+      - PORT=7410
+      - KILO_API_KEY=${KILO_API_KEY:-}
+      - KILO_BASE_URL=${KILO_BASE_URL:-https://api.kilo.ai/api/gateway}
+      - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
+      - GATEWAY_SECRET=${GATEWAY_SECRET:-}
     networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7410/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
 
 networks:
   alchemical-net:
