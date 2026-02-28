@@ -1,10 +1,11 @@
-# 🔮 Alchemical Pre-commit Hooks
+# 🔮 Alchemical Pre-commit Hooks (Local-First)
+# Toda la validación se ejecuta localmente, sin depender de GitHub Actions
 # Instalar: pip install pre-commit && pre-commit install
 # Ejecutar manualmente: pre-commit run --all-files
 
 repos:
   # ============================================
-  # 🔒 Security Hooks
+  # 🔒 Security Hooks (Built-in)
   # ============================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -12,14 +13,14 @@ repos:
       - id: detect-private-key
         name: 🔑 Detect Private Keys
         description: Prevents committing private keys
-      - id: detect-aws-credentials
-        name: 🔐 Detect AWS Credentials
-        args: [--allow-missing-credentials]
+      
       - id: check-added-large-files
         name: 📦 Check Large Files
         args: ['--maxkb=500']
+      
       - id: check-merge-conflict
         name: ⚔️ Check Merge Conflicts
+      
       - id: check-case-conflict
         name: 🔤 Check Case Conflicts
 
@@ -33,34 +34,10 @@ repos:
         name: 🧹 Ruff Lint
         args: [--fix, --select, E,W,F, --ignore, E501]
         files: ^(gateway|services|shared)/.*\.py$
+      
       - id: ruff-format
         name: ✨ Ruff Format
         files: ^(gateway|services|shared)/.*\.py$
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
-    hooks:
-      - id: mypy
-        name: 📘 MyPy Type Check
-        files: ^gateway/.*\.py$
-        args: [--ignore-missing-imports, --no-strict-optional]
-        additional_dependencies: [types-redis]
-
-  # ============================================
-  # 🎨 JavaScript/TypeScript Hooks
-  # ============================================
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.15.0
-    hooks:
-      - id: eslint
-        name: 🎨 ESLint
-        files: ^apps/alchemical-dashboard/.*\.(ts|tsx)$
-        types: [file]
-        additional_dependencies:
-          - eslint@9.15.0
-          - '@eslint/js'
-          - eslint-config-next
-        args: [--config, apps/alchemical-dashboard/.eslintrc.json]
 
   # ============================================
   # 📝 General Hooks
@@ -71,13 +48,17 @@ repos:
       - id: trailing-whitespace
         name: ✂️ Trailing Whitespace
         exclude: ^\.git/
+      
       - id: end-of-file-fixer
         name: 📄 End of File Fixer
         exclude: ^\.git/
+      
       - id: check-yaml
         name: ✅ YAML Check
+      
       - id: check-json
         name: ✅ JSON Check
+      
       - id: check-toml
         name: ✅ TOML Check
 
@@ -92,33 +73,36 @@ repos:
         files: Dockerfile$
 
   # ============================================
-  # 📊 Git Hooks
-  # ============================================
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: check-vcs-permalinks
-        name: 🔗 Check VCS Permalinks
-      - id: forbid-submodules
-        name: 🚫 Forbid Submodules
-        description: Prevents accidental submodule additions
-
-  # ============================================
-  # 🏛️ Alchemical-specific Hooks
+  # 🔮 Alchemical Custom Validation
   # ============================================
   - repo: local
     hooks:
-      - id: check-modes-file
-        name: 🔮 Check .kilocodemodes
-        entry: bash -c '[ -f .kilocodemodes ] || (echo "Missing .kilocodemodes!" && exit 1)'
+      - id: alchemical-python-syntax
+        name: 🐍 Alchemical Python Syntax Check
+        entry: python -m py_compile
         language: system
-        pass_filenames: false
-        description: Ensures .kilocodemodes file exists
+        files: ^(gateway|services)/.*\.py$
+        pass_filenames: true
+        description: Validates Python syntax for gateway and services
 
-      - id: check-tsconfig-strict
-        name: 📘 Check TypeScript Strict
-        entry: bash -c 'grep -q "\"strict\": true" apps/alchemical-dashboard/tsconfig.json || (echo "TypeScript strict mode not enabled!" && exit 1)'
+      - id: alchemical-tsconfig-check
+        name: 📘 Alchemical TypeScript Config Check
+        entry: bash -c 'grep -q "\"strict\": true" apps/alchemical-dashboard/tsconfig.json 2>/dev/null || (echo "TypeScript strict mode not enabled!" && exit 1)'
         language: system
         pass_filenames: false
         files: tsconfig\.json$
         description: Ensures TypeScript strict mode is enabled
+
+# ============================================
+# 📋 Notas de Uso
+# ============================================
+# Para ejecutar validación completa local:
+#   - Windows PowerShell: .\scripts\alchemical-local-ci.ps1
+#   - Linux/Mac/Git Bash: ./scripts/alchemical-local-ci.sh
+#
+# Para validación rápida antes de commit:
+#   pre-commit run --all-files
+#
+# Para instalar hooks:
+#   pip install pre-commit
+#   pre-commit install
