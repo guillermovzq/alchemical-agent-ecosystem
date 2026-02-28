@@ -52,31 +52,31 @@
 <p align="center">
   <strong>💬 Chat del Caldero — Multi-Agent Interaction</strong><br/>
   <em>Real-time SSE streaming with ethereal glow effects</em><br/>
-  <img src="./assets/screenshots/dashboard-chat.png" width="100%" alt="Alchemical Dashboard - Chat View" />
+  <img src="./assets/screenshots/dashboard-chat.svg" width="100%" alt="Alchemical Dashboard - Chat View" />
 </p>
 
 <p align="center">
   <strong>🧩 Agent Node Studio — Visual Workflow Builder</strong><br/>
   <em>React Flow canvas with custom alchemical nodes and animated connections</em><br/>
-  <img src="./assets/screenshots/dashboard-nodes.png" width="100%" alt="Alchemical Dashboard - Node Studio" />
+  <img src="./assets/screenshots/dashboard-nodes.svg" width="100%" alt="Alchemical Dashboard - Node Studio" />
 </p>
 
 <p align="center">
   <strong>🤖 Runtime de Agentes — Live Agent Status</strong><br/>
   <em>Real-time metrics with pulse animations and status indicators</em><br/>
-  <img src="./assets/screenshots/dashboard-agents.png" width="100%" alt="Alchemical Dashboard - Agents View" />
+  <img src="./assets/screenshots/dashboard-agents.svg" width="100%" alt="Alchemical Dashboard - Agents View" />
 </p>
 
 <p align="center">
   <strong>📜 Logs & Telemetría — Real-time Log Streaming</strong><br/>
   <em>SSE-powered log monitor with syntax highlighting</em><br/>
-  <img src="./assets/screenshots/dashboard-logs.png" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
+  <img src="./assets/screenshots/dashboard-logs.svg" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
 </p>
 
 <p align="center">
   <strong>🛠️ Administración — System Operations</strong><br/>
   <em>Settings panel with hierarchical navigation</em><br/>
-  <img src="./assets/screenshots/dashboard-admin.png" width="100%" alt="Alchemical Dashboard - Admin Panel" />
+  <img src="./assets/screenshots/dashboard-admin.svg" width="100%" alt="Alchemical Dashboard - Admin Panel" />
 </p>
 
 ### 🎨 Design System Features

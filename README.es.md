@@ -61,31 +61,31 @@ El **Magnum Opus** no es la versión final. Es la primera versión que merece es
 <p align="center">
   <strong>💬 Chat del Caldero — Interacción Multi-Agente</strong><br/>
   <em>Streaming SSE en tiempo real con efectos de brillo etéreo</em><br/>
-  <img src="./assets/screenshots/dashboard-chat.png" width="100%" alt="Alchemical Dashboard - Chat View" />
+  <img src="./assets/screenshots/dashboard-chat.svg" width="100%" alt="Alchemical Dashboard - Chat View" />
 </p>
 
 <p align="center">
   <strong>🧩 Agent Node Studio — Constructor Visual de Flujos</strong><br/>
   <em>Canvas React Flow con nodos alquímicos personalizados y conexiones animadas</em><br/>
-  <img src="./assets/screenshots/dashboard-nodes.png" width="100%" alt="Alchemical Dashboard - Node Studio" />
+  <img src="./assets/screenshots/dashboard-nodes.svg" width="100%" alt="Alchemical Dashboard - Node Studio" />
 </p>
 
 <p align="center">
   <strong>🤖 Runtime de Agentes — Estado de Agentes en Vivo</strong><br/>
   <em>Métricas en tiempo real con animaciones de pulso e indicadores de estado</em><br/>
-  <img src="./assets/screenshots/dashboard-agents.png" width="100%" alt="Alchemical Dashboard - Agents View" />
+  <img src="./assets/screenshots/dashboard-agents.svg" width="100%" alt="Alchemical Dashboard - Agents View" />
 </p>
 
 <p align="center">
   <strong>📜 Logs & Telemetría — Streaming de Logs en Tiempo Real</strong><br/>
   <em>Monitor de logs con SSE y resaltado de sintaxis</em><br/>
-  <img src="./assets/screenshots/dashboard-logs.png" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
+  <img src="./assets/screenshots/dashboard-logs.svg" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
 </p>
 
 <p align="center">
   <strong>🛠️ Administración — Operaciones del Sistema</strong><br/>
   <em>Panel de configuración con navegación jerárquica</em><br/>
-  <img src="./assets/screenshots/dashboard-admin.png" width="100%" alt="Alchemical Dashboard - Admin Panel" />
+  <img src="./assets/screenshots/dashboard-admin.svg" width="100%" alt="Alchemical Dashboard - Admin Panel" />
 </p>
 
 ### 🎨 Características del Sistema de Diseño
