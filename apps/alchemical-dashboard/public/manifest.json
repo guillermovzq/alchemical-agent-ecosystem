@@ -1,0 +1,21 @@
+{
+  "name": "Alchemical Dashboard 2026",
+  "short_name": "Alchemical",
+  "description": "Immersive multi-agent orchestration dashboard",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#d4af37",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/alchemical-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["developer", "productivity", "utilities"],
+  "lang": "es",
+  "dir": "ltr"
+}

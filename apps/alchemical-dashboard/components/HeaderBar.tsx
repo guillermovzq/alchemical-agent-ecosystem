@@ -1,57 +1,184 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Bell, Command, Cpu, MemoryStick, CircleGauge } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Bell,
+  Search,
+  Cpu,
+  MemoryStick,
+  Activity,
+  Zap,
+  Keyboard,
+  Fullscreen,
+} from "lucide-react";
+import { cn, formatNumber } from "../lib/utils";
+import { useMetrics } from "../lib/hooks";
+import { useAppStore } from "../lib/stores";
 
-function Meter({ label, value, color }: { label: string; value: number; color: string }) {
+interface MetricBarProps {
+  value: number;
+  max?: number;
+  color: string;
+  size?: "sm" | "md";
+}
+
+function MetricBar({ value, max = 100, color, size = "md" }: MetricBarProps) {
+  const percentage = Math.min((value / max) * 100, 100);
+  
   return (
-    <div style={{ minWidth: 92 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#94a3b8" }}>
-        <span>{label}</span><span>{value}%</span>
-      </div>
-      <div style={{ height: 6, borderRadius: 999, background: "rgba(255,255,255,.08)", marginTop: 4 }}>
-        <div style={{ width: `${value}%`, height: "100%", borderRadius: 999, background: color, boxShadow: `0 0 14px ${color}` }} />
-      </div>
+    <div
+      className={cn(
+        "rounded-full overflow-hidden bg-white/5",
+        size === "sm" ? "h-1 w-16" : "h-1.5 w-20"
+      )}
+    >
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: `${percentage}%` }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={cn("h-full rounded-full", color)}
+        style={{
+          boxShadow: `0 0 10px ${color.replace("bg-", "").replace("-500", "")}`,
+        }}
+      />
     </div>
   );
 }
 
 export function HeaderBar() {
-  const [m, setM] = useState({ cpu: 0, ram: 0, gpu: 0 });
-
-  useEffect(() => {
-    let stop = false;
-    const load = async () => {
-      const r = await fetch("/api/metrics", { cache: "no-store" });
-      const j = await r.json();
-      if (!stop) setM(j);
-    };
-    load();
-    const id = setInterval(load, 7000);
-    return () => { stop = true; clearInterval(id); };
-  }, []);
+  const { data: metrics } = useMetrics();
+  const { addNotification } = useAppStore();
 
   return (
-    <header className="glass-card gradient-frame" style={{ margin: "12px 12px 0", padding: "12px 14px", position: "sticky", top: 12, zIndex: 20, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-      <div>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 24 }}>Alchemical Control Panel</div>
-        <small style={{ color: "#9ca3af" }}>Caldero local-first · KiloCode AI + Redis + ChromaDB</small>
-      </div>
-
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 10px", borderRadius: 12, border: "1px solid rgba(255,255,255,.12)", background: "rgba(0,0,0,.24)", minWidth: 280 }}>
-          <Command size={14} color="#67e8f9" />
-          <input aria-label="Buscar" placeholder="Invoca agentes, tareas, logs..." style={{ width: "100%", border: 0, outline: 0, background: "transparent", color: "#e2e8f0" }} />
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="glass-panel border-b border-gold/10 px-6 py-4"
+    >
+      <div className="flex items-center justify-between gap-8">
+        {/* Title Section */}
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <h1 className="font-cinzel text-xl font-bold text-gold liquid-gold">
+              Alchemical Control
+            </h1>
+            <div className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-gold/0 via-gold/50 to-gold/0" />
+          </div>
+          <span className="text-xs text-muted-foreground">
+            KiloCode AI + Redis + ChromaDB
+          </span>
         </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <div className="card metric"><Cpu size={14} /> <Meter label="CPU" value={m.cpu} color="#22d3ee" /></div>
-          <div className="card metric"><MemoryStick size={14} /> <Meter label="RAM" value={m.ram} color="#a78bfa" /></div>
-          <div className="card metric"><CircleGauge size={14} /> <Meter label="GPU" value={m.gpu} color="#34d399" /></div>
+        {/* Search */}
+        <div className="flex-1 max-w-md">
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-gold transition-colors" />
+            <input
+              type="text"
+              placeholder="Invoca agentes, tareas, logs..."
+              className={cn(
+                "w-full pl-10 pr-4 py-2 rounded-xl text-sm",
+                "bg-white/5 border border-gold/10",
+                "text-foreground placeholder:text-muted-foreground",
+                "focus:outline-none focus:border-gold/30 focus:ring-1 focus:ring-gold/20",
+                "transition-all duration-200"
+              )}
+            />
+            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] rounded border border-gold/20 bg-gold/5 text-muted-foreground hidden md:block">
+              ⌘K
+            </kbd>
+          </div>
         </div>
 
-        <button className="icon-btn" aria-label="Notificaciones"><Bell size={16} /></button>
+        {/* Metrics */}
+        <div className="hidden lg:flex items-center gap-6">
+          {/* CPU */}
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-turq/10">
+              <Cpu className="w-3.5 h-3.5 text-turq" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">CPU</span>
+                <span className="text-xs font-mono text-turq">{metrics.cpu}%</span>
+              </div>
+              <MetricBar value={metrics.cpu} color="bg-turq" size="sm" />
+            </div>
+          </div>
+
+          {/* RAM */}
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-purple/10">
+              <MemoryStick className="w-3.5 h-3.5 text-purple" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">RAM</span>
+                <span className="text-xs font-mono text-purple">{metrics.ram}%</span>
+              </div>
+              <MetricBar value={metrics.ram} color="bg-purple" size="sm" />
+            </div>
+          </div>
+
+          {/* GPU */}
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-emerald/10">
+              <Activity className="w-3.5 h-3.5 text-emerald" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">GPU</span>
+                <span className="text-xs font-mono text-emerald">{metrics.gpu}%</span>
+              </div>
+              <MetricBar value={metrics.gpu} color="bg-emerald" size="sm" />
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() =>
+              addNotification({
+                type: "info",
+                title: "Modo Focus activado",
+                message: "Presiona ESC para salir",
+              })
+            }
+            className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-gold transition-colors"
+          >
+            <Fullscreen className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() =>
+              addNotification({
+                type: "info",
+                title: "Atajos de teclado",
+                message: "1-6: Navegación | Cmd+K: Buscar | ESC: Cerrar",
+              })
+            }
+            className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-gold transition-colors"
+          >
+            <Keyboard className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() =>
+              addNotification({
+                type: "success",
+                title: "Sistema actualizado",
+                message: "Todos los agentes están respondiendo correctamente",
+              })
+            }
+            className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-gold transition-colors relative"
+          >
+            <Bell className="w-4 h-4" />
+            <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
+          </button>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 border border-gold/30 flex items-center justify-center">
+            <Zap className="w-4 h-4 text-gold" />
+          </div>
+        </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

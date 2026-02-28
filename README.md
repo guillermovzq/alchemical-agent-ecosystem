@@ -45,32 +45,49 @@
 
 ---
 
-## 🖼️ Dashboard Screenshots
+## 🖼️ Dashboard Screenshots — 2026 Design
+
+> **✨ New 2026 Alchemical Design System**: Deep void black (#050505), liquid gold (#d4af37) and copper accents, glassmorphism panels with holographic borders, and buttery framer-motion animations.
 
 <p align="center">
   <strong>💬 Chat del Caldero — Multi-Agent Interaction</strong><br/>
+  <em>Real-time SSE streaming with ethereal glow effects</em><br/>
   <img src="./assets/screenshots/dashboard-chat.png" width="100%" alt="Alchemical Dashboard - Chat View" />
 </p>
 
 <p align="center">
-  <strong>🤖 Runtime de Agentes — Live Agent Status</strong><br/>
-  <img src="./assets/screenshots/dashboard-agents.png" width="100%" alt="Alchemical Dashboard - Agents View" />
-</p>
-
-<p align="center">
   <strong>🧩 Agent Node Studio — Visual Workflow Builder</strong><br/>
+  <em>React Flow canvas with custom alchemical nodes and animated connections</em><br/>
   <img src="./assets/screenshots/dashboard-nodes.png" width="100%" alt="Alchemical Dashboard - Node Studio" />
 </p>
 
 <p align="center">
-  <strong>📜 Monitor de Logs — Real-time Log Streaming</strong><br/>
+  <strong>🤖 Runtime de Agentes — Live Agent Status</strong><br/>
+  <em>Real-time metrics with pulse animations and status indicators</em><br/>
+  <img src="./assets/screenshots/dashboard-agents.png" width="100%" alt="Alchemical Dashboard - Agents View" />
+</p>
+
+<p align="center">
+  <strong>📜 Logs & Telemetría — Real-time Log Streaming</strong><br/>
+  <em>SSE-powered log monitor with syntax highlighting</em><br/>
   <img src="./assets/screenshots/dashboard-logs.png" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
 </p>
 
 <p align="center">
-  <strong>🛠️ Administración — Agent Creation & Settings</strong><br/>
+  <strong>🛠️ Administración — System Operations</strong><br/>
+  <em>Settings panel with hierarchical navigation</em><br/>
   <img src="./assets/screenshots/dashboard-admin.png" width="100%" alt="Alchemical Dashboard - Admin Panel" />
 </p>
+
+### 🎨 Design System Features
+
+- **Glassmorphism Panels**: Backdrop-blur with ethereal borders
+- **Liquid Gold Gradients**: Animated CSS @property gradients
+- **Holographic Effects**: Animated border spins and glow pulses
+- **Framer Motion 12**: Page transitions, micro-interactions, staggered animations
+- **Tailwind CSS v4**: Oxide engine with custom alchemical color tokens
+- **React Flow Integration**: Custom node types with mini-map and controls
+- **PWA Ready**: Manifest.json with theme colors and icons
 
 ---
 

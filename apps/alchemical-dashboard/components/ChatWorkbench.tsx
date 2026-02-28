@@ -1,275 +1,514 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Send,
+  Paperclip,
+  X,
+  Users,
+  Settings,
+  Zap,
+  GitBranch,
+  FileText,
+  ChevronDown,
+  ChevronUp,
+  Bot,
+  Sparkles,
+  Wifi,
+  WifiOff,
+  Loader2,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { useChatStore } from "../lib/stores";
+import { toast } from "sonner";
 
-type Capabilities = {
-  skills: string[];
-  tools: string[];
-  connectors: string[];
-  agents: string[];
-};
-
-type ChatMsg = { sender: string; text: string; ts?: string; kind?: string };
-
-/** Attachment with name and base64-encoded content. */
-type Attachment = { name: string; sizeKb: number; content: string };
+interface ChatMessage {
+  id: string;
+  sender: string;
+  text: string;
+  ts?: string;
+  kind?: "human" | "agent" | "system";
+}
 
 export function ChatWorkbench() {
-  const [caps, setCaps] = useState<Capabilities>({ skills: [], tools: [], connectors: [], agents: [] });
-  const [thread, setThread] = useState<ChatMsg[]>([]);
-  const [conn, setConn] = useState<"connected" | "disconnected" | "connecting">("connecting");
-  const [msg, setMsg] = useState("");
+  const {
+    inputText,
+    setInputText,
+    selectedAgent,
+    setSelectedAgent,
+    attachments,
+    addAttachment,
+    removeAttachment,
+    clearAttachments,
+    thinkingMode,
+    setThinkingMode,
+    autoEdit,
+    setAutoEdit,
+    repo,
+    setRepo,
+    roundtableAgents,
+    setRoundtableAgents,
+    roundtableRounds,
+    setRoundtableRounds,
+    connectionStatus,
+    setConnectionStatus,
+    showAdvanced,
+    toggleAdvanced,
+    isStreaming,
+    setIsStreaming,
+  } = useChatStore();
 
-  const [chatText, setChatText] = useState("");
-  const [chatAgent, setChatAgent] = useState("alquimista-mayor");
-
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [repo, setRepo] = useState(process.env.NEXT_PUBLIC_REPO ?? "");
-  const [thinking, setThinking] = useState("balanced");
-  const [autoEdit, setAutoEdit] = useState(false);
-  const [attachments, setAttachments] = useState<Attachment[]>([]);
-  const [roundAgents, setRoundAgents] = useState<string>("alquimista-mayor,redactor-narrador,investigador-analista");
-  const [rounds, setRounds] = useState(1);
-
-  const [goal, setGoal] = useState("Resolver tarea compleja en equipo y devolver plan con pasos ejecutables.");
-
+  const [thread, setThread] = useState<ChatMessage[]>([]);
+  const [availableAgents, setAvailableAgents] = useState<string[]>([]);
+  const [availableSkills, setAvailableSkills] = useState<string[]>([]);
+  const [availableTools, setAvailableTools] = useState<string[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const esRef = useRef<EventSource | null>(null);
-  const listRef = useRef<HTMLDivElement | null>(null);
-  const msgTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const showMsg = (text: string) => {
-    setMsg(text);
-    if (msgTimerRef.current) clearTimeout(msgTimerRef.current);
-    msgTimerRef.current = setTimeout(() => setMsg(""), 5000);
-  };
+  // Scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [thread]);
 
+  // Fetch capabilities
   useEffect(() => {
     fetch("/api/gateway/capabilities", { cache: "no-store" })
       .then((r) => r.json())
-      .then((j: Capabilities) => {
-        const next: Capabilities = {
-          skills: j.skills ?? [],
-          tools: j.tools ?? [],
-          connectors: j.connectors ?? [],
-          agents: j.agents ?? [],
-        };
-        setCaps(next);
-        if (next.agents?.length) setChatAgent(next.agents[0]);
+      .then((data) => {
+        setAvailableAgents(data.agents || []);
+        setAvailableSkills(data.skills || []);
+        setAvailableTools(data.tools || []);
+        if (data.agents?.length && !selectedAgent) {
+          setSelectedAgent(data.agents[0]);
+        }
       })
-      .catch(() => undefined);
+      .catch(console.error);
   }, []);
 
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollTop = listRef.current.scrollHeight;
-    }
-  }, [thread]);
-
-  useEffect(() => {
-    return () => {
-      if (msgTimerRef.current) clearTimeout(msgTimerRef.current);
-    };
-  }, []);
-
+  // Connect to SSE
   const connectStream = () => {
     if (esRef.current) esRef.current.close();
-    setConn("connecting");
+    setConnectionStatus("connecting");
+
     const es = new EventSource("/api/gateway/chat-stream");
     esRef.current = es;
-    es.onopen = () => setConn("connected");
-    es.onerror = () => setConn("disconnected");
+
+    es.onopen = () => setConnectionStatus("connected");
+    es.onerror = () => setConnectionStatus("disconnected");
     es.onmessage = (ev) => {
       try {
-        const payload = JSON.parse(ev.data as string) as { items?: ChatMsg[] };
-        setThread(payload.items ?? []);
+        const payload = JSON.parse(ev.data);
+        setThread(payload.items || []);
       } catch {
-        // ignore invalid frame
+        // ignore
       }
     };
   };
 
   const disconnectStream = () => {
-    if (esRef.current) esRef.current.close();
+    esRef.current?.close();
     esRef.current = null;
-    setConn("disconnected");
+    setConnectionStatus("disconnected");
   };
 
   useEffect(() => {
     connectStream();
     return () => disconnectStream();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const postChat = async () => {
-    if (!chatText.trim()) return;
-    await fetch("/api/gateway/chat-thread", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ sender: "operator", text: chatText, kind: "human" }),
-    });
-    setChatText("");
-  };
+  const handleSend = async () => {
+    if (!inputText.trim()) return;
 
-  const askAgent = async () => {
-    if (!chatText.trim()) return;
-    showMsg(`Enviando a ${chatAgent}...`);
-    const res = await fetch("/api/gateway/chat-ask", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        agent: chatAgent,
-        text: chatText,
-        action: "query",
-        repo,
-        thinking,
-        auto_edit: autoEdit,
-        // Send attachment metadata + content (base64) to the gateway
-        attachments: attachments.map((a) => ({ name: a.name, content: a.content })),
-      }),
-    });
-    const j = (await res.json().catch(() => ({}))) as { error?: string };
-    showMsg(res.ok ? `Respuesta recibida de ${chatAgent}` : `Error: ${j?.error ?? "chat ask failed"}`);
-    if (res.ok) {
-      setChatText("");
-      setAttachments([]);
+    setIsStreaming(true);
+    toast.info(`Enviando a ${selectedAgent}...`);
+
+    try {
+      const res = await fetch("/api/gateway/chat-ask", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agent: selectedAgent,
+          text: inputText,
+          action: "query",
+          repo,
+          thinking: thinkingMode,
+          auto_edit: autoEdit,
+          attachments: attachments.map((a) => ({
+            name: a.name,
+            content: a.content,
+          })),
+        }),
+      });
+
+      if (res.ok) {
+        toast.success(`Respuesta recibida de ${selectedAgent}`);
+        setInputText("");
+        clearAttachments();
+      } else {
+        const error = await res.json().catch(() => ({ error: "Unknown error" }));
+        toast.error(error.error || "Error al enviar mensaje");
+      }
+    } catch (err) {
+      toast.error("Error de conexión");
+    } finally {
+      setIsStreaming(false);
     }
   };
 
-  const runRoundtable = async () => {
-    const agents = roundAgents.split(",").map((x) => x.trim()).filter(Boolean);
-    if (!agents.length) return;
-    showMsg("Ejecutando roundtable...");
-    const res = await fetch("/api/gateway/chat-roundtable", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ topic: chatText || goal, agents, rounds, thinking, action: "query" }),
-    });
-    const j = (await res.json().catch(() => ({}))) as { items?: unknown[]; error?: string };
-    showMsg(res.ok ? `Roundtable completado (${j?.items?.length ?? 0})` : `Error: ${j?.error ?? "roundtable failed"}`);
-  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
 
-  const createPlan = async () => {
-    showMsg("Generando plan...");
-    const res = await fetch("/api/gateway/chat-plan", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ goal, use_skills: [], use_tools: [], create_subagents: [], channels: [] }),
-    });
-    showMsg(res.ok ? "Plan generado (revisar hilo)" : "Error generando plan");
-  };
-
-  const onAttach = (files: FileList | null) => {
-    if (!files?.length) return;
     Array.from(files).forEach((file) => {
-      if (attachments.length >= 8) return;
+      if (attachments.length >= 8) {
+        toast.warning("Máximo 8 adjuntos permitidos");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const content = (ev.target?.result as string | undefined) ?? "";
-        setAttachments((prev) =>
-          prev.length < 8
-            ? [...prev, { name: file.name, sizeKb: Math.ceil(file.size / 1024), content }]
-            : prev
-        );
+        const content = (ev.target?.result as string) || "";
+        addAttachment({
+          name: file.name,
+          sizeKb: Math.ceil(file.size / 1024),
+          content,
+          type: file.type,
+        });
       };
-      // Read as data URL (base64) so binary files are safely transmitted
       reader.readAsDataURL(file);
     });
+
+    e.target.value = "";
   };
 
-  const connColor = useMemo(() => (conn === "connected" ? "#34d399" : conn === "connecting" ? "#fbbf24" : "#fb7185"), [conn]);
+  const getStatusIcon = () => {
+    switch (connectionStatus) {
+      case "connected":
+        return <Wifi className="w-3 h-3 text-emerald" />;
+      case "connecting":
+        return <Loader2 className="w-3 h-3 text-amber animate-spin" />;
+      default:
+        return <WifiOff className="w-3 h-3 text-rose" />;
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (connectionStatus) {
+      case "connected":
+        return "text-emerald";
+      case "connecting":
+        return "text-amber";
+      default:
+        return "text-rose";
+    }
+  };
 
   return (
-    <section className="glass-card cauldron-chat" style={{ padding: 12, height: "calc(100vh - 260px)", minHeight: 520, display: "grid", gridTemplateRows: "auto 1fr auto auto", gap: 10 }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-        <div>
-          <h3 style={{ margin: 0 }}>Chat de Agentes</h3>
-          <small style={{ color: "#94a3b8" }}>Interacción real con agentes lógicos del gateway</small>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ color: connColor, fontSize: 12 }}>{conn}</span>
-          <button className="card" style={{ padding: "6px 8px" }} onClick={connectStream}>Connect</button>
-          <button className="card" style={{ padding: "6px 8px" }} onClick={disconnectStream}>Disconnect</button>
-        </div>
-      </header>
-
-      <div ref={listRef} style={{ overflow: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,.09)", background: "rgba(2,6,23,.75)", padding: 10 }}>
-        {thread.length === 0 && <div style={{ color: "#64748b" }}>Sin mensajes todavía.</div>}
-        {thread.map((m, i) => {
-          const fromAgent = m.kind === "agent" || m.kind === "dispatch";
-          return (
-            <div key={`${i}-${m.ts ?? "x"}`} style={{ padding: "7px 8px", marginBottom: 8, borderRadius: 10, background: fromAgent ? "rgba(34,211,238,.08)" : "rgba(124,58,237,.09)", border: "1px solid rgba(255,255,255,.06)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
-                <strong style={{ color: fromAgent ? "#67e8f9" : "#c4b5fd" }}>{m.sender}</strong>
-                <span style={{ color: "#94a3b8" }}>{m.ts ?? ""}</span>
-              </div>
-              <div style={{ marginTop: 3, color: "#e2e8f0", whiteSpace: "pre-wrap" }}>{m.text}</div>
+    <div className="h-full flex flex-col gap-4">
+      {/* Messages Area */}
+      <div className="flex-1 glass-card rounded-xl overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gold/10">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-lg bg-gold/10">
+              <Bot className="w-4 h-4 text-gold" />
             </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "180px 1fr auto auto", gap: 8 }}>
-        <select value={chatAgent} onChange={(e) => setChatAgent(e.target.value)} style={field}>
-          {(caps.agents.length ? caps.agents : ["alquimista-mayor"]).map((a) => <option key={a} value={a}>{a}</option>)}
-        </select>
-        <input
-          value={chatText}
-          onChange={(e) => setChatText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              askAgent();
-            }
-          }}
-          placeholder="Escribe instrucción para el agente..."
-          style={field}
-        />
-        <button className="card" style={{ padding: "8px 10px" }} onClick={postChat}>Solo hilo</button>
-        <button className="cta" style={{ padding: "8px 12px" }} onClick={askAgent}>Enviar</button>
-      </div>
-
-      <details open={showAdvanced} onToggle={(e) => setShowAdvanced((e.currentTarget as HTMLDetailsElement).open)}>
-        <summary style={{ cursor: "pointer", color: "#94a3b8" }}>Opciones avanzadas</summary>
-        <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr 150px 180px 1fr auto auto", gap: 8 }}>
-          <input value={repo} onChange={(e) => setRepo(e.target.value)} placeholder="repo owner/name" style={field} />
-          <select value={thinking} onChange={(e) => setThinking(e.target.value)} style={field}>
-            <option value="low">thinking low</option>
-            <option value="balanced">thinking balanced</option>
-            <option value="deep">thinking deep</option>
-          </select>
-          <label className="card" style={{ padding: "8px 10px", display: "flex", alignItems: "center", gap: 8 }}>
-            <input type="checkbox" checked={autoEdit} onChange={(e) => setAutoEdit(e.target.checked)} /> auto-edit
-          </label>
-          <input value={roundAgents} onChange={(e) => setRoundAgents(e.target.value)} placeholder="agentes roundtable (coma)" style={field} />
-          <input type="number" min={1} max={5} value={rounds} onChange={(e) => setRounds(Number(e.target.value) || 1)} style={{ ...field, width: 60 }} />
-          <button className="card" style={{ padding: "8px 10px" }} onClick={runRoundtable}>Roundtable</button>
-        </div>
-        <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr auto auto", gap: 8 }}>
-          <input value={goal} onChange={(e) => setGoal(e.target.value)} placeholder="objetivo para plan" style={field} />
-          <input type="file" multiple onChange={(e) => onAttach(e.target.files)} style={field} />
-          <button className="card" style={{ padding: "8px 10px" }} onClick={createPlan}>Generar plan</button>
-        </div>
-        {attachments.length > 0 && (
-          <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {attachments.map((a, i) => (
-              <span key={`${a.name}-${i}`} className="card" style={{ fontSize: 11, padding: "3px 7px" }}>
-                {a.name} ({a.sizeKb}KB)
-              </span>
-            ))}
+            <div>
+              <h3 className="text-sm font-medium text-foreground">Chat del Caldero</h3>
+              <div className="flex items-center gap-1.5">
+                {getStatusIcon()}
+                <span className={cn("text-xs", getStatusColor())}>
+                  {connectionStatus}
+                </span>
+              </div>
+            </div>
           </div>
-        )}
-      </details>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={connectionStatus === "connected" ? disconnectStream : connectStream}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                connectionStatus === "connected"
+                  ? "bg-rose/10 text-rose hover:bg-rose/20"
+                  : "bg-emerald/10 text-emerald hover:bg-emerald/20"
+              )}
+            >
+              {connectionStatus === "connected" ? "Desconectar" : "Conectar"}
+            </button>
+          </div>
+        </div>
 
-      {msg && <small style={{ color: "#67e8f9" }}>{msg}</small>}
-    </section>
+        {/* Messages List */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+          {thread.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
+              <Sparkles className="w-12 h-12 mb-4 text-gold/30" />
+              <p className="text-sm">Sin mensajes todavía</p>
+              <p className="text-xs mt-1">Comienza una conversación con los agentes</p>
+            </div>
+          ) : (
+            thread.map((msg, idx) => (
+              <motion.div
+                key={`${idx}-${msg.ts}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn(
+                  "flex gap-3 p-3 rounded-xl",
+                  msg.kind === "agent"
+                    ? "bg-turq/5 border border-turq/20"
+                    : msg.kind === "system"
+                    ? "bg-purple/5 border border-purple/20"
+                    : "bg-gold/5 border border-gold/20"
+                )}
+              >
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                    msg.kind === "agent"
+                      ? "bg-turq/20 text-turq"
+                      : msg.kind === "system"
+                      ? "bg-purple/20 text-purple"
+                      : "bg-gold/20 text-gold"
+                  )}
+                >
+                  {msg.kind === "agent" ? (
+                    <Bot className="w-4 h-4" />
+                  ) : msg.kind === "system" ? (
+                    <Zap className="w-4 h-4" />
+                  ) : (
+                    <span className="text-xs font-bold">U</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className={cn(
+                        "text-xs font-medium",
+                        msg.kind === "agent"
+                          ? "text-turq"
+                          : msg.kind === "system"
+                          ? "text-purple"
+                          : "text-gold"
+                      )}
+                    >
+                      {msg.sender}
+                    </span>
+                    {msg.ts && (
+                      <span className="text-[10px] text-muted-foreground">{msg.ts}</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-foreground mt-1 whitespace-pre-wrap">
+                    {msg.text}
+                  </p>
+                </div>
+              </motion.div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <div className="p-4 border-t border-gold/10 space-y-3">
+          {/* Attachments */}
+          {attachments.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {attachments.map((att, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 px-2 py-1 rounded-lg bg-gold/10 border border-gold/20 text-xs"
+                >
+                  <FileText className="w-3 h-3 text-gold" />
+                  <span className="text-foreground">{att.name}</span>
+                  <span className="text-muted-foreground">({att.sizeKb}KB)</span>
+                  <button
+                    onClick={() => removeAttachment(idx)}
+                    className="p-0.5 hover:bg-gold/20 rounded"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Input Row */}
+          <div className="flex items-center gap-3">
+            <select
+              value={selectedAgent}
+              onChange={(e) => setSelectedAgent(e.target.value)}
+              className="px-3 py-2.5 rounded-xl bg-white/5 border border-gold/10 text-sm text-foreground focus:outline-none focus:border-gold/30"
+            >
+              {availableAgents.map((agent) => (
+                <option key={agent} value={agent}>
+                  {agent}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                placeholder="Escribe tu mensaje..."
+                disabled={isStreaming}
+                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-gold/10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/30 pr-24"
+              />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-1.5 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-gold transition-colors"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleSend}
+              disabled={!inputText.trim() || isStreaming}
+              className={cn(
+                "px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm font-medium transition-all",
+                inputText.trim() && !isStreaming
+                  ? "bg-gradient-to-r from-gold to-gold-dark text-void hover:shadow-lg hover:shadow-gold/20"
+                  : "bg-white/5 text-muted-foreground cursor-not-allowed"
+              )}
+            >
+              {isStreaming ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+              Enviar
+            </button>
+          </div>
+
+          {/* Advanced Options Toggle */}
+          <button
+            onClick={toggleAdvanced}
+            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-gold transition-colors"
+          >
+            {showAdvanced ? (
+              <ChevronUp className="w-3 h-3" />
+            ) : (
+              <ChevronDown className="w-3 h-3" />
+            )}
+            Opciones avanzadas
+          </button>
+
+          {/* Advanced Options */}
+          <AnimatePresence>
+            {showAdvanced && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-3 rounded-xl bg-white/5 border border-gold/10 space-y-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {/* Repo */}
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Repositorio
+                      </label>
+                      <input
+                        type="text"
+                        value={repo}
+                        onChange={(e) => setRepo(e.target.value)}
+                        placeholder="owner/repo"
+                        className="w-full mt-1 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-xs text-foreground focus:outline-none focus:border-gold/30"
+                      />
+                    </div>
+
+                    {/* Thinking Mode */}
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Thinking
+                      </label>
+                      <select
+                        value={thinkingMode}
+                        onChange={(e) =>
+                          setThinkingMode(e.target.value as "low" | "balanced" | "deep")
+                        }
+                        className="w-full mt-1 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-xs text-foreground focus:outline-none focus:border-gold/30"
+                      >
+                        <option value="low">Low</option>
+                        <option value="balanced">Balanced</option>
+                        <option value="deep">Deep</option>
+                      </select>
+                    </div>
+
+                    {/* Auto Edit */}
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Auto Edit
+                      </label>
+                      <div className="mt-2">
+                        <button
+                          onClick={() => setAutoEdit(!autoEdit)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                            autoEdit
+                              ? "bg-emerald/20 text-emerald"
+                              : "bg-white/5 text-muted-foreground"
+                          )}
+                        >
+                          {autoEdit ? "Activado" : "Desactivado"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Rounds */}
+                    <div>
+                      <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Rounds
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={roundtableRounds}
+                        onChange={(e) => setRoundtableRounds(parseInt(e.target.value) || 1)}
+                        className="w-full mt-1 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-xs text-foreground focus:outline-none focus:border-gold/30"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Roundtable Agents */}
+                  <div>
+                    <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      Agentes Roundtable
+                    </label>
+                    <input
+                      type="text"
+                      value={roundtableAgents.join(", ")}
+                      onChange={(e) => setRoundtableAgents(e.target.value.split(",").map((s) => s.trim()))}
+                      placeholder="agent1, agent2, agent3"
+                      className="w-full mt-1 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-xs text-foreground focus:outline-none focus:border-gold/30"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }
-
-const field: React.CSSProperties = {
-  width: "100%",
-  borderRadius: 10,
-  border: "1px solid rgba(255,255,255,.14)",
-  background: "rgba(0,0,0,.26)",
-  color: "#f8fafc",
-  padding: "8px 10px",
-};

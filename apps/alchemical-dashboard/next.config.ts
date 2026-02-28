@@ -10,8 +10,29 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack(config) {
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "@xyflow/react",
+      "framer-motion",
+      "recharts",
+    ],
+  },
+  webpack: (config) => {
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,PUT,DELETE,OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization" },
+        ],
+      },
+    ];
   },
 };
 
