@@ -6,25 +6,6 @@
    Tailwind CSS v4 + Custom Properties + CSS @property definitions
    ═════════════════════════════════════════════════════════════════════════════ */
 
-/* ─── CSS @property for Animated Gradients ────────────────────────────────── */
-@property --gradient-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@property --glow-opacity {
-  syntax: '<number>';
-  initial-value: 0.5;
-  inherits: false;
-}
-
-@property --liquid-x {
-  syntax: '<percentage>';
-  initial-value: 0%;
-  inherits: false;
-}
-
 /* ─── Tailwind Configuration ──────────────────────────────────────────────── */
 @theme {
   /* ═══ Colors - Alchemical Palette ═══ */
@@ -146,8 +127,8 @@
   }
   
   @keyframes glow {
-    from { --glow-opacity: 0.5; }
-    to { --glow-opacity: 0.8; }
+    from { opacity: 0.5; }
+    to { opacity: 0.8; }
   }
   
   @keyframes float {
@@ -166,8 +147,8 @@
   }
   
   @keyframes border-spin {
-    from { --gradient-angle: 0deg; }
-    to { --gradient-angle: 360deg; }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
   
   @keyframes fade-in {
@@ -202,16 +183,16 @@
   }
   
   @keyframes liquid-gold {
-    0% { --liquid-x: 0%; }
-    50% { --liquid-x: 100%; }
-    100% { --liquid-x: 0%; }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 }
 
 /* ─── Base Styles ───────────────────────────────────────────────────────── */
 @layer base {
   * {
-    @apply border-border;
+    @apply border-slate-600/30;
   }
   
   html {
@@ -221,7 +202,7 @@
   }
   
   body {
-    @apply bg-void text-foreground font-sans;
+    @apply bg-slate-950 text-slate-100;
     background: 
       radial-gradient(ellipse 1800px 1000px at -10% -20%, rgba(124, 58, 237, 0.15), transparent 55%),
       radial-gradient(ellipse 1600px 900px at 110% 10%, rgba(34, 211, 238, 0.12), transparent 50%),
@@ -281,8 +262,21 @@
   }
   
   .glass-panel-hover {
-    @apply glass-panel;
-    @apply transition-all duration-300 ease-out;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all 300ms ease-out;
   }
   
   .glass-panel-hover:hover {
@@ -295,11 +289,40 @@
   }
   
   .glass-card {
-    @apply glass-panel rounded-xl;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
   }
   
   .glass-card-hover {
-    @apply glass-panel-hover rounded-xl;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all 300ms ease-out;
+    border-radius: 0.75rem;
   }
   
   /* ═══ Holographic Borders ═══ */
@@ -314,7 +337,7 @@
     border-radius: inherit;
     padding: 1px;
     background: conic-gradient(
-      from var(--gradient-angle, 0deg),
+      from 0deg,
       rgba(212, 175, 55, 0.6),
       rgba(34, 211, 238, 0.6),
       rgba(124, 58, 237, 0.6),
@@ -330,7 +353,7 @@
   
   .holo-border-gold::before {
     background: conic-gradient(
-      from var(--gradient-angle, 0deg),
+      from 0deg,
       rgba(212, 175, 55, 0.8),
       rgba(240, 208, 112, 0.6),
       rgba(184, 115, 51, 0.7),
@@ -401,7 +424,11 @@
   
   /* ═══ Ethereal Panels ═══ */
   .ethereal-panel {
-    @apply glass-card;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    border-radius: 0.75rem;
     background: linear-gradient(
       160deg,
       rgba(10, 14, 26, 0.9) 0%,
@@ -412,9 +439,19 @@
   }
   
   .ethereal-panel-active {
-    @apply ethereal-panel;
-    border-color: rgba(212, 175, 55, 0.4);
-    box-shadow: 
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
+    border-radius: 0.75rem;
+    background: linear-gradient(
+      160deg,
+      rgba(10, 14, 26, 0.9) 0%,
+      rgba(8, 11, 18, 0.85) 50%,
+      rgba(5, 8, 14, 0.9) 100%
+    );
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    box-shadow:
       0 0 30px rgba(212, 175, 55, 0.15),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
@@ -440,7 +477,13 @@
   }
   
   .btn-alchemical-primary {
-    @apply btn-alchemical;
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 200ms ease-out;
     background: linear-gradient(135deg, #d4af37, #b8960c);
     color: #050505;
     border: none;
@@ -458,17 +501,29 @@
   }
   
   .status-dot-online {
-    @apply status-dot bg-emerald;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    animation: pulse-slow 2s ease-in-out infinite;
+    background-color: #34d399;
     box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
   }
   
   .status-dot-busy {
-    @apply status-dot bg-amber;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    animation: pulse-slow 2s ease-in-out infinite;
+    background-color: #fbbf24;
     box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
   }
   
   .status-dot-offline {
-    @apply status-dot bg-rose;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    animation: pulse-slow 2s ease-in-out infinite;
+    background-color: #fb7185;
     box-shadow: 0 0 8px rgba(251, 113, 133, 0.8);
   }
   

@@ -31,7 +31,7 @@ import {
 import { cn } from "../lib/utils";
 import { toast } from "sonner";
 
-interface AgentNode {
+interface AgentNodeData {
   id: string;
   name: string;
   role: string;
@@ -42,8 +42,9 @@ interface AgentNode {
   status: "running" | "paused" | "error";
 }
 
-// Custom Node Component
-function AgentNodeComponent({ data, selected }: NodeProps<AgentNode>) {
+// Custom Node Component - use NodeProps without generic for custom data
+function AgentNodeComponent({ data, selected }: NodeProps) {
+  const agentData = data as unknown as AgentNodeData;
   const statusColors = {
     running: "border-emerald/50 shadow-emerald/20",
     paused: "border-amber/50 shadow-amber/20",
@@ -55,7 +56,7 @@ function AgentNodeComponent({ data, selected }: NodeProps<AgentNode>) {
       className={cn(
         "w-48 p-3 rounded-xl glass-card",
         "border-2 transition-all duration-200",
-        selected ? "border-gold shadow-lg shadow-gold/20" : statusColors[data.status]
+        selected ? "border-gold shadow-lg shadow-gold/20" : statusColors[agentData.status]
       )}
     >
       <Handle type="target" position={Position.Top} className="!w-3 !h-3 !bg-gold" />
@@ -63,28 +64,28 @@ function AgentNodeComponent({ data, selected }: NodeProps<AgentNode>) {
       <div className="flex items-start gap-2">
         <div className={cn(
           "w-8 h-8 rounded-lg flex items-center justify-center",
-          data.status === "running" ? "bg-emerald/20" :
-          data.status === "paused" ? "bg-amber/20" : "bg-rose/20"
+          agentData.status === "running" ? "bg-emerald/20" :
+          agentData.status === "paused" ? "bg-amber/20" : "bg-rose/20"
         )}>
           <Bot className={cn(
             "w-4 h-4",
-            data.status === "running" ? "text-emerald" :
-            data.status === "paused" ? "text-amber" : "text-rose"
+            agentData.status === "running" ? "text-emerald" :
+            agentData.status === "paused" ? "text-amber" : "text-rose"
           )} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">{data.name}</p>
-          <p className="text-xs text-muted-foreground truncate">{data.role}</p>
+          <p className="text-sm font-medium text-foreground truncate">{agentData.name}</p>
+          <p className="text-xs text-muted-foreground truncate">{agentData.role}</p>
         </div>
       </div>
 
       <div className="mt-2 flex items-center gap-1.5">
         <Cpu className="w-3 h-3 text-muted-foreground" />
-        <span className="text-[10px] text-muted-foreground truncate">{data.model}</span>
+        <span className="text-[10px] text-muted-foreground truncate">{agentData.model}</span>
       </div>
 
       <div className="mt-2 flex flex-wrap gap-1">
-        {data.skills.slice(0, 2).map((skill, i) => (
+        {agentData.skills.slice(0, 2).map((skill, i) => (
           <span
             key={i}
             className="px-1.5 py-0.5 rounded bg-gold/10 text-[9px] text-gold"
@@ -92,9 +93,9 @@ function AgentNodeComponent({ data, selected }: NodeProps<AgentNode>) {
             {skill}
           </span>
         ))}
-        {data.skills.length > 2 && (
+        {agentData.skills.length > 2 && (
           <span className="px-1.5 py-0.5 rounded bg-white/5 text-[9px] text-muted-foreground">
-            +{data.skills.length - 2}
+            +{agentData.skills.length - 2}
           </span>
         )}
       </div>
@@ -109,8 +110,8 @@ const nodeTypes = {
 };
 
 export function AgentNodeStudio() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [capabilities, setCapabilities] = useState({
     skills: [] as string[],
@@ -136,8 +137,8 @@ export function AgentNodeStudio() {
         });
 
         // Convert to nodes
-        const items: AgentNode[] = agents.items || [];
-        const initialNodes: Node[] = items.map((agent, index) => ({
+        const items = (agents.items as AgentNodeData[]) || [];
+        const initialNodes = items.map((agent, index): Node => ({
           id: agent.id || agent.name,
           type: "agent",
           position: {
@@ -152,7 +153,6 @@ export function AgentNodeStudio() {
 
         // Create edges based on relationships if any
         const initialEdges: Edge[] = [];
-
         setNodes(initialNodes);
         setEdges(initialEdges);
         setIsLoading(false);
@@ -275,6 +275,7 @@ export function AgentNodeStudio() {
           {(() => {
             const node = nodes.find((n) => n.id === selectedNode);
             if (!node) return null;
+            const nodeData = node.data as unknown as AgentNodeData;
 
             return (
               <div className="space-y-4">
@@ -282,21 +283,21 @@ export function AgentNodeStudio() {
                   <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     Nombre
                   </label>
-                  <p className="text-sm font-medium mt-1">{node.data.name}</p>
+                  <p className="text-sm font-medium mt-1">{nodeData.name}</p>
                 </div>
 
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     Rol
                   </label>
-                  <p className="text-sm mt-1">{node.data.role}</p>
+                  <p className="text-sm mt-1">{nodeData.role}</p>
                 </div>
 
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     Modelo
                   </label>
-                  <p className="text-sm mt-1">{node.data.model}</p>
+                  <p className="text-sm mt-1">{nodeData.model}</p>
                 </div>
 
                 <div>
@@ -304,7 +305,7 @@ export function AgentNodeStudio() {
                     Skills
                   </label>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {node.data.skills.map((skill: string, i: number) => (
+                    {nodeData.skills.map((skill: string, i: number) => (
                       <span
                         key={i}
                         className="px-2 py-1 rounded-md bg-gold/10 text-xs text-gold"
@@ -320,7 +321,7 @@ export function AgentNodeStudio() {
                     Tools
                   </label>
                   <div className="flex flex-wrap gap-1 mt-1">
-                    {node.data.tools.map((tool: string, i: number) => (
+                    {nodeData.tools.map((tool: string, i: number) => (
                       <span
                         key={i}
                         className="px-2 py-1 rounded-md bg-turq/10 text-xs text-turq"
@@ -337,13 +338,13 @@ export function AgentNodeStudio() {
                     <div
                       className={cn(
                         "w-10 h-5 rounded-full transition-colors relative cursor-pointer",
-                        node.data.enabled ? "bg-emerald" : "bg-white/20"
+                        nodeData.enabled ? "bg-emerald" : "bg-white/20"
                       )}
                     >
                       <div
                         className={cn(
                           "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all",
-                          node.data.enabled ? "left-5" : "left-0.5"
+                          nodeData.enabled ? "left-5" : "left-0.5"
                         )}
                       />
                     </div>
