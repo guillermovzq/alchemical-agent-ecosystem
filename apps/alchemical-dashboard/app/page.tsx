@@ -1,126 +1,124 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { StatsHero } from "../components/StatsHero";
-import { AgentCard } from "../components/AgentCard";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sidebar } from "../components/Sidebar";
+import { HeaderBar } from "../components/HeaderBar";
+import { ChatWorkbench } from "../components/ChatWorkbench";
+import { AgentNodeStudio } from "../components/AgentNodeStudio";
 import { AgentsTable } from "../components/AgentsTable";
-import type { DashboardPayload } from "../lib/types";
-import type { DashboardConfig } from "../lib/config";
+import { StatsHero } from "../components/StatsHero";
+import { JobsEventsPanel } from "../components/JobsEventsPanel";
+import { LogsMonitor } from "../components/LogsMonitor";
+import { AdminOpsPanel } from "../components/AdminOpsPanel";
+import { SettingsPanel } from "../components/SettingsPanel";
+import { useAppStore } from "../lib/stores";
+import { useAgents } from "../lib/hooks";
+import { cn } from "../lib/utils";
 
-const CreateAgentWizard = dynamic(() => import("../components/CreateAgentWizard").then((m) => m.CreateAgentWizard), { ssr: false });
-const ChatWorkbench = dynamic(() => import("../components/ChatWorkbench").then((m) => m.ChatWorkbench), { ssr: false });
-const AgentNodeStudio = dynamic(() => import("../components/AgentNodeStudio").then((m) => m.AgentNodeStudio), { ssr: false });
-const CanvasLab = dynamic(() => import("../components/CanvasLab").then((m) => m.CanvasLab), { ssr: false });
-const JobsEventsPanel = dynamic(() => import("../components/JobsEventsPanel").then((m) => m.JobsEventsPanel), { ssr: false });
-const AdminOpsPanel = dynamic(() => import("../components/AdminOpsPanel").then((m) => m.AdminOpsPanel), { ssr: false });
-const UsagePanel = dynamic(() => import("../components/UsagePanel").then((m) => m.UsagePanel), { ssr: false });
-const SettingsPanel = dynamic(() => import("../components/SettingsPanel").then((m) => m.SettingsPanel), { ssr: false });
-const LogsMonitor = dynamic(() => import("../components/LogsMonitor").then((m) => m.LogsMonitor), { ssr: false });
-
-// This view type matches the sidebar navigation items exactly.
-// The lib/types.ts View is broader (includes dashboard/studio/jobs/etc. for future use).
-type View = "chat" | "nodes" | "agents" | "ops" | "admin" | "logs";
-
-const defaultCfg: DashboardConfig = {
-  agentPollMs: 10000,
-  logsPollMs: 5000,
-  logsLines: 50,
-  defaultLogService: "velktharion",
+const viewTitles: Record<string, { title: string; subtitle: string }> = {
+  chat: {
+    title: "Chat del Caldero",
+    subtitle: "Interacción en tiempo real con agentes alquímicos",
+  },
+  nodes: {
+    title: "Agent Node Studio",
+    subtitle: "Orquestación visual de flujos multi-agente",
+  },
+  agents: {
+    title: "Runtime de Agentes",
+    subtitle: "Monitorización y control de agentes activos",
+  },
+  ops: {
+    title: "Operaciones",
+    subtitle: "Jobs, eventos y métricas del sistema",
+  },
+  logs: {
+    title: "Logs & Telemetría",
+    subtitle: "Streaming SSE de logs en tiempo real",
+  },
+  admin: {
+    title: "Administración",
+    subtitle: "Configuración del sistema y operaciones",
+  },
 };
 
-const needsAgentData = new Set<View>(["agents", "nodes", "ops"]);
+export default function DashboardPage() {
+  const { activeView } = useAppStore();
+  const { data: agentsData } = useAgents();
 
-export default function Page() {
-  const [data, setData] = useState<DashboardPayload | null>(null);
-  const [cfg, setCfg] = useState<DashboardConfig>(defaultCfg);
-  const [view, setView] = useState<View>("chat");
-
-  const onCfg = useCallback((c: DashboardConfig) => setCfg(c), []);
-
-  useEffect(() => {
-    const h = (ev: Event) => {
-      const next = (ev as CustomEvent<View>).detail;
-      if (next) setView(next);
-    };
-    window.addEventListener("alchemical:set-view", h as EventListener);
-    return () => window.removeEventListener("alchemical:set-view", h as EventListener);
-  }, []);
-
-  useEffect(() => {
-    if (!needsAgentData.has(view)) return;
-    let stop = false;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/agents", { cache: "no-store" });
-        const json = await res.json();
-        if (!stop) setData(json);
-      } catch {
-        if (!stop) setData({ items: [], stats: { active: 0, total: 0, tasksToday: null, tokensProcessed: null, uptimeAvg: 0 } });
-      }
-    };
-    load();
-    const id = setInterval(load, cfg.agentPollMs);
-    return () => {
-      stop = true;
-      clearInterval(id);
-    };
-  }, [cfg.agentPollMs, view]);
-
-  const quickCards = useMemo(() => data?.items?.slice(0, 4) || [], [data]);
-
-  const title = ({
-    chat: "💬 Chat del Caldero",
-    nodes: "🧩 Agent Node Studio",
-    agents: "🤖 Runtime de Agentes",
-    ops: "📊 Operaciones",
-    logs: "📜 Logs",
-    admin: "🛠️ Administración",
-  } as const)[view];
+  const currentView = viewTitles[activeView] || viewTitles.chat;
 
   return (
-    <div className="dashboard-grid" style={{ height: "100%", minHeight: 0 }}>
-      <section className="glass-card" style={{ padding: 12, flex: 1, minHeight: 0, overflow: "auto" }}>
-        <div style={{ position: "sticky", top: 0, zIndex: 2, marginBottom: 10, paddingBottom: 8, borderBottom: "1px solid rgba(255,255,255,.08)", backdropFilter: "blur(8px)" }}>
-          <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
-          <small style={{ color: "#94a3b8" }}>Vista única activa (sin paneles duplicados) para reducir lag y ruido visual.</small>
+    <div className="flex h-screen overflow-hidden bg-void">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <HeaderBar />
+
+        {/* View Header */}
+        <div className="px-6 py-4 border-b border-gold/5">
+          <motion.div
+            key={activeView}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <h2 className="text-lg font-semibold text-foreground">
+              {currentView.title}
+            </h2>
+            <p className="text-sm text-muted-foreground">{currentView.subtitle}</p>
+          </motion.div>
         </div>
-        {view === "chat" && <ChatWorkbench />}
 
-        {view === "nodes" && <AgentNodeStudio />}
+        {/* Main Content */}
+        <main className="flex-1 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+              className="h-full p-6 overflow-auto custom-scrollbar"
+            >
+              {activeView === "chat" && <ChatWorkbench />}
 
-        {view === "agents" && (
-          <>
-            {!data ? <div>Cargando agentes reales...</div> : (
-              <>
-                <StatsHero stats={data.stats} />
-                <section className="widgets" style={{ marginTop: 10 }}>
-                  {quickCards.map((agent) => <AgentCard key={agent.name} agent={agent} />)}
-                </section>
-                <div className="glass-card" style={{ marginTop: 10 }}><AgentsTable agents={data.items} /></div>
-              </>
-            )}
-          </>
-        )}
+              {activeView === "nodes" && <AgentNodeStudio />}
 
-        {view === "ops" && (
-          <div className="stack">
-            <JobsEventsPanel />
-            <UsagePanel />
-            <CanvasLab />
-          </div>
-        )}
+              {activeView === "agents" && (
+                <div className="space-y-6">
+                  <StatsHero stats={agentsData?.stats} />
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div className="xl:col-span-2">
+                      <AgentsTable agents={agentsData?.items || []} />
+                    </div>
+                    <div>
+                      <JobsEventsPanel />
+                    </div>
+                  </div>
+                </div>
+              )}
 
-        {view === "logs" && <LogsMonitor defaultService={cfg.defaultLogService} linesCount={cfg.logsLines} />}
+              {activeView === "ops" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <JobsEventsPanel />
+                  <div className="space-y-6">
+                    <AdminOpsPanel />
+                  </div>
+                </div>
+              )}
 
-        {view === "admin" && (
-          <div className="stack">
-            <AdminOpsPanel />
-            <SettingsPanel onChange={onCfg} />
-            <CreateAgentWizard />
-          </div>
-        )}
-      </section>
+              {activeView === "logs" && <LogsMonitor />}
+
+              {activeView === "admin" && (
+                <div className="max-w-4xl mx-auto">
+                  <SettingsPanel />
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
     </div>
   );
 }

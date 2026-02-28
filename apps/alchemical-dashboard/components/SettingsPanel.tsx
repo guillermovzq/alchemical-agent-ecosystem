@@ -1,44 +1,202 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { DashboardConfig } from "../lib/config";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Settings,
+  Bell,
+  Shield,
+  Save,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { toast } from "sonner";
 
-export function SettingsPanel({ onChange }: { onChange: (c: DashboardConfig) => void }) {
-  const [cfg, setCfg] = useState<DashboardConfig | null>(null);
-  const [saved, setSaved] = useState("");
-
-  useEffect(() => {
-    fetch("/api/config", { cache: "no-store" }).then((r) => r.json()).then((j) => {
-      setCfg(j.config);
-      onChange(j.config);
-    });
-  }, [onChange]);
-
-  if (!cfg) return <section className="glass-card" style={{ padding: 14 }}>Cargando configuración...</section>;
-
-  const update = (patch: Partial<DashboardConfig>) => setCfg((p) => ({ ...(p as DashboardConfig), ...patch }));
-
-  const save = async () => {
-    const r = await fetch("/api/config", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(cfg) });
-    const j = await r.json();
-    onChange(j.config);
-    setSaved("Guardado");
-    setTimeout(() => setSaved(""), 1500);
-  };
-
-  return (
-    <section className="glass-card" style={{ padding: 14 }}>
-      <h3 style={{ marginTop: 0 }}>Configuración avanzada</h3>
-      <div style={{ display: "grid", gap: 8 }}>
-        <label>Polling agentes (ms)<input value={cfg.agentPollMs} onChange={(e) => update({ agentPollMs: Number(e.target.value) })} style={field} /></label>
-        <label>Polling logs (ms)<input value={cfg.logsPollMs} onChange={(e) => update({ logsPollMs: Number(e.target.value) })} style={field} /></label>
-        <label>Líneas de log<input value={cfg.logsLines} onChange={(e) => update({ logsLines: Number(e.target.value) })} style={field} /></label>
-        <label>Servicio log por defecto<input value={cfg.defaultLogService} onChange={(e) => update({ defaultLogService: e.target.value })} style={field} /></label>
-        <button className="cta" onClick={save}>Guardar configuración</button>
-        {saved && <small style={{ color: "#34d399" }}>{saved}</small>}
-      </div>
-    </section>
-  );
+interface SettingSection {
+  id: string;
+  title: string;
+  icon: React.ElementType;
+  settings: {
+    id: string;
+    label: string;
+    type: "toggle" | "select" | "input";
+    value: string | boolean;
+    options?: string[];
+  }[];
 }
 
-const field: React.CSSProperties = { display: "block", width: "100%", marginTop: 4, borderRadius: 8, border: "1px solid rgba(255,255,255,.15)", background: "rgba(0,0,0,.2)", color: "#f8fafc", padding: "8px" };
+const initialSettings: SettingSection[] = [
+  {
+    id: "general",
+    title: "General",
+    icon: Settings,
+    settings: [
+      { id: "language", label: "Idioma", type: "select", value: "es", options: ["es", "en"] },
+      { id: "theme", label: "Tema Oscuro", type: "toggle", value: true },
+    ],
+  },
+  {
+    id: "notifications",
+    title: "Notificaciones",
+    icon: Bell,
+    settings: [
+      { id: "push", label: "Notificaciones Push", type: "toggle", value: true },
+      { id: "email", label: "Alertas por Email", type: "toggle", value: false },
+      { id: "sound", label: "Sonidos", type: "toggle", value: true },
+    ],
+  },
+  {
+    id: "security",
+    title: "Seguridad",
+    icon: Shield,
+    settings: [
+      { id: "2fa", label: "Autenticación 2FA", type: "toggle", value: false },
+      { id: "apikey", label: "API Key", type: "input", value: "sk-••••••••••••" },
+    ],
+  },
+];
+
+export function SettingsPanel() {
+  const [settings, setSettings] = useState(initialSettings);
+  const [activeSection, setActiveSection] = useState("general");
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const updateSetting = (sectionId: string, settingId: string, value: string | boolean) => {
+    setSettings((prev) =>
+      prev.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              settings: section.settings.map((s) =>
+                s.id === settingId ? { ...s, value } : s
+              ),
+            }
+          : section
+      )
+    );
+    setHasChanges(true);
+  };
+
+  const saveSettings = () => {
+    toast.success("Configuración guardada");
+    setHasChanges(false);
+  };
+
+  const currentSection = settings.find((s) => s.id === activeSection);
+
+  return (
+    <div className="glass-card rounded-xl overflow-hidden">
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-56 border-r border-gold/10 p-4">
+          <h2 className="text-sm font-medium text-foreground mb-4 px-2">Configuración</h2>
+          <nav className="space-y-1">
+            {settings.map((section) => {
+              const Icon = section.icon;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                    activeSection === section.id
+                      ? "bg-gold/10 text-gold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  {section.title}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 p-6">
+          {currentSection && (
+            <motion.div
+              key={currentSection.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <currentSection.icon className="w-5 h-5 text-gold" />
+                  <h3 className="text-lg font-medium text-foreground">
+                    {currentSection.title}
+                  </h3>
+                </div>
+                {hasChanges && (
+                  <button
+                    onClick={saveSettings}
+                    className="btn-alchemical-primary flex items-center gap-2 text-sm"
+                  >
+                    <Save className="w-4 h-4" />
+                    Guardar
+                  </button>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                {currentSection.settings.map((setting) => (
+                  <div
+                    key={setting.id}
+                    className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-gold/5"
+                  >
+                    <span className="text-sm text-foreground">{setting.label}</span>
+
+                    {setting.type === "toggle" && (
+                      <button
+                        onClick={() =>
+                          updateSetting(currentSection.id, setting.id, !setting.value)
+                        }
+                        className={cn(
+                          "w-11 h-6 rounded-full transition-colors relative",
+                          setting.value ? "bg-emerald" : "bg-white/20"
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "absolute top-1 w-4 h-4 rounded-full bg-white transition-all",
+                            setting.value ? "left-6" : "left-1"
+                          )}
+                        />
+                      </button>
+                    )}
+
+                    {setting.type === "select" && (
+                      <select
+                        value={setting.value as string}
+                        onChange={(e) =>
+                          updateSetting(currentSection.id, setting.id, e.target.value)
+                        }
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-sm text-foreground focus:outline-none focus:border-gold/30"
+                      >
+                        {setting.options?.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt === "es" ? "Español" : "English"}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+
+                    {setting.type === "input" && (
+                      <input
+                        type="text"
+                        value={setting.value as string}
+                        onChange={(e) =>
+                          updateSetting(currentSection.id, setting.id, e.target.value)
+                        }
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-gold/10 text-sm text-foreground focus:outline-none focus:border-gold/30 w-48"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

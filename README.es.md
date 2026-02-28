@@ -54,6 +54,52 @@ El **Magnum Opus** no es la versión final. Es la primera versión que merece es
 
 ---
 
+## 🖼️ Capturas de Pantalla — Diseño 2026
+
+> **✨ Nuevo Sistema de Diseño Alquímico 2026**: Negro profundo (#050505), acentos dorados líquidos (#d4af37) y cobre, paneles glassmorphism con bordes holográficos, y animaciones butter-smooth con framer-motion.
+
+<p align="center">
+  <strong>💬 Chat del Caldero — Interacción Multi-Agente</strong><br/>
+  <em>Streaming SSE en tiempo real con efectos de brillo etéreo</em><br/>
+  <img src="https://raw.githubusercontent.com/smouj/alchemical-agent-ecosystem/main/assets/screenshots/dashboard-chat.svg" width="100%" alt="Alchemical Dashboard - Chat View" />
+</p>
+
+<p align="center">
+  <strong>🧩 Agent Node Studio — Constructor Visual de Flujos</strong><br/>
+  <em>Canvas React Flow con nodos alquímicos personalizados y conexiones animadas</em><br/>
+  <img src="https://raw.githubusercontent.com/smouj/alchemical-agent-ecosystem/main/assets/screenshots/dashboard-nodes.svg" width="100%" alt="Alchemical Dashboard - Node Studio" />
+</p>
+
+<p align="center">
+  <strong>🤖 Runtime de Agentes — Estado de Agentes en Vivo</strong><br/>
+  <em>Métricas en tiempo real con animaciones de pulso e indicadores de estado</em><br/>
+  <img src="https://raw.githubusercontent.com/smouj/alchemical-agent-ecosystem/main/assets/screenshots/dashboard-agents.svg" width="100%" alt="Alchemical Dashboard - Agents View" />
+</p>
+
+<p align="center">
+  <strong>📜 Logs & Telemetría — Streaming de Logs en Tiempo Real</strong><br/>
+  <em>Monitor de logs con SSE y resaltado de sintaxis</em><br/>
+  <img src="https://raw.githubusercontent.com/smouj/alchemical-agent-ecosystem/main/assets/screenshots/dashboard-logs.svg" width="100%" alt="Alchemical Dashboard - Logs Monitor" />
+</p>
+
+<p align="center">
+  <strong>🛠️ Administración — Operaciones del Sistema</strong><br/>
+  <em>Panel de configuración con navegación jerárquica</em><br/>
+  <img src="https://raw.githubusercontent.com/smouj/alchemical-agent-ecosystem/main/assets/screenshots/dashboard-admin.svg" width="100%" alt="Alchemical Dashboard - Admin Panel" />
+</p>
+
+### 🎨 Características del Sistema de Diseño
+
+- **Paneles Glassmorphism**: Backdrop-blur con bordes etéreos
+- **Gradientes Dorados Líquidos**: Gradientes CSS @property animados
+- **Efectos Holográficos**: Bordes giratorios animados y pulsos de brillo
+- **Framer Motion 12**: Transiciones de página, micro-interacciones, animaciones escalonadas
+- **Tailwind CSS v4**: Motor Oxide con tokens de color alquímicos personalizados
+- **Integración React Flow**: Tipos de nodos personalizados con mini-mapa y controles
+- **PWA Ready**: Manifest.json con colores de tema e iconos
+
+---
+
 ## 🚀 Inicio Rápido (El Ritual de 5 Minutos)
 
 ### Prerrequisitos

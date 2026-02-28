@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </linearGradient>
+    <linearGradient id="sidebar-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#12121a"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="900" fill="url(#bg)"/>
+
+  <!-- Sidebar -->
+  <rect x="0" y="0" width="260" height="900" fill="url(#sidebar-grad)" opacity="0.95"/>
+  <rect x="259" y="0" width="1" height="900" fill="#d4af37" opacity="0.2"/>
+
+  <!-- Logo -->
+  <text x="24" y="40" fill="#d4af37" font-family="Georgia, serif" font-size="18" font-weight="bold" filter="url(#glow)">◈ ALCHEMICAL</text>
+
+  <!-- Nav Items -->
+  <g transform="translate(0,80)">
+    <text x="24" y="28" fill="#8a8a8a" font-family="system-ui" font-size="13">◆ Chat del Caldero</text>
+  </g>
+  <g transform="translate(0,140)">
+    <text x="24" y="28" fill="#8a8a8a" font-family="system-ui" font-size="13">◇ Node Studio</text>
+  </g>
+  <g transform="translate(0,200)">
+    <rect x="12" y="0" width="236" height="44" rx="8" fill="#d4af37" opacity="0.15"/>
+    <rect x="0" y="8" width="3" height="28" rx="1.5" fill="#d4af37"/>
+    <text x="24" y="28" fill="#d4af37" font-family="system-ui" font-size="13" font-weight="600">○ Runtime Agentes</text>
+  </g>
+  <g transform="translate(0,260)">
+    <text x="24" y="28" fill="#8a8a8a" font-family="system-ui" font-size="13">▸ Logs &amp; SSE</text>
+  </g>
+  <g transform="translate(0,320)">
+    <text x="24" y="28" fill="#8a8a8a" font-family="system-ui" font-size="13">⚙ Administración</text>
+  </g>
+
+  <!-- Stats -->
+  <g transform="translate(24,780)">
+    <text x="0" y="0" fill="#666" font-family="system-ui" font-size="10">CPU</text>
+    <text x="0" y="16" fill="#d4af37" font-family="system-ui" font-size="14" font-weight="600">42%</text>
+    <rect x="0" y="24" width="100" height="4" rx="2" fill="#d4af37"/>
+  </g>
+
+  <!-- Header -->
+  <rect x="260" y="0" width="1180" height="64" fill="#0a0a0f" opacity="0.8"/>
+  <rect x="260" y="63" width="1180" height="1" fill="#d4af37" opacity="0.1"/>
+
+  <!-- Search -->
+  <rect x="284" y="16" width="280" height="32" rx="8" fill="#12121a" stroke="#d4af37" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="300" y="36" fill="#666" font-family="system-ui" font-size="13">Buscar agentes...</text>
+
+  <!-- Main Content - Agents -->
+  <rect x="284" y="88" width="1132" height="788" rx="12" fill="#0d0d12" stroke="#d4af37" stroke-opacity="0.1" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="308" y="120" fill="#d4af37" font-family="system-ui" font-size="16" font-weight="600">Runtime de Agentes</text>
+
+  <!-- Agents Table Header -->
+  <g transform="translate(308, 150)">
+    <rect width="1084" height="40" rx="8" fill="#12121a" opacity="0.5"/>
+    <text x="24" y="26" fill="#8a8a8a" font-family="system-ui" font-size="12" font-weight="600">AGENTE</text>
+    <text x="300" y="26" fill="#8a8a8a" font-family="system-ui" font-size="12" font-weight="600">ROL</text>
+    <text x="600" y="26" fill="#8a8a8a" font-family="system-ui" font-size="12" font-weight="600">ESTADO</text>
+    <text x="800" y="26" fill="#8a8a8a" font-family="system-ui" font-size="12" font-weight="600">LATENCIA</text>
+    <text x="950" y="26" fill="#8a8a8a" font-family="system-ui" font-size="12" font-weight="600">ACCIONES</text>
+  </g>
+
+  <!-- Agent Rows -->
+  <!-- Velktharion -->
+  <g transform="translate(308, 200)">
+    <rect width="1084" height="64" rx="8" fill="#12121a" opacity="0.7" stroke="#d4af37" stroke-width="1" stroke-opacity="0.2"/>
+    <circle cx="24" cy="32" r="10" fill="#22c55e" opacity="0.3"/>
+    <circle cx="24" cy="32" r="6" fill="#22c55e">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="50" y="28" fill="#e8e6e3" font-family="system-ui" font-size="14" font-weight="600">Velktharion</text>
+    <text x="50" y="45" fill="#8a8a8a" font-family="system-ui" font-size="11">El Arquitecto</text>
+    <text x="300" y="36" fill="#d4af37" font-family="system-ui" font-size="13">Prima Materia</text>
+    <rect x="600" y="24" width="16" height="16" rx="4" fill="#22c55e" opacity="0.3"/>
+    <text x="622" y="36" fill="#22c55e" font-family="system-ui" font-size="12" font-weight="500">ACTIVO</text>
+    <text x="800" y="36" fill="#d4af37" font-family="system-ui" font-size="13" font-weight="600">45ms</text>
+    <rect x="950" y="20" width="70" height="28" rx="6" fill="#d4af37" opacity="0.2"/>
+    <text x="970" y="38" fill="#d4af37" font-family="system-ui" font-size="11">Ver</text>
+  </g>
+
+  <!-- Synapsara -->
+  <g transform="translate(308, 275)">
+    <rect width="1084" height="64" rx="8" fill="#12121a" opacity="0.3"/>
+    <circle cx="24" cy="32" r="10" fill="#22c55e" opacity="0.3"/>
+    <circle cx="24" cy="32" r="6" fill="#22c55e"/>
+    <text x="50" y="28" fill="#e8e6e3" font-family="system-ui" font-size="14" font-weight="600">Synapsara</text>
+    <text x="50" y="45" fill="#8a8a8a" font-family="system-ui" font-size="11">La Tejedora</text>
+    <text x="300" y="36" fill="#b87333" font-family="system-ui" font-size="13">Tejedor</text>
+    <rect x="600" y="24" width="16" height="16" rx="4" fill="#22c55e" opacity="0.3"/>
+    <text x="622" y="36" fill="#22c55e" font-family="system-ui" font-size="12">ACTIVO</text>
+    <text x="800" y="36" fill="#d4af37" font-family="system-ui" font-size="13">38ms</text>
+  </g>
+
+  <!-- Kryonexus -->
+  <g transform="translate(308, 350)">
+    <rect width="1084" height="64" rx="8" fill="#12121a" opacity="0.3"/>
+    <circle cx="24" cy="32" r="10" fill="#8a8a8a" opacity="0.3"/>
+    <circle cx="24" cy="32" r="6" fill="#8a8a8a"/>
+    <text x="50" y="28" fill="#e8e6e3" font-family="system-ui" font-size="14" font-weight="600">Kryonexus</text>
+    <text x="50" y="45" fill="#8a8a8a" font-family="system-ui" font-size="11">El Guardián</text>
+    <text x="300" y="36" fill="#cd7f32" font-family="system-ui" font-size="13">Centinela</text>
+    <rect x="600" y="24" width="16" height="16" rx="4" fill="#8a8a8a" opacity="0.3"/>
+    <text x="622" y="36" fill="#8a8a8a" font-family="system-ui" font-size="12">INACTIVO</text>
+    <text x="800" y="36" fill="#8a8a8a" font-family="system-ui" font-size="13">12ms</text>
+  </g>
+
+  <!-- Pyraxis -->
+  <g transform="translate(308, 425)">
+    <rect width="1084" height="64" rx="8" fill="#12121a" opacity="0.3"/>
+    <circle cx="24" cy="32" r="10" fill="#22c55e" opacity="0.3"/>
+    <circle cx="24" cy="32" r="6" fill="#22c55e"/>
+    <text x="50" y="28" fill="#e8e6e3" font-family="system-ui" font-size="14" font-weight="600">Pyraxis</text>
+    <text x="50" y="45" fill="#8a8a8a" font-family="system-ui" font-size="11">El Catalizador</text>
+    <text x="300" y="36" fill="#ff6b35" font-family="system-ui" font-size="13">Catalizador</text>
+    <rect x="600" y="24" width="16" height="16" rx="4" fill="#22c55e" opacity="0.3"/>
+    <text x="622" y="36" fill="#22c55e" font-family="system-ui" font-size="12">ACTIVO</text>
+    <text x="800" y="36" fill="#d4af37" font-family="system-ui" font-size="13">52ms</text>
+  </g>
+
+  <!-- Stats Cards -->
+  <g transform="translate(308, 520)">
+    <rect width="250" height="100" rx="12" fill="#12121a" stroke="#d4af37" stroke-opacity="0.2"/>
+    <text x="24" y="36" fill="#8a8a8a" font-family="system-ui" font-size="12">Agentes Activos</text>
+    <text x="24" y="70" fill="#d4af37" font-family="system-ui" font-size="32" font-weight="700">7/7</text>
+    <circle cx="200" cy="50" r="25" fill="#22c55e" opacity="0.2"/>
+    <text x="190" y="56" fill="#22c55e" font-family="system-ui" font-size="12">100%</text>
+  </g>
+
+  <g transform="translate(578, 520)">
+    <rect width="250" height="100" rx="12" fill="#12121a" stroke="#b87333" stroke-opacity="0.2"/>
+    <text x="24" y="36" fill="#8a8a8a" font-family="system-ui" font-size="12">Latencia Promedio</text>
+    <text x="24" y="70" fill="#d4af37" font-family="system-ui" font-size="32" font-weight="700">42ms</text>
+  </g>
+
+  <g transform="translate(848, 520)">
+    <rect width="250" height="100" rx="12" fill="#12121a" stroke="#cd7f32" stroke-opacity="0.2"/>
+    <text x="24" y="36" fill="#8a8a8a" font-family="system-ui" font-size="12">Tareas en Cola</text>
+    <text x="24" y="70" fill="#d4af37" font-family="system-ui" font-size="32" font-weight="700">12</text>
+  </g>
+</svg>
