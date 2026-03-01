@@ -9,9 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    return config;
-  },
+  turbopack: {},
   async headers() {
     return [
       {
