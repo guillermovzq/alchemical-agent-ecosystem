@@ -22,6 +22,7 @@ services:
       - auralith
       - resonvyr
       - fluxenrath
+      - alchemical-dashboard
     networks: [alchemical-net]
 
   redis:
@@ -356,6 +357,34 @@ services:
           memory: 512m
         reservations:
           memory: 128m
+
+  alchemical-dashboard:
+    build:
+      context: ./apps/alchemical-dashboard
+      dockerfile: Dockerfile.debian
+    restart: unless-stopped
+    container_name: alchemical-dashboard
+    ports:
+      - "8080:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://alchemical-gateway:7411
+    networks: [alchemical-net]
+    depends_on:
+      alchemical-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/system"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 256m
 
 networks:
   alchemical-net:
