@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   BookOpen,
   Plus,
@@ -17,6 +18,7 @@ import {
   Trash2,
   Play,
   MoreHorizontal,
+  FlaskConical,
 } from "lucide-react";
 import { useDashboardStore, type AlchemicalAgent, type AlchemicalCircle } from "@/lib/store/dashboard";
 
@@ -418,6 +420,30 @@ export default function GrimoireSidebar() {
             ))}
           </div>
         </SidebarSection>
+
+        <div className="mx-3 my-1 h-px bg-[#1A1A1A]" />
+
+        {/* Alquimista de Habilidades */}
+        <div className="px-3 py-2">
+          <Link href="/alchemist">
+            <motion.div
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all border border-transparent hover:border-[#10B981]/20 hover:bg-[#10B981]/5 group"
+              whileHover={{ x: 2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <FlaskConical size={13} className="text-[#10B981]/50 group-hover:text-[#10B981]/80 transition-colors flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] text-[#10B981]/60 group-hover:text-[#10B981]/90 font-medium transition-colors">
+                  Alquimista de Habilidades
+                </div>
+                <div className="text-[9px] text-[#333] group-hover:text-[#444] transition-colors">
+                  Forja Skills con drag &amp; drop
+                </div>
+              </div>
+              <ChevronRight size={10} className="text-[#333] group-hover:text-[#10B981]/50 transition-colors" />
+            </motion.div>
+          </Link>
+        </div>
 
         <div className="mx-3 my-1 h-px bg-[#1A1A1A]" />
 
