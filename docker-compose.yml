@@ -71,6 +71,8 @@ services:
       dockerfile: gateway/Dockerfile
     restart: unless-stopped
     container_name: alchemical-gateway
+    ports:
+      - "7411:7411"
     environment:
       - ALCHEMICAL_GATEWAY_TOKEN=${ALCHEMICAL_GATEWAY_TOKEN}
       - KILO_API_KEY=${KILO_API_KEY:-}
