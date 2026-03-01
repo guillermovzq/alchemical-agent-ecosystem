@@ -47,6 +47,11 @@ from agents_router import list_providers, get_provider, test_provider, openclaw_
 from agents_router import list_agents, create_agent, get_agent, update_agent, delete_agent, list_roles
 from agents_router import kilocode_status, kilocode_chat  # noqa: F401
 
+# Constants for RBAC
+VIEWER_ROLE = "viewer"
+OPERATOR_ROLE = "operator"
+ADMIN_ROLE = "admin"
+
 # ---------------------------------------------------------------------------
 # Structured JSON logging — manual formatter (no external dependency needed)
 # ---------------------------------------------------------------------------
