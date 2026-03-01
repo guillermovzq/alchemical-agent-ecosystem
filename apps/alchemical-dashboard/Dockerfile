@@ -17,8 +17,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Reinstall lightningcss to get correct native binaries for this platform
-RUN npm uninstall lightningcss && npm install lightningcss
+# Reinstall native packages to get correct Linux binaries for this platform
+RUN npm uninstall lightningcss tailwindcss @tailwindcss/postcss @tailwindcss/oxide && \
+    npm install lightningcss tailwindcss @tailwindcss/postcss
 
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED=1
