@@ -72,7 +72,9 @@ export function ChatWorkbench() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [thread]);
 
-  // Fetch capabilities
+  // Fetch capabilities - run only once on mount
+  const selectedAgentRef = useRef(selectedAgent);
+  selectedAgentRef.current = selectedAgent;
   useEffect(() => {
     fetch("/api/gateway/capabilities", { cache: "no-store" })
       .then((r) => r.json())
@@ -80,12 +82,12 @@ export function ChatWorkbench() {
         setAvailableAgents(data.agents || []);
         setAvailableSkills(data.skills || []);
         setAvailableTools(data.tools || []);
-        if (data.agents?.length && !selectedAgent) {
+        if (data.agents?.length && !selectedAgentRef.current) {
           setSelectedAgent(data.agents[0]);
         }
       })
       .catch(console.error);
-  }, []);
+  }, [setSelectedAgent]);
 
   // Connect to SSE
   const connectStream = () => {
