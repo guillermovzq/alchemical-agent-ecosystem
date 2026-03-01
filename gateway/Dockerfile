@@ -20,4 +20,4 @@ ENV PORT=7411
 # Make alchemical_core importable: from alchemical_core.llm import AlchemicalLLM
 ENV PYTHONPATH=/app/shared/python
 
-CMD ["sh","-c","uvicorn app:app --host 0.0.0.0 --port ${PORT} --workers 1 --log-config /dev/null"]
+CMD ["sh","-c","uvicorn app:app --host 0.0.0.0 --port ${PORT} --workers 1"]
