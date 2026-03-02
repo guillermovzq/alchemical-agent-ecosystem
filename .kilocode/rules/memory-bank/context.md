@@ -51,11 +51,18 @@ El proyecto ha sido transformado de un template básico de Next.js a un **Dashbo
 
 **Motivo**: Eran stubs vacíos. Los agentes ahora se gestionan dinámicamente vía SQLite en el gateway (CRUD completo).
 
-### ✅ Fixes Aplicados Hoy
-- Fixed build context en `gateway/Dockerfile` (COPY con prefijo `gateway/`)
-- Agregado `curl` para healthchecks en contenedor gateway
-- Corregido puerto healthcheck de 8000 → 7411 en `docker-compose.yml`
-- Gateway reiniciado exitosamente con imagen actualizada
+### ✅ Fixes Aplicados Hoy (2026-03-02)
+- **fix(dashboard-gateway)**: Corrección de conexión Dashboard ↔ Gateway
+  - Corregido GATEWAY_URL de `http://localhost/gateway` a `http://alchemical-gateway:7411`
+  - Cambiado endpoint de `/agents` a `/api/v1/agents` en API routes
+  - Actualizados archivos: `app/api/agents/route.ts`, `app/api/gateway/agents/route.ts`
+- **feat(dashboard)**: Integración de CreateAgentWizard en vista de agentes
+  - Agregado botón "Nuevo Agente" con toggle para mostrar/ocultar wizard
+  - Importado componente CreateAgentWizard en page.tsx
+- **deploy(vps)**: Deploy exitoso a VPS Hostinger
+  - Commit `9f8d790` pushed a `main`
+  - Reconstrucción de imágenes Docker en VPS
+  - 4 servicios activos y saludables
 
 ## Recently Completed
 
@@ -81,6 +88,18 @@ El proyecto ha sido transformado de un template básico de Next.js a un **Dashbo
   - Fondos oscuros (`#0a0e1a`) con texto claro (`#e8eefb`) en selects/options
   - Estilos globales para form elements en `globals.css`
   - Correcciones en: AgentsTable, ChatWorkbench, LogsMonitor, SettingsPanel
+
+### Fixes Recientes (2026-03-02)
+- [x] **Corrección de conexión Dashboard ↔ Gateway**
+  - Cambio de `localhost` a `alchemical-gateway:7411` para comunicación inter-contenedor
+  - Actualización de endpoints a `/api/v1/agents`
+  - Eliminación de 10 stubs de servicios innecesarios (migrados a `services-deprecated/`)
+- [x] **Integración de CreateAgentWizard**
+  - Panel funcional para crear agentes desde la interfaz del dashboard
+  - Toggle con botón "Nuevo Agente" en vista de agentes
+- [x] **Deploy en VPS**
+  - Git pull y reconstrucción exitosa en `/opt/alchemical`
+  - Todos los servicios healthy y operativos
 
 ## Current Structure
 
@@ -157,6 +176,7 @@ src/
 
 | Date | Changes |
 |------|---------|
+| 2026-03-02 | **fix(dashboard)**: Corrección conexión Dashboard ↔ Gateway + Deploy VPS - GATEWAY_URL corregido, endpoints actualizados a /api/v1/agents, CreateAgentWizard integrado, deploy exitoso en VPS |
 | 2026-03-01 | **infra(simplificación)**: Arquitectura v3 - Eliminados 10 microservicios stubs, reducción de 15 a 5 contenedores, docker-compose.yml simplificado, Caddyfile actualizado, services/ → services-deprecated/ |
 | 2026-03-01 | **feat(gateway)**: OpenClaw/KiloCode integrations + AI providers system - CRUD agents, 6 AI providers, SQLite persistence, documented endpoints |
 | 2026-03-01 | **fix(ui)**: Mejora de contraste WCAG AA en form elements - selects, inputs, options con fondos oscuros y texto legible |
