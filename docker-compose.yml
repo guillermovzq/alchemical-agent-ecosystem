@@ -101,9 +101,9 @@ services:
       - KILO_DEFAULT_MODEL=${KILO_DEFAULT_MODEL:-anthropic/claude-sonnet-4.5}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-alchemical}
       - GATEWAY_SECRET=${GATEWAY_SECRET:-}
-      - DATABASE_URL=/app/.runtime/gateway.db
+      - GATEWAY_DB_PATH=/data/gateway.db
     volumes:
-      - ./.runtime:/app/.runtime
+      - gateway_data:/data
     networks: [alchemical-net]
     depends_on:
       redis:
@@ -173,4 +173,6 @@ volumes:
   caddy_data:
     driver: local
   caddy_config:
+    driver: local
+  gateway_data:
     driver: local

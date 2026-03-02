@@ -90,6 +90,12 @@ El proyecto ha sido transformado de un template básico de Next.js a un **Dashbo
   - Correcciones en: AgentsTable, ChatWorkbench, LogsMonitor, SettingsPanel
 
 ### Fixes Recientes (2026-03-02)
+- [x] **fix(gateway-sqlite)**: Corrección error base de datos SQLite
+  - Corregida variable de entorno `DATABASE_URL` → `GATEWAY_DB_PATH` en docker-compose.yml
+  - Cambiado volumen de `./.runtime:/app/.runtime` a `gateway_data:/data`
+  - Agregada función `ensure_data_dir()` en agents_router.py para crear directorio de datos
+  - Agregados 3 exception handlers globales en app.py para respuestas JSON válidas
+  - Archivos modificados: `docker-compose.yml`, `gateway/agents_router.py`, `gateway/app.py`
 - [x] **Corrección de conexión Dashboard ↔ Gateway**
   - Cambio de `localhost` a `alchemical-gateway:7411` para comunicación inter-contenedor
   - Actualización de endpoints a `/api/v1/agents`
