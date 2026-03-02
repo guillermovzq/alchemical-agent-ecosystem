@@ -1346,6 +1346,50 @@ app.add_middleware(
 app.include_router(agents_router)
 
 # ---------------------------------------------------------------------------
+# Global Exception Handler - Ensure JSON responses for all errors
+# ---------------------------------------------------------------------------
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    """Handle HTTP exceptions with JSON responses."""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": "HTTPException",
+            "detail": exc.detail,
+            "status_code": exc.status_code
+        }
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    """Handle validation errors with JSON responses."""
+    return JSONResponse(
+        status_code=422,
+        content={
+            "error": "ValidationError",
+            "detail": str(exc),
+            "errors": exc.errors()
+        }
+    )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Handle all unhandled exceptions with JSON responses."""
+    logger.exception("Unhandled exception in request: %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "InternalServerError",
+            "detail": "An internal server error occurred",
+            "type": type(exc).__name__
+        }
+    )
+
+# ---------------------------------------------------------------------------
 # Middleware: X-Request-ID injection + request/response logging
 # ---------------------------------------------------------------------------
 

@@ -28,6 +28,19 @@ router = APIRouter(prefix="/api/v1", tags=["agents"])
 # Database path (must match app.py)
 DB_PATH = Path(os.getenv("GATEWAY_DB_PATH", "/data/gateway.db"))
 
+# Ensure data directory exists
+def ensure_data_dir():
+    """Ensure the data directory exists for SQLite database."""
+    try:
+        DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        return True
+    except Exception as e:
+        print(f"Error creating data directory: {e}", flush=True)
+        return False
+
+# Create directory on module load
+ensure_data_dir()
+
 
 # ---------------------------------------------------------------------------
 # Database Helper
