@@ -11,9 +11,12 @@ import { JobsEventsPanel } from "../components/JobsEventsPanel";
 import { LogsMonitor } from "../components/LogsMonitor";
 import { AdminOpsPanel } from "../components/AdminOpsPanel";
 import { SettingsPanel } from "../components/SettingsPanel";
+import { CreateAgentWizard } from "../components/CreateAgentWizard";
 import { useAppStore } from "../lib/stores";
 import { useAgents } from "../lib/hooks";
 import { cn } from "../lib/utils";
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
 
 const viewTitles: Record<string, { title: string; subtitle: string }> = {
   chat: {
@@ -45,6 +48,7 @@ const viewTitles: Record<string, { title: string; subtitle: string }> = {
 export default function DashboardPage() {
   const { activeView } = useAppStore();
   const { data: agentsData } = useAgents();
+  const [showCreateWizard, setShowCreateWizard] = useState(false);
 
   const currentView = viewTitles[activeView] || viewTitles.chat;
 
@@ -87,7 +91,39 @@ export default function DashboardPage() {
 
               {activeView === "agents" && (
                 <div className="space-y-6">
-                  <StatsHero stats={agentsData?.stats} />
+                  {/* Header with Create Button */}
+                  <div className="flex items-center justify-between">
+                    <StatsHero stats={agentsData?.stats} />
+                    <button
+                      onClick={() => setShowCreateWizard(!showCreateWizard)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold/20 hover:bg-gold/30 border border-gold/30 text-gold transition-all duration-200"
+                    >
+                      {showCreateWizard ? (
+                        <>
+                          <X className="w-4 h-4" />
+                          <span className="text-sm font-medium">Cerrar</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4" />
+                          <span className="text-sm font-medium">Nuevo Agente</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
+                  {/* Create Agent Wizard */}
+                  {showCreateWizard && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <CreateAgentWizard />
+                    </motion.div>
+                  )}
+                  
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div className="xl:col-span-2">
                       <AgentsTable agents={agentsData?.items || []} />

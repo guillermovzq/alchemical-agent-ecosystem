@@ -8,9 +8,10 @@ const CACHE_TTL_MS = 3000;
 
 /**
  * Fallback gateway URL. Override via GATEWAY_URL env var.
- * The gateway sits behind Caddy at /gateway, so localhost resolves inside Docker.
+ * In Docker Compose, use the service name to communicate between containers.
+ * The gateway exposes port 7411 directly.
  */
-const GATEWAY_URL = process.env.GATEWAY_URL ?? "http://localhost/gateway";
+const GATEWAY_URL = process.env.GATEWAY_URL ?? "http://alchemical-gateway:7411";
 
 let cache: { ts: number; payload: unknown } | null = null;
 
@@ -58,10 +59,20 @@ export async function GET(): Promise<NextResponse> {
   }
 
   try {
-    const [agentsRes, ps] = await Promise.all([
-      fetch(`${GATEWAY_URL}/agents`, { cache: "no-store", headers: gatewayHeaders() }),
-      composePs(),
-    ]);
+    // Fetch agents from gateway - use /api/v1/agents endpoint
+    const agentsRes = await fetch(`${GATEWAY_URL}/api/v1/agents`, { 
+      cache: "no-store", 
+      headers: gatewayHeaders() 
+    });
+    
+    // Try to get container status, but don't fail if Docker is unavailable
+    let ps: Array<{ Service: string; State: string; Status: string }> = [];
+    try {
+      ps = await composePs();
+    } catch {
+      // Docker not available inside container - that's ok
+      ps = [];
+    }
 
     const agentsJson = (await agentsRes.json()) as {
       items?: Array<{
