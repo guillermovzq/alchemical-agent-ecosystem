@@ -68,6 +68,8 @@ J Dilla
 Lauryn Hill
 Kendrick Lamar
 Skai Isyourgod
+The Notorious B.I.G.
+Eminem
 The Stooges
 Patti Smith
 The Clash
@@ -163,6 +165,8 @@ Sade
 Björk
 ABBA
 Miguel Bosé
+Madonna
+Cher
 Nelson Cavaquinho
 Cartola
 Paulinho da Viola
@@ -257,6 +261,16 @@ Albert King
 Freddie King
 B.B. King
 Etta James
+Ray Charles
+Sam Cooke
+Otis Redding
+Marvin Gaye
+Aretha Franklin
+Al Green
+Barry White
+Amy Winehouse
+Adele
+Mariah Carey
 Compay Segundo
 Ibrahim Ferrer
 Omara Portuondo

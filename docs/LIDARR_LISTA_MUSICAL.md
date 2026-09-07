@@ -1,6 +1,6 @@
 # Lista de contenido musical para Lidarr
 
-Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 29 géneros y 31 países, desde el siglo XVII hasta el siglo XXI.
+Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 30 géneros y 31 países, desde el siglo XVII hasta el siglo XXI.
 
 ## Criterios de exclusión
 
@@ -11,6 +11,8 @@ No se incluye:
 - Narcocorridos (sí corridos tradicionales/históricos).
 - Hip-hop "gangsta" o de contenido vacío/repetitivo (sí hip-hop consciente/de autor).
 - Pop desechable de fórmula sin mérito vocal o compositivo.
+
+**Excepción por mérito técnico:** un puñado de artistas cuyo virtuosismo técnico, influencia histórica o impacto cultural es indiscutible se incluyen aunque parte de su obra roce los criterios de arriba (p. ej. contenido explícito o pop muy comercial): Eminem, The Notorious B.I.G., Madonna, Cher.
 
 ## Cómo usarla en Lidarr
 
@@ -116,6 +118,8 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Lauryn Hill | EE. UU. | s. XX–XXI |
 | Kendrick Lamar | EE. UU. | s. XXI |
 | Skai Isyourgod | EE. UU. | s. XXI |
+| The Notorious B.I.G. | EE. UU. | s. XX |
+| Eminem | EE. UU. | s. XX–XXI |
 
 ## Punk
 
@@ -252,6 +256,8 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Björk | Islandia | s. XX–XXI |
 | ABBA | Suecia | s. XX |
 | Miguel Bosé | España | s. XX–XXI |
+| Madonna | EE. UU. | s. XX–XXI |
+| Cher | EE. UU. | s. XX–XXI |
 
 ## Samba
 
@@ -397,6 +403,21 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | B.B. King | EE. UU. | s. XX–XXI |
 | Etta James | EE. UU. | s. XX |
 
+## Soul / R&B
+
+| Artista | País | Época |
+|---|---|---|
+| Ray Charles | EE. UU. | s. XX |
+| Sam Cooke | EE. UU. | s. XX |
+| Otis Redding | EE. UU. | s. XX |
+| Marvin Gaye | EE. UU. | s. XX |
+| Aretha Franklin | EE. UU. | s. XX–XXI |
+| Al Green | EE. UU. | s. XX–XXI |
+| Barry White | EE. UU. | s. XX |
+| Amy Winehouse | Reino Unido | s. XX–XXI |
+| Adele | Reino Unido | s. XXI |
+| Mariah Carey | EE. UU. | s. XX–XXI |
+
 ## Nueva trova / son cubano
 
 | Artista | País | Época |
@@ -463,4 +484,4 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 
 ---
 
-**Resumen**: 29 géneros, 31 países, siglos XVII–XXI, ~294 artistas/intérpretes en total.
+**Resumen**: 30 géneros, 31 países, siglos XVII–XXI, ~304 artistas/intérpretes en total.
