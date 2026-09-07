@@ -1,6 +1,6 @@
 # Lista de contenido musical para Lidarr
 
-Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 38 géneros y 38 países, desde el siglo XVII hasta el siglo XXI.
+Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 41 géneros y 50 países, desde el siglo XVII hasta el siglo XXI.
 
 ## Criterios de exclusión
 
@@ -405,6 +405,29 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | DEAN | Corea del Sur | s. XXI |
 | Crush | Corea del Sur | s. XXI |
 
+## Cantopop / Mandopop de calidad
+
+| Artista | País | Época |
+|---|---|---|
+| Teresa Teng | Taiwán | s. XX |
+| Cui Jian | China | s. XX–XXI |
+| Anita Mui | Hong Kong | s. XX |
+| Leslie Cheung | Hong Kong | s. XX |
+| Faye Wong | China / Hong Kong | s. XX–XXI |
+
+## Música del sudeste asiático
+
+| Artista | País | Época |
+|---|---|---|
+| Sinn Sisamouth | Camboya | s. XX |
+| Trịnh Công Sơn | Vietnam | s. XX |
+| Khánh Ly | Vietnam | s. XX–XXI |
+| Carabao | Tailandia | s. XX–XXI |
+| Chrisye | Indonesia | s. XX–XXI |
+| Iwan Fals | Indonesia | s. XX–XXI |
+| Freddie Aguilar | Filipinas | s. XX–XXI |
+| Lea Salonga | Filipinas | s. XX–XXI |
+
 ## Big band (no banda mexicana)
 
 | Artista | País | Época |
@@ -568,6 +591,19 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Abdel Halim Hafez | Egipto | s. XX |
 | Fairuz | Líbano | s. XX–XXI |
 
+## Balcánica / eslava
+
+| Artista | País | Época |
+|---|---|---|
+| Bijelo Dugme | Bosnia y Herzegovina | s. XX |
+| Goran Bregović | Bosnia y Herzegovina | s. XX–XXI |
+| Đorđe Balašević | Serbia | s. XX–XXI |
+| Le Mystère des Voix Bulgares | Bulgaria | s. XX–XXI |
+| Maria Tănase | Rumania | s. XX |
+| Czesław Niemen | Polonia | s. XX |
+| Viktor Tsoi (Kino) | Rusia | s. XX |
+| Alla Pugacheva | Rusia | s. XX–XXI |
+
 ## Fado
 
 | Artista | País | Época |
@@ -579,4 +615,4 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 
 ---
 
-**Resumen**: 38 géneros, 38 países, siglos XVII–XXI, ~359 artistas/intérpretes en total.
+**Resumen**: 41 géneros, 50 países, siglos XVII–XXI, ~380 artistas/intérpretes en total.
