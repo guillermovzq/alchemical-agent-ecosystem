@@ -1,6 +1,6 @@
 # Lista de contenido musical para Lidarr
 
-Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 30 géneros y 31 países, desde el siglo XVII hasta el siglo XXI.
+Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 38 géneros y 38 países, desde el siglo XVII hasta el siglo XXI.
 
 ## Criterios de exclusión
 
@@ -148,7 +148,6 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Led Zeppelin | Reino Unido | s. XX |
 | Pink Floyd | Reino Unido | s. XX |
 | Queen | Reino Unido | s. XX |
-| Nirvana | EE. UU. | s. XX |
 | Radiohead | Reino Unido | s. XX–XXI |
 | Charly García | Argentina | s. XX–XXI |
 | Soda Stereo | Argentina | s. XX |
@@ -158,6 +157,54 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Caifanes | México | s. XX–XXI |
 | Zoé | México | s. XX–XXI |
 | Héroes del Silencio | España | s. XX |
+
+## Grunge
+
+| Artista | País | Época |
+|---|---|---|
+| Nirvana | EE. UU. | s. XX |
+| Pearl Jam | EE. UU. | s. XX–XXI |
+| Soundgarden | EE. UU. | s. XX |
+| Alice in Chains | EE. UU. | s. XX–XXI |
+| Stone Temple Pilots | EE. UU. | s. XX |
+
+## Indie
+
+| Artista | País | Época |
+|---|---|---|
+| The Smiths | Reino Unido | s. XX |
+| Pixies | EE. UU. | s. XX |
+| Sonic Youth | EE. UU. | s. XX |
+| Belle and Sebastian | Reino Unido | s. XX–XXI |
+| Arcade Fire | Canadá | s. XX–XXI |
+| The National | EE. UU. | s. XX–XXI |
+| Arctic Monkeys | Reino Unido | s. XXI |
+| Vampire Weekend | EE. UU. | s. XXI |
+
+## Folk
+
+| Artista | País | Época |
+|---|---|---|
+| Woody Guthrie | EE. UU. | s. XX |
+| Joan Baez | EE. UU. | s. XX–XXI |
+| Bob Dylan | EE. UU. | s. XX–XXI |
+| Simon & Garfunkel | EE. UU. | s. XX |
+| Nick Drake | Reino Unido | s. XX |
+| Fairport Convention | Reino Unido | s. XX |
+| Joni Mitchell | Canadá | s. XX–XXI |
+| Leonard Cohen | Canadá | s. XX–XXI |
+
+## Funk
+
+| Artista | País | Época |
+|---|---|---|
+| James Brown | EE. UU. | s. XX |
+| Sly and the Family Stone | EE. UU. | s. XX |
+| Parliament-Funkadelic | EE. UU. | s. XX |
+| Kool & the Gang | EE. UU. | s. XX–XXI |
+| Rick James | EE. UU. | s. XX |
+| Bootsy Collins | EE. UU. | s. XX–XXI |
+| Tower of Power | EE. UU. | s. XX–XXI |
 
 ## Power metal
 
@@ -258,6 +305,7 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Miguel Bosé | España | s. XX–XXI |
 | Madonna | EE. UU. | s. XX–XXI |
 | Cher | EE. UU. | s. XX–XXI |
+| Ed Sheeran | Reino Unido | s. XXI |
 
 ## Samba
 
@@ -301,6 +349,11 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Robert Hood | EE. UU. | s. XX–XXI |
 | Carl Craig | EE. UU. | s. XX–XXI |
 | Daft Punk | Francia | s. XX–XXI |
+| Axwell | Suecia | s. XXI |
+| Steve Angello | Suecia | s. XXI |
+| Sebastian Ingrosso | Suecia | s. XXI |
+| Avicii | Suecia | s. XXI |
+| Eric Prydz | Suecia | s. XXI |
 
 ## Tango
 
@@ -340,6 +393,17 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Anri | Japón | s. XX–XXI |
 | Toshiki Kadomatsu | Japón | s. XX–XXI |
 | Junko Ohashi | Japón | s. XX–XXI |
+
+## K-pop de calidad
+
+| Artista | País | Época |
+|---|---|---|
+| Seo Taiji and Boys | Corea del Sur | s. XX |
+| BoA | Corea del Sur | s. XX–XXI |
+| Epik High | Corea del Sur | s. XXI |
+| IU | Corea del Sur | s. XXI |
+| DEAN | Corea del Sur | s. XXI |
+| Crush | Corea del Sur | s. XXI |
 
 ## Big band (no banda mexicana)
 
@@ -467,11 +531,42 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Artista | País | Época |
 |---|---|---|
 | Miriam Makeba | Sudáfrica | s. XX |
+| Hugh Masekela | Sudáfrica | s. XX–XXI |
+| Ladysmith Black Mambazo | Sudáfrica | s. XX–XXI |
 | Salif Keita | Malí | s. XX–XXI |
+| Ali Farka Touré | Malí | s. XX–XXI |
+| Oumou Sangaré | Malí | s. XX–XXI |
 | King Sunny Adé | Nigeria | s. XX–XXI |
 | Fela Kuti | Nigeria | s. XX |
 | Youssou N'Dour | Senegal | s. XX–XXI |
+| Baaba Maal | Senegal | s. XX–XXI |
+| Angelique Kidjo | Benín | s. XX–XXI |
+| Franco Luambo | República Democrática del Congo | s. XX |
 | Cesária Évora | Cabo Verde | s. XX–XXI |
+
+## Clásica y tradicional de India
+
+| Artista | País | Época |
+|---|---|---|
+| Ravi Shankar | India | s. XX–XXI |
+| Ali Akbar Khan | India | s. XX–XXI |
+| Zakir Hussain | India | s. XX–XXI |
+
+## Playback / Bollywood
+
+| Artista | País | Época |
+|---|---|---|
+| Lata Mangeshkar | India | s. XX–XXI |
+| Kishore Kumar | India | s. XX |
+| A.R. Rahman | India | s. XX–XXI |
+
+## Música árabe clásica
+
+| Artista | País | Época |
+|---|---|---|
+| Umm Kulthum | Egipto | s. XX |
+| Abdel Halim Hafez | Egipto | s. XX |
+| Fairuz | Líbano | s. XX–XXI |
 
 ## Fado
 
@@ -484,4 +579,4 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 
 ---
 
-**Resumen**: 30 géneros, 31 países, siglos XVII–XXI, ~304 artistas/intérpretes en total.
+**Resumen**: 38 géneros, 38 países, siglos XVII–XXI, ~359 artistas/intérpretes en total.

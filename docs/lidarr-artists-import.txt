@@ -88,7 +88,6 @@ David Bowie
 Led Zeppelin
 Pink Floyd
 Queen
-Nirvana
 Radiohead
 Charly García
 Soda Stereo
@@ -98,6 +97,34 @@ Café Tacuba
 Caifanes
 Zoé
 Héroes del Silencio
+Nirvana
+Pearl Jam
+Soundgarden
+Alice in Chains
+Stone Temple Pilots
+The Smiths
+Pixies
+Sonic Youth
+Belle and Sebastian
+Arcade Fire
+The National
+Arctic Monkeys
+Vampire Weekend
+Woody Guthrie
+Joan Baez
+Bob Dylan
+Simon & Garfunkel
+Nick Drake
+Fairport Convention
+Joni Mitchell
+Leonard Cohen
+James Brown
+Sly and the Family Stone
+Parliament-Funkadelic
+Kool & the Gang
+Rick James
+Bootsy Collins
+Tower of Power
 Helloween
 Gamma Ray
 Edguy
@@ -167,6 +194,7 @@ ABBA
 Miguel Bosé
 Madonna
 Cher
+Ed Sheeran
 Nelson Cavaquinho
 Cartola
 Paulinho da Viola
@@ -195,6 +223,11 @@ Larry Heard
 Robert Hood
 Carl Craig
 Daft Punk
+Axwell
+Steve Angello
+Sebastian Ingrosso
+Avicii
+Eric Prydz
 Carlos Gardel
 Edmundo Rivero
 Aníbal Troilo
@@ -219,6 +252,12 @@ Miki Matsubara
 Anri
 Toshiki Kadomatsu
 Junko Ohashi
+Seo Taiji and Boys
+BoA
+Epik High
+IU
+DEAN
+Crush
 Duke Ellington
 Cab Calloway
 Count Basie
@@ -295,11 +334,27 @@ Scott Joplin
 Eubie Blake
 James P. Johnson
 Miriam Makeba
+Hugh Masekela
+Ladysmith Black Mambazo
 Salif Keita
+Ali Farka Touré
+Oumou Sangaré
 King Sunny Adé
 Fela Kuti
 Youssou N'Dour
+Baaba Maal
+Angelique Kidjo
+Franco Luambo
 Cesária Évora
+Ravi Shankar
+Ali Akbar Khan
+Zakir Hussain
+Lata Mangeshkar
+Kishore Kumar
+A.R. Rahman
+Umm Kulthum
+Abdel Halim Hafez
+Fairuz
 Amália Rodrigues
 Carlos do Carmo
 Dulce Pontes
