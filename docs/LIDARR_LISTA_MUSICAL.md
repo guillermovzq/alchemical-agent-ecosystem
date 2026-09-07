@@ -1,6 +1,6 @@
 # Lista de contenido musical para Lidarr
 
-Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 42 géneros y 54 países, desde el siglo XVII hasta el siglo XXI.
+Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 42 géneros y 57 países, desde el siglo XVII hasta el siglo XXI.
 
 ## Criterios de exclusión
 
@@ -618,10 +618,18 @@ Artistas de regiones poco representadas arriba, incluidos porque su éxito comer
 | a-ha | Noruega | s. XX–XXI | "Take On Me" |
 | Aqua | Dinamarca / Noruega | s. XX | "Barbie Girl" |
 | Los Del Río | España | s. XX | "Macarena" |
-| Ricky Martin | Puerto Rico | s. XX–XXI | "Livin' la Vida Loca" |
 | Kaoma | Francia / Brasil | s. XX | "Lambada" |
 | Los Kjarkas | Bolivia | s. XX–XXI | "Llorando se fue" (origen de "Lambada") |
 | OMC | Nueva Zelanda | s. XX | "How Bizarre" |
+| Ace of Base | Suecia | s. XX | "The Sign" |
+| Rednex | Suecia | s. XX–XXI | "Cotton Eye Joe" |
+| Vengaboys | Países Bajos | s. XX | "Boom, Boom, Boom, Boom!!" |
+| 2 Unlimited | Bélgica / Países Bajos | s. XX | "No Limit" |
+| Haddaway | Trinidad y Tobago / Alemania | s. XX | "What Is Love" |
+| O-Zone | Moldavia | s. XX–XXI | "Dragostea Din Tei" |
+| Las Ketchup | España | s. XXI | "The Ketchup Song (Asereje)" |
+| Eiffel 65 | Italia | s. XX–XXI | "Blue (Da Ba Dee)" |
+| Sandra | Alemania | s. XX | "Maria Magdalena" |
 
 ## Fado
 
@@ -634,4 +642,4 @@ Artistas de regiones poco representadas arriba, incluidos porque su éxito comer
 
 ---
 
-**Resumen**: 42 géneros, 54 países, siglos XVII–XXI, ~392 artistas/intérpretes en total.
+**Resumen**: 42 géneros, 57 países, siglos XVII–XXI, ~400 artistas/intérpretes en total.
