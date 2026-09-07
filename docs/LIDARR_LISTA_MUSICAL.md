@@ -1,6 +1,6 @@
 # Lista de contenido musical para Lidarr
 
-Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 41 géneros y 50 países, desde el siglo XVII hasta el siglo XXI.
+Lista curada de intérpretes para descargar vía Lidarr, priorizando **calidad musical e interpretativa sobre éxito comercial**. Cubre 42 géneros y 54 países, desde el siglo XVII hasta el siglo XXI.
 
 ## Criterios de exclusión
 
@@ -404,6 +404,7 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | IU | Corea del Sur | s. XXI |
 | DEAN | Corea del Sur | s. XXI |
 | Crush | Corea del Sur | s. XXI |
+| PSY | Corea del Sur | s. XXI |
 
 ## Cantopop / Mandopop de calidad
 
@@ -604,6 +605,24 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 | Viktor Tsoi (Kino) | Rusia | s. XX |
 | Alla Pugacheva | Rusia | s. XX–XXI |
 
+## Grandes éxitos internacionales (cruce cultural)
+
+Artistas de regiones poco representadas arriba, incluidos porque su éxito comercial global es innegable (no solo de culto/crítica) — el criterio que pediste con Tarkan y Lou Bega como referencia.
+
+| Artista | País | Época | Éxito representativo |
+|---|---|---|---|
+| Tarkan | Turquía | s. XX–XXI | "Şımarık" |
+| Lou Bega | Alemania | s. XX–XXI | "Mambo No. 5" |
+| Falco | Austria | s. XX | "Rock Me Amadeus" |
+| Nena | Alemania | s. XX | "99 Luftballons" |
+| a-ha | Noruega | s. XX–XXI | "Take On Me" |
+| Aqua | Dinamarca / Noruega | s. XX | "Barbie Girl" |
+| Los Del Río | España | s. XX | "Macarena" |
+| Ricky Martin | Puerto Rico | s. XX–XXI | "Livin' la Vida Loca" |
+| Kaoma | Francia / Brasil | s. XX | "Lambada" |
+| Los Kjarkas | Bolivia | s. XX–XXI | "Llorando se fue" (origen de "Lambada") |
+| OMC | Nueva Zelanda | s. XX | "How Bizarre" |
+
 ## Fado
 
 | Artista | País | Época |
@@ -615,4 +634,4 @@ Este documento es una **lista de referencia**, no un import list automático. Pa
 
 ---
 
-**Resumen**: 41 géneros, 50 países, siglos XVII–XXI, ~380 artistas/intérpretes en total.
+**Resumen**: 42 géneros, 54 países, siglos XVII–XXI, ~392 artistas/intérpretes en total.
