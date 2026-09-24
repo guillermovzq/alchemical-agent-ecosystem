@@ -300,6 +300,42 @@ def test_webhook_unsupported_channel_returns_400(client):
 
 
 # ---------------------------------------------------------------------------
+# 9b. Connector message query — filter by contact / self-chat
+# ---------------------------------------------------------------------------
+
+def test_connector_messages_filters_by_contact_and_self(client, auth_headers):
+    import app as gw
+
+    gw.append_chat(
+        "inbound:whatsapp", "hola desde Bruno", "connector",
+        channel="whatsapp", contact="Bruno", is_self=False,
+    )
+    gw.append_chat(
+        "inbound:whatsapp", "nota para mi mismo", "connector",
+        channel="whatsapp", contact="5215500000000", is_self=True,
+    )
+
+    r_contact = client.get(
+        "/connectors/whatsapp/messages", params={"contact": "bruno"}, headers=auth_headers
+    )
+    assert r_contact.status_code == 200
+    contact_items = r_contact.json()["items"]
+    assert contact_items and all(i["contact"] == "Bruno" for i in contact_items)
+
+    r_self = client.get(
+        "/connectors/whatsapp/messages", params={"self_only": True}, headers=auth_headers
+    )
+    assert r_self.status_code == 200
+    self_items = r_self.json()["items"]
+    assert self_items and all(i["is_self"] == 1 for i in self_items)
+
+
+def test_connector_messages_unsupported_channel_returns_400(client, auth_headers):
+    r = client.get("/connectors/unknownchannel/messages", headers=auth_headers)
+    assert r.status_code == 400
+
+
+# ---------------------------------------------------------------------------
 # 10. Secret scanner — connector token_ref
 # ---------------------------------------------------------------------------
 
