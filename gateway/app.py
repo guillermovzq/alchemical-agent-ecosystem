@@ -685,10 +685,20 @@ def init_db() -> None:
               sender TEXT NOT NULL,
               text TEXT NOT NULL,
               kind TEXT NOT NULL,
-              ts TEXT NOT NULL
+              ts TEXT NOT NULL,
+              channel TEXT,
+              contact TEXT,
+              is_self INTEGER NOT NULL DEFAULT 0
             )
             """
         )
+        existing_cols = {
+            row["name"] for row in conn.execute("PRAGMA table_info(chat_messages)")
+        }
+        for col_def in ("channel TEXT", "contact TEXT", "is_self INTEGER NOT NULL DEFAULT 0"):
+            col_name = col_def.split()[0]
+            if col_name not in existing_cols:
+                conn.execute(f"ALTER TABLE chat_messages ADD COLUMN {col_def}")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS events (
@@ -747,6 +757,10 @@ def init_db() -> None:
         conn.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status, next_run_ts)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_events_ts ON events(id DESC)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_chat_messages_id ON chat_messages(id DESC)")
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_chat_messages_contact "
+            "ON chat_messages(channel, contact, id DESC)"
+        )
         conn.execute("CREATE INDEX IF NOT EXISTS idx_usage_id ON usage_samples(id DESC)")
 
         # C1 — seed bootstrap admin key with hash
@@ -831,12 +845,20 @@ def row_to_agent(row: sqlite3.Row) -> Dict[str, Any]:
 # Chat / event / usage helpers
 # ---------------------------------------------------------------------------
 
-def append_chat(sender: str, text: str, kind: str = "message") -> None:
+def append_chat(
+    sender: str,
+    text: str,
+    kind: str = "message",
+    channel: Optional[str] = None,
+    contact: Optional[str] = None,
+    is_self: bool = False,
+) -> None:
     """Persist a chat message to the database."""
     with db_conn() as conn:
         conn.execute(
-            "INSERT INTO chat_messages(sender, text, kind, ts) VALUES(?,?,?,?)",
-            (sender, text, kind, now_iso()),
+            "INSERT INTO chat_messages(sender, text, kind, ts, channel, contact, is_self) "
+            "VALUES(?,?,?,?,?,?,?)",
+            (sender, text, kind, now_iso(), channel, contact, int(is_self)),
         )
 
 
@@ -1221,9 +1243,20 @@ async def job_worker() -> None:
             elif job["kind"] == "connector_inbound":
                 ch = payload.get("channel")
                 frm = payload.get("from")
+                target = payload.get("target")
                 txt = payload.get("text", "")
+                # A self-chat (e.g. WhatsApp "Message yourself") has the same
+                # identifier as sender and recipient.
+                is_self = bool(frm) and frm == target
                 append_event("info", "connector", f"Inbound from {ch}:{frm}")
-                append_chat(f"inbound:{ch}", txt, "connector")
+                append_chat(
+                    f"inbound:{ch}",
+                    txt,
+                    "connector",
+                    channel=ch,
+                    contact=frm,
+                    is_self=is_self,
+                )
 
             else:
                 append_event("warn", "jobs", f"Unknown job kind: {job['kind']}")
@@ -1905,6 +1938,43 @@ async def connector_webhook(
     normalized = normalize_inbound(channel, body)
     enqueue_job("connector_inbound", normalized)
     return {"ok": True, "accepted": True}
+
+
+@app.get("/connectors/{channel}/messages", tags=["connectors"])
+async def connector_messages(
+    channel: str,
+    request: Request,
+    contact: Optional[str] = None,
+    self_only: bool = False,
+    limit: int = 100,
+) -> Dict[str, Any]:
+    """Query stored inbound messages for a channel already received via webhook.
+
+    This only reads messages already persisted by ``/connectors/webhook/{channel}``
+    (e.g. a configured WhatsApp Business API webhook) — it does not reach out to
+    the channel itself. Filter by ``contact`` (sender id/name, case-insensitive
+    substring match) or set ``self_only=true`` for messages sent to yourself
+    (sender == recipient, such as WhatsApp's "Message yourself" chat).
+    """
+    _require_auth(request, VIEWER_ROLE)
+    if channel not in CHANNEL_CONNECTORS:
+        raise HTTPException(400, f"Unsupported channel: {channel}")
+
+    lim = max(1, min(limit, 500))
+    query = "SELECT sender,text,kind,ts,channel,contact,is_self FROM chat_messages WHERE channel=?"
+    params: List[Any] = [channel]
+    if self_only:
+        query += " AND is_self=1"
+    elif contact:
+        query += " AND contact LIKE ? COLLATE NOCASE"
+        params.append(f"%{contact}%")
+    query += " ORDER BY id DESC LIMIT ?"
+    params.append(lim)
+
+    with db_conn() as conn:
+        rows = conn.execute(query, params).fetchall()
+    items = [dict(r) for r in reversed(rows)]
+    return {"items": items, "count": len(items)}
 
 
 # ---------------------------------------------------------------------------
